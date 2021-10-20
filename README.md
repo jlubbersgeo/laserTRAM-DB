@@ -33,9 +33,9 @@ Alternatively, LaserTRAM-DB can be installed locally and run by creating a [virt
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 cd /path/to/laserTRAM-DB
-python3 -m venv lasertram-db
-source ./lasertram-db/bin/activate
-pip3 install -r ./requirements.txt
+conda create -n lasertram-db python=3.7.7
+conda activate lasertram-db
+conda install --file requirements.txt
 python lasertram-db.py
 ```
 
@@ -43,18 +43,7 @@ When the program is running, copy and paste the provided link provided in the te
 
 You can close the program by entering ```ctrl + c``` in the terminal window or simply exiting the terminal window. 
 
-### Windows
-```
-git clone https://github.com/jlubbersgeo/laserTRAM-DB
-cd /path/to/laserTRAM-DB
-python3 -m venv lasertram-db
-pip3 install -r ./requirements.txt
-python lasertram-db.py
-```
 
-When the program is running, copy and paste the provided link provided in the terminal window into the browswer window and the app will run. 
-
-To exit the program here, simply close the terminal window.
 
 ### Caveats
 - If you are completely new to [python](https://www.python.org/downloads/windows/) and [git](https://git-scm.com/download/win), make sure they are installed on your machine.
