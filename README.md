@@ -25,7 +25,7 @@ It is comprised of 3 parts:
 
 The easiest way to use LaserTRAM-DB is to use the following link: 
 
-[lasertram-db.herokuapp.com](https://lasertram-db.herokuapp.com/)
+COMING SOON!
 
 Alternatively, LaserTRAM-DB can be installed locally and run by creating a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#installing-virtualenv):
 
