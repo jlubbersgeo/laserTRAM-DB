@@ -29,7 +29,6 @@ The easiest way to use LaserTRAM-DB is to use the following link:
 
 Alternatively, LaserTRAM-DB can be installed locally and run by creating a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#installing-virtualenv):
 
-### MacOS
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 cd /path/to/laserTRAM-DB
