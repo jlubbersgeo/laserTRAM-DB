@@ -279,7 +279,7 @@ app.layout = html.Div(
                                         dbc.Col(
                                             [
                                                 html.H4("Analyte Uncertainties"),
-                                                dcc.Graph(id="error-data",),
+                                                dcc.Graph(id="error-data", style = {'width':'100vh'}),
                                             ]
                                         ),
                                         dbc.Col(
@@ -303,6 +303,8 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 275,
+                                                        "width" : "100vh"
+                                                        
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
@@ -524,7 +526,7 @@ app.layout = html.Div(
                                         dbc.Col(
                                             [
                                                 html.H4("Analyte Uncertainties"),
-                                                dcc.Graph(id="error-data_p",),
+                                                dcc.Graph(id="error-data_p",style = {'width':'100vh'}),
                                             ]
                                         ),
                                         dbc.Col(
@@ -548,6 +550,7 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 275,
+                                                        "width" : "100vh"
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
@@ -727,6 +730,7 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 400,
+                                                        "width" : "50vh"
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
@@ -798,6 +802,7 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 400,
+                                                        "width": "100vh"
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
