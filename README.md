@@ -38,7 +38,7 @@ conda install --file requirements.txt
 python lasertram-db.py
 ```
 
-When the program is running, copy and paste the provided link provided in the terminal window into the browswer window and the app will run. You can stop the program using ```ctrl+c``` on MacOS or ```exit()``` followed by the return button on Windows. To then exit the virtual environment:
+When the program is running, copy and paste the provided link provided in the terminal window into the browser window and the app will run. You can stop the program using ```ctrl+c``` on MacOS or ```exit()``` followed by the return button on Windows. To then exit the virtual environment:
 
 ```
 conda deactivate
