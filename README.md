@@ -27,7 +27,7 @@ The easiest way to use LaserTRAM-DB is to use the following link:
 
 COMING SOON!
 
-Alternatively, LaserTRAM-DB can be installed locally and run by creating a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#installing-virtualenv):
+Alternatively, LaserTRAM-DB can be installed locally and run by creating a virtual environment. If you are new to python, we recommend doing this through [Anaconda](https://www.anaconda.com/products/individual).
 
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
@@ -38,15 +38,18 @@ conda install --file requirements.txt
 python lasertram-db.py
 ```
 
-When the program is running, copy and paste the provided link provided in the terminal window into the browswer window and the app will run. 
+When the program is running, copy and paste the provided link provided in the terminal window into the browswer window and the app will run. You can stop the program using ```ctrl+c``` and then exit the virtual environment with:
 
-You can close the program by entering ```ctrl + c``` in the terminal window or simply exiting the terminal window. 
+```conda deactivate```.
 
+From now on any time you wish to use the program, simply re-activate the virtual environment and run the script like above:
 
+```
+conda activate lasertram-db
+cd /path/to/laserTRAM-DB
+python lasertram-db.py
+```
 
-### Caveats
-- If you are completely new to [python](https://www.python.org/downloads/windows/) and [git](https://git-scm.com/download/win), make sure they are installed on your machine.
-- You will have to re-create the virtual environment each time you wish to use LaserTRAM-DB.
 
 ## Demos
 Video tutorials on how to use each piece of software can be found at the following links:
