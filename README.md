@@ -52,6 +52,18 @@ cd /path/to/laserTRAM-DB
 python lasertram-db.py
 ```
 
+### Caveats
+
+On windows you may need to add the following channel for downloading the ```requirements.txt```file:
+```
+git clone https://github.com/jlubbersgeo/laserTRAM-DB
+cd /path/to/laserTRAM-DB
+conda create -n lasertram-db python=3.7.7
+conda activate lasertram-db
+conda config --append channels conda-forge
+conda install --file requirements.txt
+python lasertram-db.py
+```
 
 ## Demos
 Video tutorials on how to use each piece of software can be found at the following links:
