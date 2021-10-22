@@ -980,7 +980,8 @@ def plot(spot, stored_data, interval_slider, int_std, filename):
             detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
             
             # subtract background from interval signal
-            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc]
+            # bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc] # need to change this to be just bkgd_data
+            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
             
             # normalize background corrected data to internal standard data 
             bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
@@ -1179,7 +1180,9 @@ def add_row(
                 df_n = df.to_numpy()
                 bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
                 detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-                bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc]
+                # bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc]
+                bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
+
                 bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
                 bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
                 bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
@@ -1366,7 +1369,7 @@ def plot_profile(stored_data, interval_slider, int_std, filename):
         # int_std_loc = [elements.index(i) for i in elements if int_std in i]
         bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
         detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-        bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc]
+        bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
         bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
         bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
         bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
@@ -1536,7 +1539,7 @@ def add_row_p(n_clicks, stored_data, interval_slider, int_std, rows, columns, fi
             df_n = df.to_numpy()
             bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
             detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data[int_std_loc]
+            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
             bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
             bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
             bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
@@ -1630,7 +1633,7 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         "GSE-1G",
         "NIST-610",
         "NIST-612",
-        "BM90201-G",
+        "BM9021-G",
         "GOR128-G",
         "GOR132-G",
         "ATHO-G",
