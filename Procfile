@@ -1,1 +1,1 @@
-web: gunicorn laserTRAM_dash:server
+web: gunicorn lasertram-db:server
