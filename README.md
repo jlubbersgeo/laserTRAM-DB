@@ -28,7 +28,7 @@ It is comprised of 3 parts:
 
 The easiest way to use LaserTRAM-DB is to use the following link: 
 
-COMING SOON!
+[https://lasertram-db.herokuapp.com/](https://lasertram-db.herokuapp.com/)
 
 Alternatively, LaserTRAM-DB can be installed locally and run by creating a virtual environment. If you are new to python, we recommend doing this through [Anaconda](https://www.anaconda.com/products/individual).
 
