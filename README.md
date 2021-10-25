@@ -1,5 +1,8 @@
 # ```LaserTRAM-DB```: A dashboard for the complete laser ablation icp-ms data reduction pipeline. 
 
+[![status](https://joss.theoj.org/papers/1a568b84977b149738e4ebeb49f71a6e/status.svg)](https://joss.theoj.org/papers/1a568b84977b149738e4ebeb49f71a6e)
+
+
 LaserTRAM-DB is a dashboard for the complete processing pipeline of Laser Ablation Inductively Coupled Plasma Mass Spectrometry (LA-ICP-MS) data in complex materials such as geologic samples. As LA-ICP-MS data in geologic samples frequently have multiple phases, inclusions, and other compositional complexities within them that do not represent the material of interest, user interaction is required to filter unwanted signals out of the overall ablation signal. LaserTRAM-DB allows the user to filter which portion of the ablation peak is utilized in calculating concentrations, subsequently allowing for more accurate data to be obtained. Furthermore, it allows for the processing of both individual spot analysis data and a line of spots gathered in rapid succession, reducing the time required for data reduction while preserving spatial definition and still ensuring data quality.
 
 ## Statement of Need
