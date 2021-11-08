@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Lubbers"
+  given-names: "Jordan"
+  orcid: "https://orcid.org/0000-0002-3566-5091"
+- family-names: "Kent"
+  given-names: "Adam"
+- family-names: "Chris"
+  given-names: "Russo"
+title: "LaserTRAM-DB"
+version: 1.0.0
+doi: 10.5281/zenodo.5620857
+date-released: 2021-10-29
+url: "https://github.com/jlubbersgeo/laserTRAM-DB"
