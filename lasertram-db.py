@@ -1917,7 +1917,7 @@ def calculate_concentrations(
         if int_std == "43Ca":
             ppm = 1e4 * (oxide * 40.078 / (40.078 + 15.999))
         elif int_std == "29Si":
-            ppm = 1e4 * (oxide * 28.086 / (28.086 + 15.999))
+            ppm = 1e4 * (oxide * 28.086 / (28.086 + 2*15.999))
         return ppm
 
     # all of the samples in your input sheet that are NOT potential calibration standards
