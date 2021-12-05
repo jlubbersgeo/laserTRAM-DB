@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Sat Dec  4 08:26:36 2021
+
+@author: jordanlubbers
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Wed Oct 20 13:57:37 2021
 
 @author: jordanlubbers
@@ -18,6 +26,7 @@ import statsmodels.api as sm
 from statsmodels.tools.eval_measures import rmse
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
+import plotly.express as px
 
 colorlist = [
     "#2E91E5",
@@ -279,7 +288,10 @@ app.layout = html.Div(
                                         dbc.Col(
                                             [
                                                 html.H4("Analyte Uncertainties"),
-                                                dcc.Graph(id="error-data", style = {'width':'100vh'}),
+                                                dcc.Graph(
+                                                    id="error-data",
+                                                    style={"width": "100vh"},
+                                                ),
                                             ]
                                         ),
                                         dbc.Col(
@@ -303,8 +315,7 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 275,
-                                                        "width" : "80vh"
-                                                        
+                                                        "width": "80vh",
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
@@ -526,7 +537,10 @@ app.layout = html.Div(
                                         dbc.Col(
                                             [
                                                 html.H4("Analyte Uncertainties"),
-                                                dcc.Graph(id="error-data_p",style = {'width':'100vh'}),
+                                                dcc.Graph(
+                                                    id="error-data_p",
+                                                    style={"width": "100vh"},
+                                                ),
                                             ]
                                         ),
                                         dbc.Col(
@@ -550,7 +564,7 @@ app.layout = html.Div(
                                                     style_table={
                                                         "overflowX": "auto",
                                                         "height": 275,
-                                                        "width" : "80vh"
+                                                        "width": "80vh",
                                                     },
                                                     fixed_rows={"headers": True},
                                                     style_cell={
@@ -597,251 +611,307 @@ app.layout = html.Div(
                     style=tab_style,
                     selected_style=tab_selected_style,
                     children=[
-                        # Hidden div inside the app that stores the intermediate value
-                        dcc.Store(id="stored_data_c"),
-                        dcc.Store(id="stored_stds"),
-                        dbc.Col(
+                        dcc.Tabs(
                             [
-                                dbc.Row(
-                                    [
-                                        dbc.Col([html.H2("LaserCalc"),]),
+                                dcc.Tab(
+                                    label="Concentrations data",
+                                    style=tab_style,
+                                    selected_style=tab_selected_style,
+                                    children=[
+                                        # Hidden div inside the app that stores the intermediate value
+                                        dcc.Store(id="stored_data_c"),
+                                        dcc.Store(id="stored_stds"),
+                                        dcc.Store(id="stored_calibstd_data"),
                                         dbc.Col(
                                             [
-                                                html.H4(
-                                                    "Calculating concentrations for LA-ICP-MS spot data"
-                                                ),
-                                            ]
-                                        ),
-                                    ],
-                                    align="center",
-                                ),
-                                dbc.Card(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(
+                                                dbc.Row(
                                                     [
-                                                        dcc.Upload(
-                                                            id="upload-data_c",
-                                                            children=dbc.Button(
-                                                                "Upload Data",
-                                                                id="upload-btn_c",
-                                                                color="dark",
-                                                                size="lg",
-                                                                n_clicks=0,
-                                                            ),
+                                                        dbc.Col(
+                                                            [html.H2("LaserCalc"),]
                                                         ),
-                                                        html.Hr(),
-                                                        dcc.Upload(
-                                                            id="upload-stds",
-                                                            children=dbc.Button(
-                                                                "Upload Stds",
-                                                                id="stds_btn",
-                                                                color="secondary",
-                                                                size="lg",
-                                                                n_clicks=0,
-                                                            ),
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Calculating concentrations for LA-ICP-MS spot data"
+                                                                ),
+                                                            ]
                                                         ),
                                                     ],
-                                                    width=2,
+                                                    align="center",
                                                 ),
-                                                dbc.Col(
+                                                dbc.Card(
                                                     [
                                                         dbc.Row(
                                                             [
                                                                 dbc.Col(
                                                                     [
-                                                                        dbc.Label(
-                                                                            "Calibration Standard:"
+                                                                        dcc.Upload(
+                                                                            id="upload-data_c",
+                                                                            children=dbc.Button(
+                                                                                "Upload Data",
+                                                                                id="upload-btn_c",
+                                                                                color="dark",
+                                                                                size="lg",
+                                                                                n_clicks=0,
+                                                                            ),
                                                                         ),
-                                                                        dcc.Dropdown(
-                                                                            id="std_dropdown",
-                                                                            multi=False,
-                                                                            style={
-                                                                                "color": "#212121",
-                                                                                "background-color": "none",
-                                                                                "width": "100%",
-                                                                            },
-                                                                            placeholder="Choose calibration std.",
-                                                                            value=None,
+                                                                        html.Hr(),
+                                                                        dcc.Upload(
+                                                                            id="upload-stds",
+                                                                            children=dbc.Button(
+                                                                                "Upload Stds",
+                                                                                id="stds_btn",
+                                                                                color="secondary",
+                                                                                size="lg",
+                                                                                n_clicks=0,
+                                                                            ),
                                                                         ),
-                                                                    ]
+                                                                    ],
+                                                                    width=2,
                                                                 ),
-                                                            ]
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        dbc.Label(
+                                                                                            "Calibration Standard:"
+                                                                                        ),
+                                                                                        dcc.Dropdown(
+                                                                                            id="std_dropdown",
+                                                                                            multi=False,
+                                                                                            style={
+                                                                                                "color": "#212121",
+                                                                                                "background-color": "none",
+                                                                                                "width": "100%",
+                                                                                            },
+                                                                                            placeholder="Choose calibration std.",
+                                                                                            value=None,
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    width=4,
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(),
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        dbc.Button(
+                                                                                            "Calculate!",
+                                                                                            id="calculate_btn",
+                                                                                            color="success",
+                                                                                            size="lg",
+                                                                                            n_clicks=0,
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ],
+                                                                    width=4,
+                                                                ),
+                                                            ],
                                                         )
                                                     ],
-                                                    width=4,
+                                                    body=True,
+                                                    style={"width": "100rem"},
+                                                    color="primary",
+                                                    inverse=True,
                                                 ),
-                                                dbc.Col(
+                                                dbc.Row(
                                                     [
-                                                        dbc.Row(
+                                                        dbc.Col(
                                                             [
-                                                                dbc.Col(),
-                                                                dbc.Col(
-                                                                    [
-                                                                        dbc.Button(
-                                                                            "Calculate!",
-                                                                            id="calculate_btn",
-                                                                            color="success",
-                                                                            size="lg",
-                                                                            n_clicks=0,
+                                                                html.H4(
+                                                                    "Internal Std. Concentrations: "
+                                                                ),
+                                                                dash_table.DataTable(
+                                                                    id="int_std_table",
+                                                                    columns=[
+                                                                        {
+                                                                            "name": "Spot",
+                                                                            "id": "Spot",
+                                                                            "renamable": False,
+                                                                        },
+                                                                        {
+                                                                            "name": "Int. Std. Conc.",
+                                                                            "id": "Int. Std. Conc.",
+                                                                            "renamable": False,
+                                                                        },
+                                                                        {
+                                                                            "name": "Int. Std. 1 stdev %",
+                                                                            "id": "Int. Std. 1 stdev %",
+                                                                            "renamable": False,
+                                                                        },
+                                                                    ],
+                                                                    style_table={
+                                                                        "overflowX": "auto",
+                                                                        "height": 400,
+                                                                        "width": "50vh",
+                                                                    },
+                                                                    fixed_rows={
+                                                                        "headers": True
+                                                                    },
+                                                                    style_cell={
+                                                                        # all three widths are needed
+                                                                        "minWidth": "20px",
+                                                                        "width": "20px",
+                                                                        "maxWidth": "20px",
+                                                                        "overflow": "hidden",
+                                                                        "textOverflow": "ellipsis",
+                                                                    },
+                                                                    style_data_conditional=[
+                                                                        {
+                                                                            "if": {
+                                                                                "row_index": "odd"
+                                                                            },
+                                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                                        }
+                                                                    ],
+                                                                    style_header={
+                                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                                        "fontWeight": "bold",
+                                                                    },
+                                                                    editable=True,
+                                                                    row_deletable=False,
+                                                                ),
+                                                            ],
+                                                            width=3,
+                                                        ),
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    children=[
+                                                                        "",
+                                                                        html.Div(
+                                                                            id="table_header",
+                                                                            style={
+                                                                                "display": "inline"
+                                                                            },
                                                                         ),
                                                                     ]
                                                                 ),
+                                                                dash_table.DataTable(
+                                                                    id="concentrations_table",
+                                                                    columns=[
+                                                                        {
+                                                                            "name": "Spot",
+                                                                            "id": "Spot",
+                                                                            "renamable": False,
+                                                                        },
+                                                                        {
+                                                                            "name": "Int. Std. Conc.",
+                                                                            "id": "Int. Std. Conc.",
+                                                                            "renamable": False,
+                                                                        },
+                                                                        {
+                                                                            "name": "Int. Std. 1 stdev %",
+                                                                            "id": "Int. Std. 1 stdev %",
+                                                                            "renamable": False,
+                                                                        },
+                                                                    ]
+                                                                    + [
+                                                                        {
+                                                                            "name": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "id": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "renamable": False,
+                                                                        }
+                                                                        for i in range(
+                                                                            1, 10
+                                                                        )
+                                                                    ],
+                                                                    style_table={
+                                                                        "overflowX": "auto",
+                                                                        "height": 400,
+                                                                        "width": "80vh",
+                                                                    },
+                                                                    fixed_rows={
+                                                                        "headers": True
+                                                                    },
+                                                                    style_cell={
+                                                                        # all three widths are needed
+                                                                        "minWidth": "100px",
+                                                                        "width": "60px",
+                                                                        "maxWidth": "60px",
+                                                                        "overflow": "hidden",
+                                                                        "textOverflow": "ellipsis",
+                                                                    },
+                                                                    style_data_conditional=[
+                                                                        {
+                                                                            "if": {
+                                                                                "row_index": "odd"
+                                                                            },
+                                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                                        }
+                                                                    ],
+                                                                    style_header={
+                                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                                        "fontWeight": "bold",
+                                                                    },
+                                                                    data=[
+                                                                        {
+                                                                            "analyte-{}".format(
+                                                                                i
+                                                                            ): (
+                                                                                (i - 1)
+                                                                                * 5
+                                                                            )
+                                                                            for i in range(
+                                                                                1, 10
+                                                                            )
+                                                                        }
+                                                                    ],
+                                                                    editable=True,
+                                                                    row_deletable=False,
+                                                                    export_format="xlsx",
+                                                                    export_headers="display",
+                                                                ),
                                                             ]
                                                         ),
-                                                    ],
-                                                    width=4,
-                                                ),
-                                            ],
-                                        )
-                                    ],
-                                    body=True,
-                                    style={"width": "100rem"},
-                                    color="primary",
-                                    inverse=True,
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            [
-                                                html.H4(
-                                                    "Internal Std. Concentrations: "
-                                                ),
-                                                dash_table.DataTable(
-                                                    id="int_std_table",
-                                                    columns=[
-                                                        {
-                                                            "name": "Spot",
-                                                            "id": "Spot",
-                                                            "renamable": False,
-                                                        },
-                                                        {
-                                                            "name": "Int. Std. Conc.",
-                                                            "id": "Int. Std. Conc.",
-                                                            "renamable": False,
-                                                        },
-                                                        {
-                                                            "name": "Int. Std. 1 stdev %",
-                                                            "id": "Int. Std. 1 stdev %",
-                                                            "renamable": False,
-                                                        },
-                                                    ],
-                                                    style_table={
-                                                        "overflowX": "auto",
-                                                        "height": 400,
-                                                        "width" : "50vh"
-                                                    },
-                                                    fixed_rows={"headers": True},
-                                                    style_cell={
-                                                        # all three widths are needed
-                                                        "minWidth": "20px",
-                                                        "width": "20px",
-                                                        "maxWidth": "20px",
-                                                        "overflow": "hidden",
-                                                        "textOverflow": "ellipsis",
-                                                    },
-                                                    style_data_conditional=[
-                                                        {
-                                                            "if": {"row_index": "odd"},
-                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                        }
-                                                    ],
-                                                    style_header={
-                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                        "fontWeight": "bold",
-                                                    },
-                                                    editable=True,
-                                                    row_deletable=False,
-                                                ),
-                                            ],
-                                            width=3,
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                html.H4(
-                                                    children=[
-                                                        "",
-                                                        html.Div(
-                                                            id="table_header",
-                                                            style={"display": "inline"},
-                                                        ),
                                                     ]
-                                                ),
-                                                dash_table.DataTable(
-                                                    id="concentrations_table",
-                                                    columns=[
-                                                        {
-                                                            "name": "Spot",
-                                                            "id": "Spot",
-                                                            "renamable": False,
-                                                        },
-                                                        {
-                                                            "name": "Int. Std. Conc.",
-                                                            "id": "Int. Std. Conc.",
-                                                            "renamable": False,
-                                                        },
-                                                        {
-                                                            "name": "Int. Std. 1 stdev %",
-                                                            "id": "Int. Std. 1 stdev %",
-                                                            "renamable": False,
-                                                        },
-                                                    ]
-                                                    + [
-                                                        {
-                                                            "name": "analyte-{}".format(
-                                                                i
-                                                            ),
-                                                            "id": "analyte-{}".format(
-                                                                i
-                                                            ),
-                                                            "renamable": False,
-                                                        }
-                                                        for i in range(1, 10)
-                                                    ],
-                                                    style_table={
-                                                        "overflowX": "auto",
-                                                        "height": 400,
-                                                        "width": "80vh"
-                                                    },
-                                                    fixed_rows={"headers": True},
-                                                    style_cell={
-                                                        # all three widths are needed
-                                                        "minWidth": "100px",
-                                                        "width": "60px",
-                                                        "maxWidth": "60px",
-                                                        "overflow": "hidden",
-                                                        "textOverflow": "ellipsis",
-                                                    },
-                                                    style_data_conditional=[
-                                                        {
-                                                            "if": {"row_index": "odd"},
-                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                        }
-                                                    ],
-                                                    style_header={
-                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                        "fontWeight": "bold",
-                                                    },
-                                                    data=[
-                                                        {
-                                                            "analyte-{}".format(i): (
-                                                                (i - 1) * 5
-                                                            )
-                                                            for i in range(1, 10)
-                                                        }
-                                                    ],
-                                                    editable=True,
-                                                    row_deletable=False,
-                                                    export_format="xlsx",
-                                                    export_headers="display",
                                                 ),
                                             ]
                                         ),
-                                    ]
+                                    ],
+                                ),
+                                # Hidden div inside the app that stores the intermediate value
+                                dcc.Tab(
+                                    label="Primary Standard data",
+                                    style=tab_style,
+                                    selected_style=tab_selected_style,
+                                    children=[
+                                        html.H3("Choose an analyte to inspect!"),
+                                        dbc.Col(
+                                            [
+                                                dcc.Dropdown(
+                                                    id="analyte_dropdown",
+                                                    multi=False,
+                                                    style={
+                                                        "color": "#212121",
+                                                        "background-color": "none",
+                                                        "width": "50%",
+                                                    },
+                                                    placeholder="Please choose an analyte",
+                                                    value=None,
+                                                ),
+                                                dcc.Graph(id="drift_correct_fig"),
+                                            ]
+                                        ),
+                                    ],
                                 ),
                             ]
-                        ),
+                        )
                     ],
                 ),
             ]
@@ -865,10 +935,9 @@ text_color = "Black"
     Input("upload-data", "contents"),
     State("upload-data", "filename"),
 )
-
 def get_data(contents, filename):
     if filename == None:
-        #arbitrary place holders until data are uploaded
+        # arbitrary place holders until data are uploaded
         spot_list = [{"label": "please upload some data", "value": "None"}]
         data = pd.DataFrame()
         columns = [
@@ -951,58 +1020,67 @@ def plot(spot, stored_data, interval_slider, int_std, filename):
             data.set_index("SampleLabel", inplace=True)
             # filter for spot chosen
             df = data.loc[spot, :]
-            
+
             # get time in units of seconds
             df["Time"] = df["Time"] / 1000
-            
-            #get analyte list
+
+            # get analyte list
             elements = df.iloc[:, 1:].columns.tolist()
-            
-            #interval positions for background and signal to keep
+
+            # interval positions for background and signal to keep
             bkgd_start_idx = np.where(df["Time"] > interval_slider[0])[0][0]
             bkgd_stop_idx = np.where(df["Time"] > interval_slider[1])[0][0]
             int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
             int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
-            
 
-            for e,i in zip(elements,range(len(elements))):
+            for e, i in zip(elements, range(len(elements))):
                 if e == int_std:
                     break
             int_std_loc = i
-            
-            # convert spot data to numpy array        
+
+            # convert spot data to numpy array
             df_n = df.to_numpy()
-            
+
             # get median background counts per second for each analyte
-            bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
-            
+            bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+
             # get detection limits for each analyte: 3 std devs from bkgd_data
-            detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-            
+            detection_limits = (
+                np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
+            )
+
             # subtract background from interval signal
-            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
-            
-            # normalize background corrected data to internal standard data 
-            bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
-            
+            bkgd_correct_data = df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data
+
+            # normalize background corrected data to internal standard data
+            bkgd_correct_normal_data = (
+                bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
+            )
+
             # median values for normalized data for interval
-            bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
-            
+            bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+
             # flag median values that are below detection limit or 0 with -9999. This flag
             # is used later in laser calc to say they are "b.d.l"
-            bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
-            bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) == 0 ] = -9999
-            
+            bkgd_correct_med[
+                np.median(bkgd_correct_data, axis=0) <= detection_limits
+            ] = -9999
+            bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+
             # standard error of the normalized data over the chosen interval
-            se = bkgd_correct_normal_data.std(axis = 0) / np.sqrt(abs(int_stop_idx - int_start_idx))
-            
+            se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
+                abs(int_stop_idx - int_start_idx)
+            )
+
             # relative standard error
-            rel_se = 100* (se / bkgd_correct_med)
-            
+            rel_se = 100 * (se / bkgd_correct_med)
+
             # turn numpy array into pandas dataframe and add back in time column.
             # This step makes it easier to plot below
-            bkgd_correct_normal_data = pd.DataFrame(bkgd_correct_normal_data,columns = elements)
-            bkgd_correct_normal_data['Time'] = df_n[int_start_idx:int_stop_idx,0]
+            bkgd_correct_normal_data = pd.DataFrame(
+                bkgd_correct_normal_data, columns=elements
+            )
+            bkgd_correct_normal_data["Time"] = df_n[int_start_idx:int_stop_idx, 0]
 
             # make the plots
             fig = make_subplots(
@@ -1122,6 +1200,7 @@ def plot(spot, stored_data, interval_slider, int_std, filename):
 
             return fig, error_fig
 
+
 # add "recorded" data to table for eventual export
 @app.callback(
     Output("adding-rows-table", "data"),
@@ -1153,7 +1232,7 @@ def add_row(
         else:
             # get information for last button that was clicked in app
             changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
-            
+
             # if that button was the record button, save all the information from above
             if "record_btn" in changed_id:
 
@@ -1168,27 +1247,36 @@ def add_row(
                 int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
                 int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
 
-                
                 elements = df.iloc[:, 1:].columns.tolist()
 
-                for e,i in zip(elements,range(len(elements))):
+                for e, i in zip(elements, range(len(elements))):
                     if e == int_std:
                         break
                 int_std_loc = i
-                        
+
                 df_n = df.to_numpy()
-                bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
-                detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-                bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
-                bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
-                bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
-                bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
-                bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) == 0 ] = -9999
-                se = bkgd_correct_normal_data.std(axis = 0) / np.sqrt(abs(int_stop_idx - int_start_idx))
-                rel_se = 100* (se / bkgd_correct_med)
-                bkgd_correct_normal_data = pd.DataFrame(bkgd_correct_normal_data,columns = elements)
-                bkgd_correct_normal_data['Time'] = df_n[int_start_idx:int_stop_idx,0]
-                
+                bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+                detection_limits = (
+                    np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
+                )
+                bkgd_correct_data = df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data
+                bkgd_correct_normal_data = (
+                    bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
+                )
+                bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+                bkgd_correct_med[
+                    np.median(bkgd_correct_data, axis=0) <= detection_limits
+                ] = -9999
+                bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+                se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
+                    abs(int_stop_idx - int_start_idx)
+                )
+                rel_se = 100 * (se / bkgd_correct_med)
+                bkgd_correct_normal_data = pd.DataFrame(
+                    bkgd_correct_normal_data, columns=elements
+                )
+                bkgd_correct_normal_data["Time"] = df_n[int_start_idx:int_stop_idx, 0]
+
                 # inserting all the metadata about bkgd and interval
                 # start and stop times as well as the int std cps value
                 row_data = list(bkgd_correct_med) + list(rel_se)
@@ -1204,7 +1292,8 @@ def add_row(
 
             return rows
 
-# change sample next and previous buttons callback 
+
+# change sample next and previous buttons callback
 @app.callback(
     Output("spot_dropdown", "value"),
     [
@@ -1216,8 +1305,7 @@ def add_row(
 )
 def move_sample(next_clicks, prev_clicks, stored_data, spot, filename):
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
-    
-    
+
     if filename == None:
 
         return spot
@@ -1234,13 +1322,12 @@ def move_sample(next_clicks, prev_clicks, stored_data, spot, filename):
 
             spots = list(data.index.unique())
             current_spot_idx = spots.index(spot)
-            
+
             # moving the spot list one forward or backward based on
             # which button is clicked
-            
-                
+
             if next_clicks != 0 or prev_clicks != 0:
-                
+
                 if "next_btn" in changed_id:
 
                     new_spot_idx = current_spot_idx + 1
@@ -1257,10 +1344,11 @@ def move_sample(next_clicks, prev_clicks, stored_data, spot, filename):
                         new_spot_idx = 1
 
                 return spots[new_spot_idx]
-            
+
+
 #%%
 # LaserTRAM profiler
-# This is relatively uncommented because it is functionally the same as 
+# This is relatively uncommented because it is functionally the same as
 # the LaserTRAM tab functions above. Where different it will be commented.
 
 # upload data callback
@@ -1348,36 +1436,39 @@ def plot_profile(stored_data, interval_slider, int_std, filename):
         # get data from stored data. No need to filter for spots here
         df = pd.read_json(stored_data, orient="split")
         df.dropna(inplace=True)
-        
 
         elements = df.iloc[:, 1:].columns.tolist()
         bkgd_start_idx = np.where(df["Time"] > interval_slider[0])[0][0]
         bkgd_stop_idx = np.where(df["Time"] > interval_slider[1])[0][0]
         int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
         int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
-        
-        
-        for e,i in zip(elements,range(len(elements))):
+
+        for e, i in zip(elements, range(len(elements))):
             if e == int_std:
                 break
         int_std_loc = i
-                
+
         df_n = df.to_numpy()
         # int_std_loc = [elements.index(i) for i in elements if int_std in i]
-        bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
-        detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-        bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
-        bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
-        bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
-        bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
-        bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) == 0 ] = -9999
-        se = bkgd_correct_normal_data.std(axis = 0) / np.sqrt(abs(int_stop_idx - int_start_idx))
-        rel_se = 100* (se / bkgd_correct_med)
-        bkgd_correct_normal_data = pd.DataFrame(bkgd_correct_normal_data,columns = elements)
-        bkgd_correct_normal_data['Time'] = df_n[int_start_idx:int_stop_idx,0]
-            
-        
-        
+        bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+        detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
+        bkgd_correct_data = df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data
+        bkgd_correct_normal_data = (
+            bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
+        )
+        bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+        bkgd_correct_med[
+            np.median(bkgd_correct_data, axis=0) <= detection_limits
+        ] = -9999
+        bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+        se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
+            abs(int_stop_idx - int_start_idx)
+        )
+        rel_se = 100 * (se / bkgd_correct_med)
+        bkgd_correct_normal_data = pd.DataFrame(
+            bkgd_correct_normal_data, columns=elements
+        )
+        bkgd_correct_normal_data["Time"] = df_n[int_start_idx:int_stop_idx, 0]
 
         fig = make_subplots(
             rows=1,
@@ -1443,7 +1534,7 @@ def plot_profile(stored_data, interval_slider, int_std, filename):
             autosize=True,
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            title_text= "Profile: {}".format(filename.replace('.csv',''))
+            title_text="Profile: {}".format(filename.replace(".csv", "")),
         )
 
         fig.update_yaxes(
@@ -1492,7 +1583,8 @@ def plot_profile(stored_data, interval_slider, int_std, filename):
 
         return fig, error_fig
 
-# add data to table after record button is pressed 
+
+# add data to table after record button is pressed
 # --------------
 @app.callback(
     Output("adding-rows-table_p", "data"),
@@ -1527,24 +1619,33 @@ def add_row_p(n_clicks, stored_data, interval_slider, int_std, rows, columns, fi
             int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
             int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
 
-            
-            for e,i in zip(elements,range(len(elements))):
+            for e, i in zip(elements, range(len(elements))):
                 if e == int_std:
                     break
             int_std_loc = i
-                    
+
             df_n = df.to_numpy()
-            bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)
-            detection_limits = np.std(df_n[bkgd_start_idx:bkgd_stop_idx,1:],axis = 0)*3
-            bkgd_correct_data = df_n[int_start_idx:int_stop_idx,1:] - bkgd_data
-            bkgd_correct_normal_data = bkgd_correct_data / bkgd_correct_data[:,int_std_loc][:,None]
-            bkgd_correct_med = np.median(bkgd_correct_normal_data,axis = 0)
-            bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) <= detection_limits] = -9999
-            bkgd_correct_med[np.median(bkgd_correct_data,axis = 0) == 0 ] = -9999
-            se = bkgd_correct_normal_data.std(axis = 0) / np.sqrt(abs(int_stop_idx - int_start_idx))
-            rel_se = 100* (se / bkgd_correct_med)
-            bkgd_correct_normal_data = pd.DataFrame(bkgd_correct_normal_data,columns = elements)
-            bkgd_correct_normal_data['Time'] = df_n[int_start_idx:int_stop_idx,0]
+            bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+            detection_limits = (
+                np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
+            )
+            bkgd_correct_data = df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data
+            bkgd_correct_normal_data = (
+                bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
+            )
+            bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+            bkgd_correct_med[
+                np.median(bkgd_correct_data, axis=0) <= detection_limits
+            ] = -9999
+            bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+            se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
+                abs(int_stop_idx - int_start_idx)
+            )
+            rel_se = 100 * (se / bkgd_correct_med)
+            bkgd_correct_normal_data = pd.DataFrame(
+                bkgd_correct_normal_data, columns=elements
+            )
+            bkgd_correct_normal_data["Time"] = df_n[int_start_idx:int_stop_idx, 0]
 
             row_data = list(bkgd_correct_med) + list(rel_se)
             row_data.insert(0, "{}_spot_{}".format(filename.replace(".csv", ""), spot))
@@ -1558,6 +1659,7 @@ def add_row_p(n_clicks, stored_data, interval_slider, int_std, rows, columns, fi
             rows.append({c["id"]: r for c, r in zip(columns, row_data)})
 
         return rows
+
 
 # jump interval based on input value and button clicks callback
 # ----------
@@ -1576,9 +1678,9 @@ def jump(n_clicks_f, n_clicks_b, step_val, filename, interval_slider):
         return interval_slider
 
     else:
-        #this jumps the interval by the amount specified in the step_val input 
+        # this jumps the interval by the amount specified in the step_val input
         # box. Checks to see which button was clicked and then acts accordingly
-        # e.g. moving the interval forward or backwards 
+        # e.g. moving the interval forward or backwards
         if n_clicks_f != 0 or n_clicks_b != 0:
 
             changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
@@ -1618,7 +1720,7 @@ def jump(n_clicks_f, n_clicks_b, step_val, filename, interval_slider):
     State("table_header", "children"),
 )
 def get_ratio_data(contents, filename, columns, int_std_columns, header):
-    # list of standard reference materials currently supported. This can be a 
+    # list of standard reference materials currently supported. This can be a
     # fluid list based on what is in the spreadsheet with accepted values
     pubstandards = [
         "BCR-2G",
@@ -1639,7 +1741,7 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         "T1-G",
         "StHs680-G",
     ]
-    
+
     if filename == None:
         # arbitrary fillers when no data is uploaded
         calib_std_list = [{"label": "Choose calibration std.", "value": "None"}]
@@ -1650,7 +1752,7 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         calib_std = None
 
     elif "xls" in filename:
-        #retrieve data from uploaded file. This is the output from the above
+        # retrieve data from uploaded file. This is the output from the above
         # tabs (either lasertram or lasertram profiler)
         content_type, content_string = contents.split(",")
 
@@ -1686,9 +1788,9 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         data.set_index("sample", inplace=True)
 
         calib_std_list = [{"label": std, "value": std} for std in potential_standards]
-        # currently only supports 43Ca or 29Si as calibration standards. Will 
+        # currently only supports 43Ca or 29Si as calibration standards. Will
         # adjust this soon. DONT FORGET
-        
+
         if data["norm"].unique()[0] == "43Ca":
             int_std_data = pd.DataFrame(
                 {"Spot": spots, "CaO wt%": 10, "CaO 1stdev%": 1}, index=data.index
@@ -1716,7 +1818,8 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         calib_std,
     )
 
-#upload standard reference material sheet callback
+
+# upload standard reference material sheet callback
 @app.callback(
     [Output("stored_stds", "data"),],
     Input("upload-stds", "contents"),
@@ -1746,13 +1849,17 @@ def get_stds(contents, filename):
 
     return (data.to_json(orient="split"),)
 
+
 # calculate concentrations based on uploaded data and chosen calibration
-# standard from dropdown 
+# standard from dropdown
 @app.callback(
     [
         Output("concentrations_table", "data"),
         Output("concentrations_table", "columns"),
         Output("table_header", "children"),
+        Output("analyte_dropdown", "options"),
+        Output("analyte_dropdown", "value"),
+        Output("stored_calibstd_data", "data"),
     ],
     [
         Input("stored_data_c", "data"),
@@ -1766,13 +1873,13 @@ def get_stds(contents, filename):
 )
 # This is the money maker function that does all the heavy lifting.
 def calculate_concentrations(
-    stored_data, stds_data, stds, calib_std, n_clicks, table_data, header
+    stored_data, stds_data, stds, calib_std, n_clicks, table_data, header,
 ):
-    # dont do anything if the button hasn't been clicked. Need to prevent 
+    # dont do anything if the button hasn't been clicked. Need to prevent
     # error from being thrown
     if n_clicks < 1:
         raise exceptions.PreventUpdate
-        
+
     # once clicked it's go time
     if n_clicks >= 1:
         # get data and analyte list
@@ -1796,6 +1903,9 @@ def calculate_concentrations(
                 or "long" in analyte
             )
         ]
+
+        analyte_list = [{"label": analyte, "value": analyte} for analyte in myanalytes]
+
         # myanalytes.remove(data['norm'].unique()[0])
 
         spots = list(data.index.unique())
@@ -1835,8 +1945,6 @@ def calculate_concentrations(
         table_data_df["sample"] = stds_column
         table_data_df.set_index("sample", inplace=True)
 
-        
-
         # list of columns that pertain to analyte uncertainties
         myuncertainties = [analyte + "_se" for analyte in myanalytes]
 
@@ -1862,10 +1970,10 @@ def calculate_concentrations(
         # analyte to the element used as the internal standard
         std_conc_ratios = []
         myanalytes_nomass = []
-        # go through each analyte and check to see whether or not it needs to be 
+        # go through each analyte and check to see whether or not it needs to be
         # drift corrected. This is outlined in the documentation for the criteria
-        # if RMSE < std err of mean then drift correct. Else just take mean of 
-        # calibration standard data 
+        # if RMSE < std err of mean then drift correct. Else just take mean of
+        # calibration standard data
         for j in range(len(myanalytes)):
 
             # Getting regression statistics on analyte normalized ratios through time
@@ -1917,7 +2025,7 @@ def calculate_concentrations(
         if int_std == "43Ca":
             ppm = 1e4 * (oxide * 40.078 / (40.078 + 15.999))
         elif int_std == "29Si":
-            ppm = 1e4 * (oxide * 28.086 / (28.086 + 2*15.999))
+            ppm = 1e4 * (oxide * 28.086 / (28.086 + 2 * 15.999))
         return ppm
 
     # all of the samples in your input sheet that are NOT potential calibration standards
@@ -2010,7 +2118,7 @@ def calculate_concentrations(
             )
             concentrations_list.append(concentrations)
 
-    # All of our samples that are not potential secondary standards. 
+    # All of our samples that are not potential secondary standards.
     # The concentrations for the internal standard are specified by the user
     # in the left table. Defaults to 10 for CaO and 50 for SiO2
 
@@ -2186,7 +2294,7 @@ def calculate_concentrations(
                 )
 
         std_conc_stds = np.array(std_conc_stds)
-        # incorporate uncertainty in calibration standard 
+        # incorporate uncertainty in calibration standard
         if calib_uncertainty == True:
             unknown_stds_values = concentration * np.sqrt(
                 t1[:, np.newaxis]
@@ -2217,8 +2325,8 @@ def calculate_concentrations(
 
     final_standards_list = []
     final_unknowns_list = []
-    # concatenates the concentrations and uncertainties dataframes such that there 
-    # is now one dataframe for each secondary standard that contains both the concentrations 
+    # concatenates the concentrations and uncertainties dataframes such that there
+    # is now one dataframe for each secondary standard that contains both the concentrations
     # and concentrations of the uncertainties for each spot
 
     for concentration, standard, name in zip(
@@ -2265,7 +2373,7 @@ def calculate_concentrations(
             df.insert(loc=2, column="SiO2 1stdev%", value=unknown_int_std_unc)
 
         final_unknowns_list.append(df)
-        
+
     # get final dataframes for secondary standards and unknowns
     df_standards = pd.concat(final_standards_list)
     df_unknowns = pd.concat(final_unknowns_list)
@@ -2274,21 +2382,159 @@ def calculate_concentrations(
     df_all = pd.concat([df_unknowns, df_standards])
     df_all.reset_index(inplace=True)
     df_all.drop("sample", axis="columns", inplace=True)
-    
+
     # put it in the table on the right
     final_columns = [{"id": c, "name": c} for c in df_all.columns]
 
     header = "Calculated Concentrations: "
 
-    return df_all.to_dict("records"), final_columns, header
+    init_analyte = myanalytes[0]
 
-                
-                
-                
-                
-        
-        
+    return (
+        df_all.to_dict("records"),
+        final_columns,
+        header,
+        analyte_list,
+        init_analyte,
+        calib_std_data.to_json(orient="split"),
+    )
 
+
+@app.callback(
+    Output("drift_correct_fig", "figure"),
+    [
+        Input("analyte_dropdown", "value"),
+        Input("stored_calibstd_data", "data"),
+        Input("calculate_btn", "n_clicks"),
+    ],
+)
+def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
+
+    if n_clicks < 1:
+        raise exceptions.PreventUpdate
+    else:
+        calib_std_data = pd.read_json(calib_std_data, orient="split")
+        # x = np.arange(0,calib_std_data.shape[0],1)
+        x = calib_std_data["index"].to_numpy()
+        y = calib_std_data[drift_analyte].to_numpy()
+
+        X = sm.add_constant(x)
+        # Note the difference in argument order
+        model = sm.OLS(y, X).fit()
+        # now generate predictions
+        ypred = model.predict(X)
+
+        # calc rmse
+        RMSE = rmse(y, ypred)
+
+        slope = model.params[1]
+        intercept = model.params[0]
+
+        mean = np.mean(y)
+        std = np.std(y)
+        se = 100 * ((std / mean) / np.sqrt(len(y)))
+
+        # scatter plot
+        drift_fig = px.scatter(
+            calib_std_data,
+            x="index",
+            y=drift_analyte,
+            title="Normalized ratios for {} over time".format(
+                list(calib_std_data.index.unique())[0]
+            ),
+        )
+        drift_fig.update_traces(
+            marker=dict(size=20, color="#8C190D", line=dict(width=2, color="black")),
+            selector=dict(mode="markers"),
+        )
+
+        # line for the mean value of the calibration standard normalized values
+        drift_fig.add_hline(
+            y=mean,
+            line_width=3,
+            line_dash="dash",
+            line_color="green",
+            name="observed mean",
+        )
+
+        # line for the linear regression through the points
+        drift_fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=ypred,
+                mode="lines",
+                line=dict(color="black", width=3, dash="dash"),
+                name="regression",
+            )
+        )
+
+        # annotations for the std error of the mean, the RMSE, and whether or not its drift corrected
+        # this gets tripped if the RMSE is less than the relative standard error of the mean
+        drift_fig.add_annotation(x=0, y=mean, text="Mean", showarrow=True, arrowhead=6)
+        drift_fig.add_annotation(
+            xref="x domain",
+            yref="y domain",
+            x=0,
+            y=1.05,
+            text="Std. Err. of mean %: <b><i>{}</i></b>".format(np.round(se, 3)),
+            showarrow=False,
+        )
+        drift_fig.add_annotation(
+            xref="x domain",
+            yref="y domain",
+            x=0.15,
+            y=1.05,
+            text="RMSE of regression % : <b><i>{}</i></b>".format(
+                np.round(100 * RMSE / mean, 3)
+            ),
+            showarrow=False,
+        )
+        if 100 * RMSE / mean < se:
+            drift_check = "True"
+
+            drift_fig.add_annotation(
+                xref="x domain",
+                yref="y domain",
+                x=0.4,
+                y=1.05,
+                text="Drift Corrected: <b>{} <br> <i>y = {}x + {}</i></b>".format(
+                    drift_check, np.round(slope, 2), np.round(intercept, 2),
+                ),
+                showarrow=False,
+            )
+
+        else:
+            drift_check = "False"
+
+            drift_fig.add_annotation(
+                xref="x domain",
+                yref="y domain",
+                x=0.4,
+                y=1.05,
+                text="Drift Corrected: <b>{}</b>".format(drift_check),
+                showarrow=False,
+            )
+
+        drift_fig.update_layout(
+            template="simple_white",
+            font=dict(family="Gill Sans", size=20, color=text_color),
+            autosize=True,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+        )
+
+        drift_fig.update_yaxes(title_text="{} Normalized Ratio".format(drift_analyte),)
+
+        drift_fig.update_xaxes(
+            title_text="Analysis Number",
+            tickcolor=text_color,
+            linewidth=2,
+            linecolor=text_color,
+            row=1,
+            col=1,
+        )
+
+    return drift_fig
 
 
 if __name__ == "__main__":
