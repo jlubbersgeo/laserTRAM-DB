@@ -740,16 +740,7 @@ app.layout = html.Div(
                                                                             "id": "Spot",
                                                                             "renamable": False,
                                                                         },
-                                                                        {
-                                                                            "name": "Int. Std. Conc.",
-                                                                            "id": "Int. Std. Conc.",
-                                                                            "renamable": False,
-                                                                        },
-                                                                        {
-                                                                            "name": "Int. Std. 1 stdev %",
-                                                                            "id": "Int. Std. 1 stdev %",
-                                                                            "renamable": False,
-                                                                        },
+                                                            
                                                                     ],
                                                                     style_table={
                                                                         "overflowX": "auto",
@@ -906,6 +897,78 @@ app.layout = html.Div(
                                                     value=None,
                                                 ),
                                                 dcc.Graph(id="drift_correct_fig"),
+                                                dash_table.DataTable(
+                                                    
+                                                                    id="calib_std_table",
+                                                                    columns=[
+                                                                        {
+                                                                            "name": "Spot",
+                                                                            "id": "Spot",
+                                                                            "renamable": False,
+                                                                        },
+                                                                        
+                                                                    ]
+                                                                    + [
+                                                                        {
+                                                                            "name": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "id": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "renamable": False,
+                                                                        }
+                                                                        for i in range(
+                                                                            1, 10
+                                                                        )
+                                                                    ],
+                                                                    style_table={
+                                                                        "overflowX": "auto",
+                                                                        "height": 400,
+                                                                        "width": "100vh",
+                                                                    },
+                                                                    fixed_rows={
+                                                                        "headers": True
+                                                                    },
+                                                                    style_cell={
+                                                                        # all three widths are needed
+                                                                        "minWidth": "100px",
+                                                                        "width": "60px",
+                                                                        "maxWidth": "60px",
+                                                                        "overflow": "hidden",
+                                                                        "textOverflow": "ellipsis",
+                                                                    },
+                                                                    style_data_conditional=[
+                                                                        {
+                                                                            "if": {
+                                                                                "row_index": "odd"
+                                                                            },
+                                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                                        }
+                                                                    ],
+                                                                    style_header={
+                                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                                        "fontWeight": "bold",
+                                                                    },
+                                                                    data=[
+                                                                        {
+                                                                            "analyte-{}".format(
+                                                                                i
+                                                                            ): (
+                                                                                (i - 1)
+                                                                                * 5
+                                                                            )
+                                                                            for i in range(
+                                                                                1, 10
+                                                                            )
+                                                                        }
+                                                                    ],
+                                                                    editable=True,
+                                                                    row_deletable=False,
+                                                                    export_format="xlsx",
+                                                                    export_headers="display",
+                                                                
+                                                    )
                                             ]
                                         ),
                                     ],
@@ -1860,6 +1923,8 @@ def get_stds(contents, filename):
         Output("analyte_dropdown", "options"),
         Output("analyte_dropdown", "value"),
         Output("stored_calibstd_data", "data"),
+        Output("calib_std_table", "data"),
+        Output("calib_std_table", "columns")
     ],
     [
         Input("stored_data_c", "data"),
@@ -2383,13 +2448,30 @@ def calculate_concentrations(
     df_all.reset_index(inplace=True)
     df_all.drop("sample", axis="columns", inplace=True)
 
-    # put it in the table on the right
-    final_columns = [{"id": c, "name": c} for c in df_all.columns]
+    
 
     header = "Calculated Concentrations: "
 
     init_analyte = myanalytes[0]
-
+    
+    table_df = calib_std_data.copy()
+    table_df.loc['mean'] = table_df.mean()
+    table_df.loc['mean','Spot'] = 'average'
+    table_df.loc['mean','bkgd_start':'int_stop'] = np.nan
+    table_df.loc['mean','norm'] = table_df['norm'][0]
+    
+    index_as_list = table_df.index.to_list()
+    idx = index_as_list.index('mean')
+    index_as_list[idx] = calib_std
+    table_df.index = index_as_list
+    table_df.reset_index(inplace = True)
+    columns_as_list = table_df.columns.to_list()
+    columns_as_list[0] = 'Standard'
+    table_df.columns = columns_as_list 
+    
+    # put it in the table on the right
+    final_columns = [{"id": c, "name": c} for c in df_all.columns.to_list()]
+    calib_std_columns = [{"id": c, "name": c} for c in columns_as_list]
     return (
         df_all.to_dict("records"),
         final_columns,
@@ -2397,6 +2479,8 @@ def calculate_concentrations(
         analyte_list,
         init_analyte,
         calib_std_data.to_json(orient="split"),
+        table_df.to_dict("records"),
+        calib_std_columns
     )
 
 
@@ -2414,7 +2498,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         raise exceptions.PreventUpdate
     else:
         calib_std_data = pd.read_json(calib_std_data, orient="split")
-        # x = np.arange(0,calib_std_data.shape[0],1)
+        norm_analyte = calib_std_data["norm"].unique().tolist()[0]
         x = calib_std_data["index"].to_numpy()
         y = calib_std_data[drift_analyte].to_numpy()
 
@@ -2523,7 +2607,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
             plot_bgcolor="rgba(0,0,0,0)",
         )
 
-        drift_fig.update_yaxes(title_text="{} Normalized Ratio".format(drift_analyte),)
+        drift_fig.update_yaxes(title_text="{}/{}".format(drift_analyte,norm_analyte))
 
         drift_fig.update_xaxes(
             title_text="Analysis Number",
