@@ -52,6 +52,7 @@ python lasertram-db.py
 
 ### Caveats
 
+#### Installation
 On windows you may need to add the following channel for downloading the ```requirements.txt```file:
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
@@ -62,6 +63,22 @@ conda config --append channels conda-forge
 conda install --file requirements.txt
 python lasertram-db.py
 ```
+
+#### Internal Standards
+While you can technically use any analyte for an internal standard in ```LaserTRAM``` (i.e., it will still generate a ratio normalized to any analyte in the experiment), concentrations will only be calculated in ```LaserCalc``` from internal standards that can be make the following oxides:
+- SiO2 (e.g., 29Si)
+- TiO2 (e.g., 47Ti)
+- Al2O3
+- Cr2O3
+- MnO
+- FeO
+- K2O
+- CaO (e.g. 43Ca)
+- Na2O
+- NiO
+
+
+***Just because you can doesn't mean you should***. Ideally the internal standard analyte is one in which the concentration is well constrained already. 
 
 ## Demos
 Video tutorials on how to use each piece of software can be found at the following links:
