@@ -28,6 +28,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 
+#this should hopefully be enough colors. Repeats after 48...
 colorlist = [
     "#2E91E5",
     "#E15F99",
