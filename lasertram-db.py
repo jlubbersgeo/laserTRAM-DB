@@ -27,6 +27,7 @@ from statsmodels.tools.eval_measures import rmse
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
+from mendeleev import element as e
 
 #this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -1815,6 +1816,115 @@ def jump(n_clicks_f, n_clicks_b, step_val, filename, interval_slider):
 
 
 #%%
+#these two functions are for converting oxide concentrations of internal std
+# to ppm.
+
+def analyte_to_oxide(int_std):
+    """
+    return the most likely EPMA oxide for a given internal standard analyte
+
+    Parameters
+    ----------
+    int_std : string
+        the internal standard used from LaserTRAM. This is in the 'norm' column
+        of the LaserTRAM output
+        
+        currently supported elements:
+            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O'
+
+    Returns
+    -------
+    oxide : string
+        the equivalent EPMA oxide for a given internal standard analyte
+        e.g. 29Si --> SiO2
+             43Ca --> CaO
+
+    """
+    
+    el = [i for i in int_std if not i.isdigit()]
+    
+    if len(el) == 2:
+        
+        element = el[0] + el[1]
+        
+    else:
+        
+        element = el[0]
+        
+    
+    oxides = ['SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O','NiO']
+    
+    for o in oxides:
+        
+        if element in o:
+            
+            oxide = o
+            
+    return oxide
+def oxide_to_ppm(wt_percent,int_std):
+    """
+    convert concentration internal standard analyte oxide in weight percent to 
+    concentration ppm for a 1D series of data
+
+    Parameters
+    ----------
+    wt_percent : array-like
+        the oxide values to be converted to ppm
+    int_std : string
+        the internal standard used in the experiment (e.g., '29Si', '43Ca', 
+                                                      '47Ti')
+        currently supported elements:
+            
+            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O'
+
+    Returns
+    -------
+    ppm : array-like
+        concentrations in ppm the same shape as the wt_percent input
+
+    """
+    
+    el = [i for i in int_std if not i.isdigit()]
+    
+    if len(el) == 2:
+        
+        element = el[0] + el[1]
+        
+    else:
+        
+        element = el[0]
+        
+    
+    oxides = ['SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O','NiO']
+    
+    for o in oxides:
+        
+        if element in o:
+            
+            oxide = o
+    
+    s = oxide.split('O')
+    cat_subscript = s[0]
+    an_subscript = s[1]
+    
+    cat_subscript = [i for i in cat_subscript if i.isdigit()]
+    if cat_subscript:
+        cat_subscript = int(cat_subscript[0])
+    else:
+        cat_subscript = 1
+    
+    an_subscript = [i for i in an_subscript if i.isdigit()]
+    if an_subscript:
+        an_subscript = int(an_subscript[0])
+    else:
+        an_subscript = 1
+        
+        
+    ppm = 1e4 * ((wt_percent * e(element).atomic_weight * cat_subscript) / ( e(element).atomic_weight + e('O').atomic_weight*an_subscript))
+    return ppm
+
+
+
 # LaserCalc
 # upload data from lasertram output button
 @app.callback(
@@ -2135,34 +2245,21 @@ def calculate_concentrations(
         # std_conc_ratios = pd.DataFrame(np.array(std_conc_ratios)[np.newaxis,:],columns = myanalytes)
         std_conc_ratios = np.array(std_conc_ratios)
 
-    def oxide_to_ppm(oxide, int_std):
-        if int_std == "43Ca":
-            ppm = 1e4 * (oxide * 40.078 / (40.078 + 15.999))
-        elif int_std == "29Si":
-            ppm = 1e4 * (oxide * 28.086 / (28.086 + 2 * 15.999))
-        return ppm
-
+    
     # all of the samples in your input sheet that are NOT potential calibration standards
     samples_nostandards = list(np.setdiff1d(stds_column, potential_standards))
+    
+    #get corresponding oxide for internal standard analyte and convert its
+    #concentrations from wt% oxide to ppm. Only works with the supported
+    #list of oides in the 'analyte_to_oxide' function above.
+    oxide = analyte_to_oxide(calib_std_data["norm"].unique()[0])
+    
+    int_std_oxide_array = pd.to_numeric(table_data_df.loc[samples_nostandards, "{} wt%".format(oxide)]).to_numpy()
+    
+    int_std_concentration = oxide_to_ppm(int_std_oxide_array,calib_std_data["norm"].unique()[0])
+    
+    unknown_int_std_unc = pd.to_numeric(table_data_df.loc[samples_nostandards, "{} 1stdev%".format(oxide)]).to_numpy()
 
-    # converting oxide data to ppm for calibration standards
-    if calib_std_data["norm"].unique()[0] == "43Ca":
-        int_std_oxide_array = pd.to_numeric(
-            table_data_df.loc[samples_nostandards, "CaO wt%"]
-        ).to_numpy()
-        int_std_concentration = oxide_to_ppm(int_std_oxide_array, "43Ca")
-
-        unknown_int_std_unc = pd.to_numeric(
-            table_data_df.loc[samples_nostandards, "CaO 1stdev%"]
-        ).to_numpy()
-    elif calib_std_data["norm"].unique()[0] == "29Si":
-        int_std_oxide_array = pd.to_numeric(
-            table_data_df.loc[samples_nostandards, "SiO2 wt%"]
-        )
-        int_std_concentration = oxide_to_ppm(int_std_oxide_array, "29Si")
-        unknown_int_std_unc = pd.to_numeric(
-            table_data_df.loc[samples_nostandards, "SiO2 1stdev%"]
-        )
 
     # getting secondary standards list (potential standards minus calibration standard)
     secondary_standards = potential_standards.copy()
