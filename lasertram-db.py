@@ -27,9 +27,9 @@ from statsmodels.tools.eval_measures import rmse
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
-from mendeleev import element as e
+import mendeleev
 
-#this should hopefully be enough colors. Repeats after 48...
+# this should hopefully be enough colors. Repeats after 48...
 colorlist = [
     "#2E91E5",
     "#E15F99",
@@ -790,7 +790,6 @@ app.layout = html.Div(
                                                                             "id": "Spot",
                                                                             "renamable": False,
                                                                         },
-                                                            
                                                                     ],
                                                                     style_table={
                                                                         "overflowX": "auto",
@@ -948,77 +947,63 @@ app.layout = html.Div(
                                                 ),
                                                 dcc.Graph(id="drift_correct_fig"),
                                                 dash_table.DataTable(
-                                                    
-                                                                    id="calib_std_table",
-                                                                    columns=[
-                                                                        {
-                                                                            "name": "Spot",
-                                                                            "id": "Spot",
-                                                                            "renamable": False,
-                                                                        },
-                                                                        
-                                                                    ]
-                                                                    + [
-                                                                        {
-                                                                            "name": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "id": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "renamable": False,
-                                                                        }
-                                                                        for i in range(
-                                                                            1, 10
-                                                                        )
-                                                                    ],
-                                                                    style_table={
-                                                                        "overflowX": "auto",
-                                                                        "height": 400,
-                                                                        "width": "100vh",
-                                                                    },
-                                                                    fixed_rows={
-                                                                        "headers": True
-                                                                    },
-                                                                    style_cell={
-                                                                        # all three widths are needed
-                                                                        "minWidth": "100px",
-                                                                        "width": "60px",
-                                                                        "maxWidth": "60px",
-                                                                        "overflow": "hidden",
-                                                                        "textOverflow": "ellipsis",
-                                                                    },
-                                                                    style_data_conditional=[
-                                                                        {
-                                                                            "if": {
-                                                                                "row_index": "odd"
-                                                                            },
-                                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                                        }
-                                                                    ],
-                                                                    style_header={
-                                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                                        "fontWeight": "bold",
-                                                                    },
-                                                                    data=[
-                                                                        {
-                                                                            "analyte-{}".format(
-                                                                                i
-                                                                            ): (
-                                                                                (i - 1)
-                                                                                * 5
-                                                                            )
-                                                                            for i in range(
-                                                                                1, 10
-                                                                            )
-                                                                        }
-                                                                    ],
-                                                                    editable=True,
-                                                                    row_deletable=False,
-                                                                    export_format="xlsx",
-                                                                    export_headers="display",
-                                                                
-                                                    )
+                                                    id="calib_std_table",
+                                                    columns=[
+                                                        {
+                                                            "name": "Spot",
+                                                            "id": "Spot",
+                                                            "renamable": False,
+                                                        },
+                                                    ]
+                                                    + [
+                                                        {
+                                                            "name": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "id": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "renamable": False,
+                                                        }
+                                                        for i in range(1, 10)
+                                                    ],
+                                                    style_table={
+                                                        "overflowX": "auto",
+                                                        "height": 400,
+                                                        "width": "100vh",
+                                                    },
+                                                    fixed_rows={"headers": True},
+                                                    style_cell={
+                                                        # all three widths are needed
+                                                        "minWidth": "100px",
+                                                        "width": "60px",
+                                                        "maxWidth": "60px",
+                                                        "overflow": "hidden",
+                                                        "textOverflow": "ellipsis",
+                                                    },
+                                                    style_data_conditional=[
+                                                        {
+                                                            "if": {"row_index": "odd"},
+                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                        }
+                                                    ],
+                                                    style_header={
+                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                        "fontWeight": "bold",
+                                                    },
+                                                    data=[
+                                                        {
+                                                            "analyte-{}".format(i): (
+                                                                (i - 1) * 5
+                                                            )
+                                                            for i in range(1, 10)
+                                                        }
+                                                    ],
+                                                    editable=True,
+                                                    row_deletable=False,
+                                                    export_format="xlsx",
+                                                    export_headers="display",
+                                                ),
                                             ]
                                         ),
                                     ],
@@ -1816,8 +1801,9 @@ def jump(n_clicks_f, n_clicks_b, step_val, filename, interval_slider):
 
 
 #%%
-#these two functions are for converting oxide concentrations of internal std
+# these two functions are for converting oxide concentrations of internal std
 # to ppm.
+
 
 def analyte_to_oxide(int_std):
     """
@@ -1840,28 +1826,40 @@ def analyte_to_oxide(int_std):
              43Ca --> CaO
 
     """
-    
+
     el = [i for i in int_std if not i.isdigit()]
-    
+
     if len(el) == 2:
-        
+
         element = el[0] + el[1]
-        
+
     else:
-        
+
         element = el[0]
-        
-    
-    oxides = ['SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O','NiO']
-    
+
+    oxides = [
+        "SiO2",
+        "TiO2",
+        "Al2O3",
+        "Cr2O3",
+        "MnO",
+        "FeO",
+        "K2O",
+        "CaO",
+        "Na2O",
+        "NiO",
+    ]
+
     for o in oxides:
-        
+
         if element in o:
-            
+
             oxide = o
-            
+
     return oxide
-def oxide_to_ppm(wt_percent,int_std):
+
+
+def oxide_to_ppm(wt_percent, int_std):
     """
     convert concentration internal standard analyte oxide in weight percent to 
     concentration ppm for a 1D series of data
@@ -1883,46 +1881,60 @@ def oxide_to_ppm(wt_percent,int_std):
         concentrations in ppm the same shape as the wt_percent input
 
     """
-    
+
     el = [i for i in int_std if not i.isdigit()]
-    
+
     if len(el) == 2:
-        
+
         element = el[0] + el[1]
-        
+
     else:
-        
+
         element = el[0]
-        
-    
-    oxides = ['SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O','NiO']
-    
+
+    oxides = [
+        "SiO2",
+        "TiO2",
+        "Al2O3",
+        "Cr2O3",
+        "MnO",
+        "FeO",
+        "K2O",
+        "CaO",
+        "Na2O",
+        "NiO",
+    ]
+
     for o in oxides:
-        
+
         if element in o:
-            
+
             oxide = o
-    
-    s = oxide.split('O')
+
+    s = oxide.split("O")
     cat_subscript = s[0]
     an_subscript = s[1]
-    
+
     cat_subscript = [i for i in cat_subscript if i.isdigit()]
     if cat_subscript:
         cat_subscript = int(cat_subscript[0])
     else:
         cat_subscript = 1
-    
+
     an_subscript = [i for i in an_subscript if i.isdigit()]
     if an_subscript:
         an_subscript = int(an_subscript[0])
     else:
         an_subscript = 1
-        
-        
-    ppm = 1e4 * ((wt_percent * e(element).atomic_weight * cat_subscript) / ( e(element).atomic_weight + e('O').atomic_weight*an_subscript))
-    return ppm
 
+    ppm = 1e4 * (
+        (wt_percent * mendeleev.element(element).atomic_weight * cat_subscript)
+        / (
+            mendeleev.element(element).atomic_weight
+            + mendeleev.element("O").atomic_weight * an_subscript
+        )
+    )
+    return ppm
 
 
 # LaserCalc
@@ -2012,22 +2024,31 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         calib_std_list = [{"label": std, "value": std} for std in potential_standards]
         # currently only supports 43Ca or 29Si as calibration standards. Will
         # adjust this soon. DONT FORGET
+        int_std_data = pd.DataFrame(
+            {
+                "Spot": spots,
+                "{} wt%".format(analyte_to_oxide(data["norm"].unique()[0])): 10,
+                "{} 1stdev%".format(analyte_to_oxide(data["norm"].unique()[0])): 1,
+            },
+            index=data.index,
+        )
+        columns = [{"id": c, "name": c} for c in data.columns]
+        int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
+        # if data["norm"].unique()[0] == "43Ca":
+        #     int_std_data = pd.DataFrame(
+        #         {"Spot": spots, "CaO wt%": 10, "CaO 1stdev%": 1}, index=data.index
+        #     )
 
-        if data["norm"].unique()[0] == "43Ca":
-            int_std_data = pd.DataFrame(
-                {"Spot": spots, "CaO wt%": 10, "CaO 1stdev%": 1}, index=data.index
-            )
+        #     columns = [{"id": c, "name": c} for c in data.columns]
+        #     int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
 
-            columns = [{"id": c, "name": c} for c in data.columns]
-            int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
+        # elif data["norm"].unique()[0] == "29Si":
+        #     int_std_data = pd.DataFrame(
+        #         {"Spot": spots, "SiO2 wt%": 50, "SiO2 1stdev%": 1},
+        #     )
 
-        elif data["norm"].unique()[0] == "29Si":
-            int_std_data = pd.DataFrame(
-                {"Spot": spots, "SiO2 wt%": 50, "SiO2 1stdev%": 1},
-            )
-
-            columns = [{"id": c, "name": c} for c in data.columns]
-            int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
+        #     columns = [{"id": c, "name": c} for c in data.columns]
+        #     int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
 
         int_std_table_data = int_std_data.to_dict("records")
         calib_std = potential_standards[0]
@@ -2083,7 +2104,7 @@ def get_stds(contents, filename):
         Output("analyte_dropdown", "value"),
         Output("stored_calibstd_data", "data"),
         Output("calib_std_table", "data"),
-        Output("calib_std_table", "columns")
+        Output("calib_std_table", "columns"),
     ],
     [
         Input("stored_data_c", "data"),
@@ -2118,8 +2139,8 @@ def calculate_concentrations(
                 or "norm" in analyte
                 or "index" in analyte
                 or "Spot" in analyte
-                or "SiO2 wt%" in analyte
-                or "SiO2 1stdev%" in analyte
+                or "wt%" in analyte
+                or "1stdev%" in analyte
                 or "CaO wt%" in analyte
                 or "CaO 1stdev%" in analyte
                 or "start" in analyte
@@ -2245,21 +2266,25 @@ def calculate_concentrations(
         # std_conc_ratios = pd.DataFrame(np.array(std_conc_ratios)[np.newaxis,:],columns = myanalytes)
         std_conc_ratios = np.array(std_conc_ratios)
 
-    
     # all of the samples in your input sheet that are NOT potential calibration standards
     samples_nostandards = list(np.setdiff1d(stds_column, potential_standards))
-    
-    #get corresponding oxide for internal standard analyte and convert its
-    #concentrations from wt% oxide to ppm. Only works with the supported
-    #list of oides in the 'analyte_to_oxide' function above.
-    oxide = analyte_to_oxide(calib_std_data["norm"].unique()[0])
-    
-    int_std_oxide_array = pd.to_numeric(table_data_df.loc[samples_nostandards, "{} wt%".format(oxide)]).to_numpy()
-    
-    int_std_concentration = oxide_to_ppm(int_std_oxide_array,calib_std_data["norm"].unique()[0])
-    
-    unknown_int_std_unc = pd.to_numeric(table_data_df.loc[samples_nostandards, "{} 1stdev%".format(oxide)]).to_numpy()
 
+    # get corresponding oxide for internal standard analyte and convert its
+    # concentrations from wt% oxide to ppm. Only works with the supported
+    # list of oides in the 'analyte_to_oxide' function above.
+    oxide = analyte_to_oxide(calib_std_data["norm"].unique()[0])
+
+    int_std_oxide_array = pd.to_numeric(
+        table_data_df.loc[samples_nostandards, "{} wt%".format(oxide)]
+    ).to_numpy()
+
+    int_std_concentration = oxide_to_ppm(
+        int_std_oxide_array, calib_std_data["norm"].unique()[0]
+    )
+
+    unknown_int_std_unc = pd.to_numeric(
+        table_data_df.loc[samples_nostandards, "{} 1stdev%".format(oxide)]
+    ).to_numpy()
 
     # getting secondary standards list (potential standards minus calibration standard)
     secondary_standards = potential_standards.copy()
@@ -2547,23 +2572,37 @@ def calculate_concentrations(
         # catches normalized ratio flag from lasertram where bdl was -9999
         df[df < 0] = "b.d.l."
         df.insert(loc=0, column="Spot", value=data.loc[name, "Spot"])
-        if calib_std_data["norm"].unique()[0] == "43Ca":
-            df.insert(loc=1, column="CaO wt%", value=stds_data.loc[name, "CaO"] / 1e4)
-            df.insert(
-                loc=2,
-                column="CaO 1stdev%",
-                value=(stds_data.loc[name, "CaO_std"] / stds_data.loc[name, "CaO"])
-                * 100,
-            )
 
-        elif calib_std_data["norm"].unique()[0] == "29Si":
-            df.insert(loc=1, column="SiO2 wt%", value=stds_data.loc[name, "SiO2"] / 1e4)
-            df.insert(
-                loc=2,
-                column="SiO2 1stdev%",
-                value=(stds_data.loc[name, "SiO2_std"] / stds_data.loc[name, "SiO2"])
-                * 100,
+        df.insert(
+            loc=1, column="{} wt%".format(oxide), value=stds_data.loc[name, oxide] / 1e4
+        )
+        df.insert(
+            loc=2,
+            column="{} 1stdev%".format(oxide),
+            value=(
+                stds_data.loc[name, "{}_std".format(oxide)]
+                / stds_data.loc[name, "{}".format(oxide)]
             )
+            * 100,
+        )
+
+        # if calib_std_data["norm"].unique()[0] == "43Ca":
+        #     df.insert(loc=1, column="CaO wt%", value=stds_data.loc[name, "CaO"] / 1e4)
+        #     df.insert(
+        #         loc=2,
+        #         column="CaO 1stdev%",
+        #         value=(stds_data.loc[name, "CaO_std"] / stds_data.loc[name, "CaO"])
+        #         * 100,
+        #     )
+
+        # elif calib_std_data["norm"].unique()[0] == "29Si":
+        #     df.insert(loc=1, column="SiO2 wt%", value=stds_data.loc[name, "SiO2"] / 1e4)
+        #     df.insert(
+        #         loc=2,
+        #         column="SiO2 1stdev%",
+        #         value=(stds_data.loc[name, "SiO2_std"] / stds_data.loc[name, "SiO2"])
+        #         * 100,
+        #     )
 
         final_standards_list.append(df)
 
@@ -2575,13 +2614,17 @@ def calculate_concentrations(
         df = pd.concat([concentration, sample], axis=1)
         df[df < 0] = "b.d.l."
         df.insert(loc=0, column="Spot", value=data.loc[name, "Spot"])
-        if calib_std_data["norm"].unique()[0] == "43Ca":
-            df.insert(loc=1, column="CaO wt%", value=int_std_oxide_array)
-            df.insert(loc=2, column="CaO 1stdev%", value=unknown_int_std_unc)
 
-        elif calib_std_data["norm"].unique()[0] == "29Si":
-            df.insert(loc=1, column="SiO2 wt%", value=int_std_oxide_array)
-            df.insert(loc=2, column="SiO2 1stdev%", value=unknown_int_std_unc)
+        df.insert(loc=1, column="{} wt%".format(oxide), value=int_std_oxide_array)
+        df.insert(loc=2, column="{} 1stdev%".format(oxide), value=unknown_int_std_unc)
+
+        # if calib_std_data["norm"].unique()[0] == "43Ca":
+        #     df.insert(loc=1, column="CaO wt%", value=int_std_oxide_array)
+        #     df.insert(loc=2, column="CaO 1stdev%", value=unknown_int_std_unc)
+
+        # elif calib_std_data["norm"].unique()[0] == "29Si":
+        #     df.insert(loc=1, column="SiO2 wt%", value=int_std_oxide_array)
+        #     df.insert(loc=2, column="SiO2 1stdev%", value=unknown_int_std_unc)
 
         final_unknowns_list.append(df)
 
@@ -2594,27 +2637,25 @@ def calculate_concentrations(
     df_all.reset_index(inplace=True)
     df_all.drop("sample", axis="columns", inplace=True)
 
-    
-
     header = "Calculated Concentrations: "
 
     init_analyte = myanalytes[0]
-    
+
     table_df = calib_std_data.copy()
-    table_df.loc['mean'] = table_df.mean()
-    table_df.loc['mean','Spot'] = 'average'
-    table_df.loc['mean','bkgd_start':'int_stop'] = np.nan
-    table_df.loc['mean','norm'] = table_df['norm'][0]
-    
+    table_df.loc["mean"] = table_df.mean()
+    table_df.loc["mean", "Spot"] = "average"
+    table_df.loc["mean", "bkgd_start":"int_stop"] = np.nan
+    table_df.loc["mean", "norm"] = table_df["norm"][0]
+
     index_as_list = table_df.index.to_list()
-    idx = index_as_list.index('mean')
+    idx = index_as_list.index("mean")
     index_as_list[idx] = calib_std
     table_df.index = index_as_list
-    table_df.reset_index(inplace = True)
+    table_df.reset_index(inplace=True)
     columns_as_list = table_df.columns.to_list()
-    columns_as_list[0] = 'Standard'
-    table_df.columns = columns_as_list 
-    
+    columns_as_list[0] = "Standard"
+    table_df.columns = columns_as_list
+
     # put it in the table on the right
     final_columns = [{"id": c, "name": c} for c in df_all.columns.to_list()]
     calib_std_columns = [{"id": c, "name": c} for c in columns_as_list]
@@ -2626,7 +2667,7 @@ def calculate_concentrations(
         init_analyte,
         calib_std_data.to_json(orient="split"),
         table_df.to_dict("records"),
-        calib_std_columns
+        calib_std_columns,
     )
 
 
@@ -2753,7 +2794,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
             plot_bgcolor="rgba(0,0,0,0)",
         )
 
-        drift_fig.update_yaxes(title_text="{}/{}".format(drift_analyte,norm_analyte))
+        drift_fig.update_yaxes(title_text="{}/{}".format(drift_analyte, norm_analyte))
 
         drift_fig.update_xaxes(
             title_text="Analysis Number",
