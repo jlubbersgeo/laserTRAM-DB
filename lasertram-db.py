@@ -2013,7 +2013,7 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
                 old_df.loc[
                     spots_with_data,
                     ["bkgd_start", "bkgd_stop", "int_start", "int_stop"],
-                ].reset_index(),
+                ].reset_index().drop('index',axis = 'columns'),
                 medians_df,
                 rel_se_df,
             ],
