@@ -1463,18 +1463,38 @@ def get_data(contents, filename):
         # Assume that the user uploaded an excel file
         data = pd.read_excel(io.BytesIO(decoded))
         data.dropna(inplace=True)
+        
         data = data.set_index(["SampleLabel"])
-        columns = (
-            [{"id": "Spot", "name": "Spot"}]
-            + [{"id": "bkgd_start", "name": "bkgd_start"}]
-            + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
-            + [{"id": "int_start", "name": "int_start"}]
-            + [{"id": "int_stop", "name": "int_stop"}]
-            + [{"id": "norm", "name": "norm"}]
-            + [{"id": "norm_cps", "name": "norm_cps"}]
-            + [{"id": c, "name": c} for c in data.iloc[:, 1:].columns]
-            + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 1:].columns]
-        )
+
+        #check for timestamp column
+        # if 'timestamp' in data.columns.tolist():
+        if 'timestamp' in data.columns.tolist():
+            
+            columns = (
+                [{"id": "timestamp", "name": "timestamp"}]
+                + [{"id": "Spot", "name": "Spot"}]
+                + [{"id": "bkgd_start", "name": "bkgd_start"}]
+                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+                + [{"id": "int_start", "name": "int_start"}]
+                + [{"id": "int_stop", "name": "int_stop"}]
+                + [{"id": "norm", "name": "norm"}]
+                + [{"id": "norm_cps", "name": "norm_cps"}]
+                + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
+                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
+            )
+            
+        else:
+            columns = (
+                [{"id": "Spot", "name": "Spot"}]
+                + [{"id": "bkgd_start", "name": "bkgd_start"}]
+                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+                + [{"id": "int_start", "name": "int_start"}]
+                + [{"id": "int_stop", "name": "int_stop"}]
+                + [{"id": "norm", "name": "norm"}]
+                + [{"id": "norm_cps", "name": "norm_cps"}]
+                + [{"id": c, "name": c} for c in data.iloc[:, 1:].columns]
+                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 1:].columns]
+            )
 
         spots = list(data.index.unique())
         spot_list = [{"label": spot, "value": spot} for spot in spots]
@@ -1527,8 +1547,15 @@ def plot(spot, stored_data, interval_slider, int_std, filename):
             # retrieve data stored in background
             data = pd.read_json(stored_data, orient="split")
             data.set_index("SampleLabel", inplace=True)
-            # filter for spot chosen
-            df = data.loc[spot, :]
+            
+            # filter for spot chosen and exclude timestamp column
+            if 'timestamp' in data.columns.tolist():
+                
+                df = data.loc[spot, :]
+                df = df.iloc[:,1:]
+            else:
+                
+                df = data.loc[spot,:]
 
             # get time in units of seconds
             df["Time"] = df["Time"] / 1000
@@ -1747,8 +1774,19 @@ def add_row(
 
                 data = pd.read_json(stored_data, orient="split")
                 data.set_index("SampleLabel", inplace=True)
+                
+                # filter for spot chosen and exclude timestamp column
+                if 'timestamp' in data.columns.tolist():
+                    timestamp = str(data.loc[spot,'timestamp'].unique()[0])
+                    df = data.loc[spot, :]
+                    df = df.iloc[:,1:]
 
-                df = data.loc[spot, :]
+                else:
+                    timestamp = 'N/A'
+                    df = data.loc[spot,:]
+                    
+                elements = df.iloc[:, 1:].columns.tolist()
+
                 df["Time"] = df["Time"] / 1000
 
                 bkgd_start_idx = np.where(df["Time"] > interval_slider[0])[0][0]
@@ -1756,7 +1794,7 @@ def add_row(
                 int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
                 int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
 
-                elements = df.iloc[:, 1:].columns.tolist()
+                
 
                 for e, i in zip(elements, range(len(elements))):
                     if e == int_std:
@@ -1790,12 +1828,17 @@ def add_row(
                 # start and stop times as well as the int std cps value
                 row_data = list(bkgd_correct_med) + list(rel_se)
                 row_data.insert(0, spot)
+                
+                
+                    
                 row_data.insert(1, df["Time"][bkgd_start_idx])
                 row_data.insert(2, df["Time"][bkgd_stop_idx])
                 row_data.insert(3, df["Time"][int_start_idx])
                 row_data.insert(4, df["Time"][int_stop_idx])
                 row_data.insert(5, int_std)
                 row_data.insert(6, np.median(bkgd_correct_data[int_std_loc]))
+                
+                row_data.insert(0,timestamp)
 
                 rows.append({c["id"]: r for c, r in zip(columns, row_data)})
 
@@ -1855,7 +1898,6 @@ def move_sample(next_clicks, prev_clicks, stored_data, spot, filename):
                 return spots[new_spot_idx]
 
 
-# LaserCalc
 # upload data from lasertram output button
 @app.callback(
     [
@@ -1884,15 +1926,11 @@ def get_oldratio_data(contents, filename, columns, int_std_columns, header):
             }
         ]
 
-        # calib_std_list = [{"label": "Choose calibration std.", "value": "None"}]
         data = pd.DataFrame(np.zeros(len(columns)))
         table_data = pd.DataFrame(np.zeros(len(columns)))
         table_columns = columns.copy()
 
-        # int_std_data = pd.DataFrame(np.zeros(len(int_std_columns)))
-
-        # int_std_table_data = int_std_data.to_dict("records")
-        # calib_std = None
+     
 
     elif "xls" in filename:
         # retrieve data from uploaded file. This is the output from the above
@@ -1903,14 +1941,23 @@ def get_oldratio_data(contents, filename, columns, int_std_columns, header):
         # Assume that the user uploaded an excel file
         data = pd.read_excel(io.BytesIO(decoded))
         data.dropna(inplace=True)
+        cols = data.columns.tolist()
 
         data = data.set_index(["Spot"])
-
-        analytes = [
-            {"label": l, "value": l} for l in data.iloc[:, 6:].columns if "_se" not in l
-        ]
+        if 'timestamp' in data.columns.tolist():
+            
+            analytes = [
+                {"label": l, "value": l} for l in data.iloc[:, 8:].columns if "_se" not in l
+            ]
+        
+        else:
+            analytes = [
+                {"label": l, "value": l} for l in data.iloc[:, 7:].columns if "_se" not in l
+            ]
+        
 
         table_data = data.reset_index()
+        table_data = table_data.loc[:,cols]
         table_columns = [{"id": str(c), "name": str(c)} for c in table_data.columns]
 
     return (
@@ -1950,12 +1997,20 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
                     spots_with_data.append(spot)
 
         df_for_reprocessing = df.loc[spots_with_data, :]
+        if 'timestamp' in df_for_reprocessing.columns.tolist():
+            
+            elements = df_for_reprocessing.iloc[:, 2:].columns.tolist()
 
-        elements = df_for_reprocessing.iloc[:, 1:].columns.tolist()
+        else:
+            
+            elements = df_for_reprocessing.iloc[:, 1:].columns.tolist()
+            
+        
 
         medians = []
         rel_ses = []
         norm_counts = []
+        timestamps = []
         for spot in spots_with_data:
 
             # get each spot
@@ -1978,7 +2033,15 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             ][0]
 
             # make numpy array, this is all the same as the actual lasertram
-            df_n = spot_data.to_numpy()
+            if 'timestamp' in spot_data.columns.tolist():
+                
+                timestamp = str(spot_data['timestamp'].unique()[0])
+                df_n = spot_data.iloc[:,1:].to_numpy()
+            
+            else:
+                timestamp = 'N/A'
+                df_n = spot_data.to_numpy()
+                
             int_std_loc = [elements.index(i) for i in elements if int_std in i][0]
             bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
             detection_limits = (
@@ -2002,12 +2065,13 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             norm_counts.append(np.median(bkgd_correct_data[:, int_std_loc]))
             medians.append(bkgd_correct_med)
             rel_ses.append(rel_se)
+            timestamps.append(timestamp)
 
         medians_df = pd.DataFrame(medians, columns=elements)
         rel_se_df = pd.DataFrame(
             rel_ses, columns=["{}_se".format(element) for element in elements]
         )
-
+            
         reprocessed_data = pd.concat(
             [
                 old_df.loc[
@@ -2019,9 +2083,16 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             ],
             axis="columns",
         )
-        reprocessed_data.insert(0, "Spot", spots_with_data)
-        reprocessed_data.insert(5, "norm", int_std)
-        reprocessed_data.insert(6, "norm_cps", norm_counts)
+        
+        reprocessed_data.insert(0,'timestamp',timestamps)
+        reprocessed_data.insert(1, "Spot", spots_with_data)
+        
+        
+            
+        reprocessed_data.insert(6, "norm", int_std)
+        reprocessed_data.insert(7, "norm_cps", norm_counts)
+        
+        
 
         return (
             [{"id": str(c), "name": str(c)} for c in reprocessed_data.columns],
@@ -2619,21 +2690,7 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         )
         columns = [{"id": c, "name": c} for c in data.columns]
         int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
-        # if data["norm"].unique()[0] == "43Ca":
-        #     int_std_data = pd.DataFrame(
-        #         {"Spot": spots, "CaO wt%": 10, "CaO 1stdev%": 1}, index=data.index
-        #     )
-
-        #     columns = [{"id": c, "name": c} for c in data.columns]
-        #     int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
-
-        # elif data["norm"].unique()[0] == "29Si":
-        #     int_std_data = pd.DataFrame(
-        #         {"Spot": spots, "SiO2 wt%": 50, "SiO2 1stdev%": 1},
-        #     )
-
-        #     columns = [{"id": c, "name": c} for c in data.columns]
-        #     int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
+        
 
         int_std_table_data = int_std_data.to_dict("records")
         calib_std = potential_standards[0]
@@ -2731,6 +2788,7 @@ def calculate_concentrations(
                 or "start" in analyte
                 or "stop" in analyte
                 or "long" in analyte
+                or "timestamp" in analyte
             )
         ]
 
@@ -2809,7 +2867,16 @@ def calculate_concentrations(
             # Getting regression statistics on analyte normalized ratios through time
             # for the calibration standard. This is what we use to check to see if it needs
             # to be drift corrected
-            x = calib_std_data["index"]
+            if 'timestamp' in calib_std_data.columns.tolist():
+                # get an array in time units based on timestamp column. This is 
+                # is in seconds
+                x = np.array([np.datetime64(d,'m') for d in calib_std_data['timestamp']]).astype(np.float64)
+
+            
+            else:
+                
+                x = calib_std_data["index"]
+                
             y = calib_std_data[myanalytes[j]]
 
             X = sm.add_constant(x)
@@ -2871,15 +2938,14 @@ def calculate_concentrations(
         table_data_df.loc[samples_nostandards, "{} 1stdev%".format(oxide)]
     ).to_numpy()
 
-    # getting secondary standards list (potential standards minus calibration standard)
     secondary_standards = potential_standards.copy()
     secondary_standards.remove(calib_std)
     concentrations_list = []
-
-    # calculate concentrations for secondary standards
+    
+    
     for standard in secondary_standards:
         drift_concentrations_list = []
-
+    
         for j, analyte, slope, intercept, drift in zip(
             range(len(myanalytes)),
             myanalytes,
@@ -2887,10 +2953,15 @@ def calculate_concentrations(
             calib_std_intercepts,
             drift_check,
         ):
-
+    
             if "True" in drift:
-                frac = slope * data.loc[standard, "index"] + intercept
-
+                if 'timestamp' in data.columns.tolist():
+                    frac = slope*np.array([np.datetime64(d, "m") for d in data.loc[standard,"timestamp"]]).astype(np.float64) + intercept
+                else:
+                    
+                    
+                    frac = slope * data.loc[standard, "index"] + intercept
+    
                 drift_concentrations = (
                     (
                         stds_data.loc[
@@ -2901,55 +2972,53 @@ def calculate_concentrations(
                     * (std_conc_ratios[j] / frac)
                     * data.loc[standard, analyte]
                 )
-
+    
                 df = pd.DataFrame(drift_concentrations, columns=[analyte])
-
+    
                 drift_concentrations_list.append(df)
-
+    
         if len(drift_concentrations_list) > 0:
-
+    
             drift_df = pd.concat(drift_concentrations_list, axis="columns")
-
+    
             concentrations = (
                 (
                     stds_data.loc[
-                        standard,
-                        re.split("(\d+)", calib_std_data["norm"].unique()[0])[2],
+                        standard, re.split("(\d+)", calib_std_data["norm"].unique()[0])[2]
                     ]
                 )
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * data.loc[standard, myanalytes]
             )
-
+    
             for column in drift_df.columns.tolist():
                 concentrations[column] = drift_df[column]
-
+    
             concentrations_list.append(concentrations)
-
         else:
             concentrations = (
                 (
                     stds_data.loc[
-                        standard,
-                        re.split("(\d+)", calib_std_data["norm"].unique()[0])[2],
+                        standard, re.split("(\d+)", calib_std_data["norm"].unique()[0])[2]
                     ]
                 )
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * data.loc[standard, myanalytes]
             )
             concentrations_list.append(concentrations)
-
-    # All of our samples that are not potential secondary standards.
-    # The concentrations for the internal standard are specified by the user
-    # in the left table. Defaults to 10 for CaO and 50 for SiO2
-
+    
+    
+    # All of our samples that are not potential secondary standards. The concentrations for the internal standard are
+    # specified in the cell above
+    
+    
     unknown_concentrations_list = []
     # creates a list of dataframes, one for each sample, that holds the concentration information
-
+    
     for sample in samples_nostandards:
-
+    
         drift_concentrations_list = []
-
+    
         for j, analyte, slope, intercept, drift in zip(
             range(len(myanalytes)),
             myanalytes,
@@ -2957,42 +3026,46 @@ def calculate_concentrations(
             calib_std_intercepts,
             drift_check,
         ):
-
+    
             if "True" in drift:
-                frac = slope * data.loc[sample, "index"] + intercept
-
+                if 'timestamp' in data.columns.tolist():
+                    frac = slope * np.array([np.datetime64(d, "m") for d in data.loc[sample,"timestamp"]]).astype(np.float64) + intercept
+                else:
+                    
+                    frac = data.loc[sample, "index"] + intercept
+                
+    
                 drift_concentrations = (
                     data.loc[sample, analyte]
                     * (std_conc_ratios[j] / frac)
                     * (int_std_concentration)
                 )
-
+    
                 df = pd.DataFrame(drift_concentrations, columns=[analyte])
-
+    
                 drift_concentrations_list.append(df)
-
+                
         if len(drift_concentrations_list) > 0:
-
+    
             drift_df = pd.concat(drift_concentrations_list, axis="columns")
-
+    
             unknown_concentrations = (
                 data.loc[sample, myanalytes]
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * (int_std_concentration[:, np.newaxis])
             )
-
+    
             for column in drift_df.columns.tolist():
                 unknown_concentrations[column] = drift_df[column]
-
+    
             unknown_concentrations_list.append(unknown_concentrations)
-
         else:
             unknown_concentrations = (
                 data.loc[sample, myanalytes]
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * (int_std_concentration[:, np.newaxis])
             )
-
+    
             unknown_concentrations_list.append(unknown_concentrations)
 
     # Incorporating uncertainty in the calibration standard
@@ -3171,23 +3244,7 @@ def calculate_concentrations(
             * 100,
         )
 
-        # if calib_std_data["norm"].unique()[0] == "43Ca":
-        #     df.insert(loc=1, column="CaO wt%", value=stds_data.loc[name, "CaO"] / 1e4)
-        #     df.insert(
-        #         loc=2,
-        #         column="CaO 1stdev%",
-        #         value=(stds_data.loc[name, "CaO_std"] / stds_data.loc[name, "CaO"])
-        #         * 100,
-        #     )
-
-        # elif calib_std_data["norm"].unique()[0] == "29Si":
-        #     df.insert(loc=1, column="SiO2 wt%", value=stds_data.loc[name, "SiO2"] / 1e4)
-        #     df.insert(
-        #         loc=2,
-        #         column="SiO2 1stdev%",
-        #         value=(stds_data.loc[name, "SiO2_std"] / stds_data.loc[name, "SiO2"])
-        #         * 100,
-        #     )
+        
 
         final_standards_list.append(df)
 
@@ -3203,13 +3260,6 @@ def calculate_concentrations(
         df.insert(loc=1, column="{} wt%".format(oxide), value=int_std_oxide_array)
         df.insert(loc=2, column="{} 1stdev%".format(oxide), value=unknown_int_std_unc)
 
-        # if calib_std_data["norm"].unique()[0] == "43Ca":
-        #     df.insert(loc=1, column="CaO wt%", value=int_std_oxide_array)
-        #     df.insert(loc=2, column="CaO 1stdev%", value=unknown_int_std_unc)
-
-        # elif calib_std_data["norm"].unique()[0] == "29Si":
-        #     df.insert(loc=1, column="SiO2 wt%", value=int_std_oxide_array)
-        #     df.insert(loc=2, column="SiO2 1stdev%", value=unknown_int_std_unc)
 
         final_unknowns_list.append(df)
 
@@ -3271,7 +3321,13 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
     else:
         calib_std_data = pd.read_json(calib_std_data, orient="split")
         norm_analyte = calib_std_data["norm"].unique().tolist()[0]
-        x = calib_std_data["index"].to_numpy()
+        if 'timestamp' in calib_std_data.columns.tolist():
+           # get an array in time units based on timestamp column. This is 
+           # is in seconds
+           x = np.array([np.datetime64(d,'m') for d in calib_std_data['timestamp']]).astype(np.float64)
+        else:
+            x = calib_std_data["index"]
+           
         y = calib_std_data[drift_analyte].to_numpy()
 
         X = sm.add_constant(x)
@@ -3293,7 +3349,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         # scatter plot
         drift_fig = px.scatter(
             calib_std_data,
-            x="index",
+            x=np.cumsum(np.diff(x, prepend = x[0])),
             y=drift_analyte,
             title="Normalized ratios for {} over time".format(
                 list(calib_std_data.index.unique())[0]
@@ -3316,7 +3372,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         # line for the linear regression through the points
         drift_fig.add_trace(
             go.Scatter(
-                x=x,
+                x=np.cumsum(np.diff(x, prepend = x[0])),
                 y=ypred,
                 mode="lines",
                 line=dict(color="black", width=3, dash="dash"),
@@ -3382,7 +3438,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         drift_fig.update_yaxes(title_text="{}/{}".format(drift_analyte, norm_analyte))
 
         drift_fig.update_xaxes(
-            title_text="Analysis Number",
+            title_text="Time in experiment (min)",
             tickcolor=text_color,
             linewidth=2,
             linecolor=text_color,
