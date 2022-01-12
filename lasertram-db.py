@@ -155,256 +155,646 @@ app.layout = html.Div(
         dcc.Tabs(
             [
                 dcc.Tab(
-                    label="LaserTRAM",
+                    label="LaserTRAM spot",
                     style=tab_style,
                     selected_style=tab_selected_style,
                     children=[
-                        dcc.Store(id="stored_data"),
-                        dbc.Col(
+                        dcc.Tabs(
                             [
-                                dbc.Row(
-                                    [
-                                        dbc.Col([html.H2("LaserTRAM"),]),
+                                dcc.Tab(
+                                    label="New Project",
+                                    style=tab_style,
+                                    selected_style=tab_selected_style,
+                                    children=[
+                                        dcc.Store(id="stored_data"),
                                         dbc.Col(
                                             [
-                                                html.H4(
-                                                    "Laser Time Resolved Analysis Module for LA-ICP-MS"
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [html.H2("LaserTRAM"),]
+                                                        ),
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Laser Time Resolved Analysis Module for LA-ICP-MS"
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    align="center",
+                                                ),
+                                                dbc.Card(
+                                                    [
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        dcc.Upload(
+                                                                            id="upload-data",
+                                                                            children=dbc.Button(
+                                                                                "Upload Data",
+                                                                                id="upload-btn",
+                                                                                color="dark",
+                                                                                size="lg",
+                                                                                n_clicks=0,
+                                                                            ),
+                                                                        ),
+                                                                        html.Hr(),
+                                                                    ],
+                                                                    width=2,
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        dbc.Label(
+                                                                                            "Spot:"
+                                                                                        ),
+                                                                                        dcc.Dropdown(
+                                                                                            id="spot_dropdown",
+                                                                                            multi=False,
+                                                                                            style={
+                                                                                                "color": "#212121",
+                                                                                                "background-color": "none",
+                                                                                                "width": "100%",
+                                                                                            },
+                                                                                            placeholder="Please choose a spot",
+                                                                                            value=None,
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        html.Label(
+                                                                                            "Int. Std. "
+                                                                                        ),
+                                                                                        dcc.Dropdown(
+                                                                                            id="int_std_dropdown",
+                                                                                            multi=False,
+                                                                                            style={
+                                                                                                "color": "#212121",
+                                                                                                "background-color": "none",
+                                                                                                "width": "70%",
+                                                                                            },
+                                                                                            options=[
+                                                                                                {
+                                                                                                    "label": "43Ca",
+                                                                                                    "value": "43Ca",
+                                                                                                },
+                                                                                                {
+                                                                                                    "label": "47Ti",
+                                                                                                    "value": "47Ti",
+                                                                                                },
+                                                                                                {
+                                                                                                    "label": "29Si",
+                                                                                                    "value": "29Si",
+                                                                                                },
+                                                                                            ],
+                                                                                            value="43Ca",
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    width=4,
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(
+                                                                                    dbc.Button(
+                                                                                        "Previous",
+                                                                                        id="previous_btn",
+                                                                                        color="warning",
+                                                                                        size="lg",
+                                                                                        n_clicks=0,
+                                                                                    ),
+                                                                                ),
+                                                                                dbc.Col(
+                                                                                    dbc.Button(
+                                                                                        "Next",
+                                                                                        id="next_btn",
+                                                                                        color="info",
+                                                                                        size="lg",
+                                                                                        n_clicks=0,
+                                                                                    ),
+                                                                                ),
+                                                                                dbc.Col(
+                                                                                    dbc.Button(
+                                                                                        "Record",
+                                                                                        id="record_btn",
+                                                                                        color="success",
+                                                                                        size="lg",
+                                                                                        n_clicks=0,
+                                                                                    ),
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ],
+                                                                    width=4,
+                                                                ),
+                                                            ],
+                                                        )
+                                                    ],
+                                                    body=True,
+                                                    style={"width": "100rem"},
+                                                    color="primary",
+                                                    inverse=True,
+                                                ),
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [
+                                                                dbc.Row(
+                                                                    [
+                                                                        dbc.Col(
+                                                                            [
+                                                                                html.H4(
+                                                                                    "Choose background and interval of interest with the sliders"
+                                                                                ),
+                                                                                html.Hr(),
+                                                                                dcc.RangeSlider(
+                                                                                    id="interval_slider",
+                                                                                    step=1,
+                                                                                    value=[
+                                                                                        5,
+                                                                                        15,
+                                                                                        25,
+                                                                                        45,
+                                                                                    ],
+                                                                                    tooltip={
+                                                                                        "always_visible": True,
+                                                                                        "placement": "bottom",
+                                                                                    },
+                                                                                    allowCross=False,
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    ]
+                                                                ),
+                                                                dcc.Graph(
+                                                                    id="raw-data",
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Analyte Uncertainties"
+                                                                ),
+                                                                dcc.Graph(
+                                                                    id="error-data",
+                                                                    style={
+                                                                        "width": "100vh"
+                                                                    },
+                                                                ),
+                                                            ]
+                                                        ),
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Saved Spot Data"
+                                                                ),
+                                                                dash_table.DataTable(
+                                                                    id="adding-rows-table",
+                                                                    columns=[
+                                                                        {
+                                                                            "name": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "id": "analyte-{}".format(
+                                                                                i
+                                                                            ),
+                                                                            "deletable": True,
+                                                                            "renamable": False,
+                                                                        }
+                                                                        for i in range(
+                                                                            1, 5
+                                                                        )
+                                                                    ],
+                                                                    style_table={
+                                                                        "overflowX": "auto",
+                                                                        "height": 275,
+                                                                        "width": "80vh",
+                                                                    },
+                                                                    fixed_rows={
+                                                                        "headers": True
+                                                                    },
+                                                                    style_cell={
+                                                                        # all three widths are needed
+                                                                        "minWidth": "100px",
+                                                                        "width": "60px",
+                                                                        "maxWidth": "60px",
+                                                                        "overflow": "hidden",
+                                                                        "textOverflow": "ellipsis",
+                                                                    },
+                                                                    style_data_conditional=[
+                                                                        {
+                                                                            "if": {
+                                                                                "row_index": "odd"
+                                                                            },
+                                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                                        }
+                                                                    ],
+                                                                    style_header={
+                                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                                        "fontWeight": "bold",
+                                                                    },
+                                                                    data=[
+                                                                        {
+                                                                            "analyte-{}".format(
+                                                                                i
+                                                                            ): (
+                                                                                (i - 1)
+                                                                                * 5
+                                                                            )
+                                                                            for i in range(
+                                                                                1, 5
+                                                                            )
+                                                                        }
+                                                                    ],
+                                                                    editable=True,
+                                                                    row_deletable=False,
+                                                                    export_format="xlsx",
+                                                                    export_headers="display",
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ]
                                                 ),
                                             ]
                                         ),
                                     ],
-                                    align="center",
                                 ),
-                                dbc.Card(
-                                    [
-                                        dbc.Row(
-                                            [
-                                                dbc.Col(
-                                                    [
-                                                        dcc.Upload(
-                                                            id="upload-data",
-                                                            children=dbc.Button(
-                                                                "Upload Data",
-                                                                id="upload-btn",
-                                                                color="dark",
-                                                                size="lg",
-                                                                n_clicks=0,
-                                                            ),
-                                                        ),
-                                                        html.Hr(),
-                                                    ],
-                                                    width=2,
-                                                ),
-                                                dbc.Col(
-                                                    [
-                                                        dbc.Row(
-                                                            [
-                                                                dbc.Col(
-                                                                    [
-                                                                        dbc.Label(
-                                                                            "Spot:"
-                                                                        ),
-                                                                        dcc.Dropdown(
-                                                                            id="spot_dropdown",
-                                                                            multi=False,
-                                                                            style={
-                                                                                "color": "#212121",
-                                                                                "background-color": "none",
-                                                                                "width": "100%",
-                                                                            },
-                                                                            placeholder="Please choose a spot",
-                                                                            value=None,
-                                                                        ),
-                                                                    ]
-                                                                ),
-                                                                dbc.Col(
-                                                                    [
-                                                                        html.Label(
-                                                                            "Int. Std. "
-                                                                        ),
-                                                                        dcc.Dropdown(
-                                                                            id="int_std_dropdown",
-                                                                            multi=False,
-                                                                            style={
-                                                                                "color": "#212121",
-                                                                                "background-color": "none",
-                                                                                "width": "70%",
-                                                                            },
-                                                                            options=[
-                                                                                {
-                                                                                    "label": "43Ca",
-                                                                                    "value": "43Ca",
-                                                                                },
-                                                                                {
-                                                                                    "label": "47Ti",
-                                                                                    "value": "47Ti",
-                                                                                },
-                                                                                {
-                                                                                    "label": "29Si",
-                                                                                    "value": "29Si",
-                                                                                },
-                                                                            ],
-                                                                            value="43Ca",
-                                                                        ),
-                                                                    ]
-                                                                ),
-                                                            ]
-                                                        )
-                                                    ],
-                                                    width=4,
-                                                ),
-                                                dbc.Col(
-                                                    [
-                                                        dbc.Row(
-                                                            [
-                                                                dbc.Col(
-                                                                    dbc.Button(
-                                                                        "Previous",
-                                                                        id="previous_btn",
-                                                                        color="warning",
-                                                                        size="lg",
-                                                                        n_clicks=0,
-                                                                    ),
-                                                                ),
-                                                                dbc.Col(
-                                                                    dbc.Button(
-                                                                        "Next",
-                                                                        id="next_btn",
-                                                                        color="info",
-                                                                        size="lg",
-                                                                        n_clicks=0,
-                                                                    ),
-                                                                ),
-                                                                dbc.Col(
-                                                                    dbc.Button(
-                                                                        "Record",
-                                                                        id="record_btn",
-                                                                        color="success",
-                                                                        size="lg",
-                                                                        n_clicks=0,
-                                                                    ),
-                                                                ),
-                                                            ]
-                                                        ),
-                                                    ],
-                                                    width=4,
-                                                ),
-                                            ],
-                                        )
-                                    ],
-                                    body=True,
-                                    style={"width": "100rem"},
-                                    color="primary",
-                                    inverse=True,
-                                ),
-                                dbc.Row(
-                                    [
+                                dcc.Tab(
+                                    label="Re-processing",
+                                    style=tab_style,
+                                    selected_style=tab_selected_style,
+                                    children=[
+                                        dcc.Store(id="stored_new_data"),
+                                        dcc.Store(id="stored_old_data"),
                                         dbc.Col(
                                             [
                                                 dbc.Row(
                                                     [
                                                         dbc.Col(
                                                             [
-                                                                html.H4(
-                                                                    "Choose background and interval of interest with the sliders"
+                                                                html.H2(
+                                                                    "LaserTRAM Re-processing"
                                                                 ),
-                                                                html.Hr(),
-                                                                dcc.RangeSlider(
-                                                                    id="interval_slider",
-                                                                    step=1,
-                                                                    value=[
-                                                                        5,
-                                                                        15,
-                                                                        25,
-                                                                        45,
+                                                            ]
+                                                        ),
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Re-process an old experiment using a new internal standard"
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    align="center",
+                                                ),
+                                                dbc.Card(
+                                                    [
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        dcc.Upload(
+                                                                            id="upload-data_reprocess",
+                                                                            children=dbc.Button(
+                                                                                "Upload old LT file",
+                                                                                id="upload-btn_reprocess",
+                                                                                color="dark",
+                                                                                size="lg",
+                                                                                n_clicks=0,
+                                                                            ),
+                                                                        ),
+                                                                        html.Hr(),
                                                                     ],
-                                                                    tooltip={
-                                                                        "always_visible": True,
-                                                                        "placement": "bottom",
-                                                                    },
-                                                                    allowCross=False,
+                                                                    width=2,
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        dbc.Label(
+                                                                                            "Internal Standard:"
+                                                                                        ),
+                                                                                        dcc.Dropdown(
+                                                                                            id="int_std_dropdown_reprocess",
+                                                                                            multi=False,
+                                                                                            style={
+                                                                                                "color": "#212121",
+                                                                                                "background-color": "none",
+                                                                                                "width": "100%",
+                                                                                            },
+                                                                                            placeholder="Choose a new internal standard",
+                                                                                            value=None,
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    width=4,
+                                                                ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
+                                                                                dbc.Col(),
+                                                                                dbc.Col(
+                                                                                    [
+                                                                                        dbc.Button(
+                                                                                            "Re-process!",
+                                                                                            id="reprocess_btn",
+                                                                                            color="success",
+                                                                                            size="lg",
+                                                                                            n_clicks=0,
+                                                                                        ),
+                                                                                    ]
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ],
+                                                                    width=4,
                                                                 ),
                                                             ],
+                                                        )
+                                                    ],
+                                                    body=True,
+                                                    style={"width": "100rem"},
+                                                    color="primary",
+                                                    inverse=True,
+                                                ),
+                                                dbc.Row(
+                                                    [
+                                                        html.Div(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Old normalized ratios "
+                                                                        ),
+                                                                        dash_table.DataTable(
+                                                                            id="old_data_table",
+                                                                            columns=[
+                                                                                {
+                                                                                    "name": "Spot",
+                                                                                    "id": "Spot",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "bkgd_start",
+                                                                                    "id": "bkgd_start",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "bkgd_stop",
+                                                                                    "id": "bkgd_stop",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "int_start",
+                                                                                    "id": "int_start",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "int_stop",
+                                                                                    "id": "int_stop",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "norm",
+                                                                                    "id": "norm",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "norm_cps",
+                                                                                    "id": "norm_cps",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                            ]
+                                                                            + [
+                                                                                {
+                                                                                    "name": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "id": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "renamable": False,
+                                                                                }
+                                                                                for i in range(
+                                                                                    1,
+                                                                                    10,
+                                                                                )
+                                                                            ],
+                                                                            style_table={
+                                                                                "overflowX": "auto",
+                                                                                "height": 400,
+                                                                                "width": "90vh",
+                                                                            },
+                                                                            fixed_rows={
+                                                                                "headers": True
+                                                                            },
+                                                                            style_cell={
+                                                                                # all three widths are needed
+                                                                                "minWidth": "100px",
+                                                                                "width": "60px",
+                                                                                "maxWidth": "60px",
+                                                                                "overflow": "hidden",
+                                                                                "textOverflow": "ellipsis",
+                                                                            },
+                                                                            style_data_conditional=[
+                                                                                {
+                                                                                    "if": {
+                                                                                        "row_index": "odd"
+                                                                                    },
+                                                                                    "backgroundColor": "rgb(248, 248, 248)",
+                                                                                }
+                                                                            ],
+                                                                            style_header={
+                                                                                "backgroundColor": "rgb(230, 230, 230)",
+                                                                                "fontWeight": "bold",
+                                                                            },
+                                                                            data=[
+                                                                                {
+                                                                                    "analyte-{}".format(
+                                                                                        i
+                                                                                    ): (
+                                                                                        (
+                                                                                            i
+                                                                                            - 1
+                                                                                        )
+                                                                                        * 5
+                                                                                    )
+                                                                                    for i in range(
+                                                                                        1,
+                                                                                        5,
+                                                                                    )
+                                                                                }
+                                                                            ],
+                                                                            editable=True,
+                                                                            row_deletable=False,
+                                                                            export_format="xlsx",
+                                                                            export_headers="display",
+                                                                        ),
+                                                                    ],
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
+                                                        ),
+                                                        html.Div(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            children=[
+                                                                                "Re-normalized data",
+                                                                                html.Div(
+                                                                                    id="reprocess_header",
+                                                                                    style={
+                                                                                        "display": "inline"
+                                                                                    },
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                        dash_table.DataTable(
+                                                                            id="new_data_table",
+                                                                            columns=[
+                                                                                {
+                                                                                    "name": "Spot",
+                                                                                    "id": "Spot",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "bkgd_start",
+                                                                                    "id": "bkgd_start",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "bkgd_stop",
+                                                                                    "id": "bkgd_stop",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "int_start",
+                                                                                    "id": "int_start",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "int_stop",
+                                                                                    "id": "int_stop",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "norm",
+                                                                                    "id": "norm",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "norm_cps",
+                                                                                    "id": "norm_cps",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                            ]
+                                                                            + [
+                                                                                {
+                                                                                    "name": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "id": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "renamable": False,
+                                                                                }
+                                                                                for i in range(
+                                                                                    1,
+                                                                                    10,
+                                                                                )
+                                                                            ],
+                                                                            style_table={
+                                                                                "overflowX": "auto",
+                                                                                "height": 400,
+                                                                                "width": "90vh",
+                                                                            },
+                                                                            fixed_rows={
+                                                                                "headers": True
+                                                                            },
+                                                                            style_cell={
+                                                                                # all three widths are needed
+                                                                                "minWidth": "100px",
+                                                                                "width": "60px",
+                                                                                "maxWidth": "60px",
+                                                                                "overflow": "hidden",
+                                                                                "textOverflow": "ellipsis",
+                                                                            },
+                                                                            style_data_conditional=[
+                                                                                {
+                                                                                    "if": {
+                                                                                        "row_index": "odd"
+                                                                                    },
+                                                                                    "backgroundColor": "rgb(248, 248, 248)",
+                                                                                }
+                                                                            ],
+                                                                            style_header={
+                                                                                "backgroundColor": "rgb(230, 230, 230)",
+                                                                                "fontWeight": "bold",
+                                                                            },
+                                                                            data=[
+                                                                                {
+                                                                                    "analyte-{}".format(
+                                                                                        i
+                                                                                    ): (
+                                                                                        (
+                                                                                            i
+                                                                                            - 1
+                                                                                        )
+                                                                                        * 5
+                                                                                    )
+                                                                                    for i in range(
+                                                                                        1,
+                                                                                        5,
+                                                                                    )
+                                                                                }
+                                                                            ],
+                                                                            editable=True,
+                                                                            row_deletable=False,
+                                                                            export_format="xlsx",
+                                                                            export_headers="display",
+                                                                        ),
+                                                                    ],
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
                                                         ),
                                                     ]
                                                 ),
-                                                dcc.Graph(id="raw-data",),
                                             ]
                                         ),
-                                    ]
-                                ),
-                                dbc.Row(
-                                    [
-                                        dbc.Col(
-                                            [
-                                                html.H4("Analyte Uncertainties"),
-                                                dcc.Graph(
-                                                    id="error-data",
-                                                    style={"width": "100vh"},
-                                                ),
-                                            ]
-                                        ),
-                                        dbc.Col(
-                                            [
-                                                html.H4("Saved Spot Data"),
-                                                dash_table.DataTable(
-                                                    id="adding-rows-table",
-                                                    columns=[
-                                                        {
-                                                            "name": "analyte-{}".format(
-                                                                i
-                                                            ),
-                                                            "id": "analyte-{}".format(
-                                                                i
-                                                            ),
-                                                            "deletable": True,
-                                                            "renamable": False,
-                                                        }
-                                                        for i in range(1, 5)
-                                                    ],
-                                                    style_table={
-                                                        "overflowX": "auto",
-                                                        "height": 275,
-                                                        "width": "80vh",
-                                                    },
-                                                    fixed_rows={"headers": True},
-                                                    style_cell={
-                                                        # all three widths are needed
-                                                        "minWidth": "100px",
-                                                        "width": "60px",
-                                                        "maxWidth": "60px",
-                                                        "overflow": "hidden",
-                                                        "textOverflow": "ellipsis",
-                                                    },
-                                                    style_data_conditional=[
-                                                        {
-                                                            "if": {"row_index": "odd"},
-                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                        }
-                                                    ],
-                                                    style_header={
-                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                        "fontWeight": "bold",
-                                                    },
-                                                    data=[
-                                                        {
-                                                            "analyte-{}".format(i): (
-                                                                (i - 1) * 5
-                                                            )
-                                                            for i in range(1, 5)
-                                                        }
-                                                    ],
-                                                    editable=True,
-                                                    row_deletable=False,
-                                                    export_format="xlsx",
-                                                    export_headers="display",
-                                                ),
-                                            ]
-                                        ),
-                                    ]
+                                    ],
                                 ),
                             ]
-                        ),
+                        )
                     ],
                 ),
                 dcc.Tab(
@@ -777,147 +1167,168 @@ app.layout = html.Div(
                                                 ),
                                                 dbc.Row(
                                                     [
-                                                        dbc.Col(
+                                                        html.Div(
                                                             [
-                                                                html.H4(
-                                                                    "Internal Std. Concentrations: "
-                                                                ),
-                                                                dash_table.DataTable(
-                                                                    id="int_std_table",
-                                                                    columns=[
-                                                                        {
-                                                                            "name": "Spot",
-                                                                            "id": "Spot",
-                                                                            "renamable": False,
-                                                                        },
-                                                                    ],
-                                                                    style_table={
-                                                                        "overflowX": "auto",
-                                                                        "height": 400,
-                                                                        "width": "50vh",
-                                                                    },
-                                                                    fixed_rows={
-                                                                        "headers": True
-                                                                    },
-                                                                    style_cell={
-                                                                        # all three widths are needed
-                                                                        "minWidth": "20px",
-                                                                        "width": "20px",
-                                                                        "maxWidth": "20px",
-                                                                        "overflow": "hidden",
-                                                                        "textOverflow": "ellipsis",
-                                                                    },
-                                                                    style_data_conditional=[
-                                                                        {
-                                                                            "if": {
-                                                                                "row_index": "odd"
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Internal Std. Concentrations: "
+                                                                        ),
+                                                                        dash_table.DataTable(
+                                                                            id="int_std_table",
+                                                                            columns=[
+                                                                                {
+                                                                                    "name": "Spot",
+                                                                                    "id": "Spot",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                            ],
+                                                                            style_table={
+                                                                                "overflowX": "auto",
+                                                                                "height": 400,
+                                                                                "width": "50vh",
                                                                             },
-                                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                                        }
+                                                                            fixed_rows={
+                                                                                "headers": True
+                                                                            },
+                                                                            style_cell={
+                                                                                # all three widths are needed
+                                                                                "minWidth": "20px",
+                                                                                "width": "20px",
+                                                                                "maxWidth": "20px",
+                                                                                "overflow": "hidden",
+                                                                                "textOverflow": "ellipsis",
+                                                                            },
+                                                                            style_data_conditional=[
+                                                                                {
+                                                                                    "if": {
+                                                                                        "row_index": "odd"
+                                                                                    },
+                                                                                    "backgroundColor": "rgb(248, 248, 248)",
+                                                                                }
+                                                                            ],
+                                                                            style_header={
+                                                                                "backgroundColor": "rgb(230, 230, 230)",
+                                                                                "fontWeight": "bold",
+                                                                            },
+                                                                            editable=True,
+                                                                            row_deletable=False,
+                                                                        ),
                                                                     ],
-                                                                    style_header={
-                                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                                        "fontWeight": "bold",
-                                                                    },
-                                                                    editable=True,
-                                                                    row_deletable=False,
-                                                                ),
+                                                                    width=3,
+                                                                )
                                                             ],
-                                                            width=3,
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
                                                         ),
-                                                        dbc.Col(
+                                                        html.Div(
                                                             [
-                                                                html.H4(
-                                                                    children=[
-                                                                        "",
-                                                                        html.Div(
-                                                                            id="table_header",
-                                                                            style={
-                                                                                "display": "inline"
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            children=[
+                                                                                "",
+                                                                                html.Div(
+                                                                                    id="table_header",
+                                                                                    style={
+                                                                                        "display": "inline"
+                                                                                    },
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                        dash_table.DataTable(
+                                                                            id="concentrations_table",
+                                                                            columns=[
+                                                                                {
+                                                                                    "name": "Spot",
+                                                                                    "id": "Spot",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "Int. Std. Conc.",
+                                                                                    "id": "Int. Std. Conc.",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                                {
+                                                                                    "name": "Int. Std. 1 stdev %",
+                                                                                    "id": "Int. Std. 1 stdev %",
+                                                                                    "renamable": False,
+                                                                                },
+                                                                            ]
+                                                                            + [
+                                                                                {
+                                                                                    "name": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "id": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "renamable": False,
+                                                                                }
+                                                                                for i in range(
+                                                                                    1,
+                                                                                    10,
+                                                                                )
+                                                                            ],
+                                                                            style_table={
+                                                                                "overflowX": "auto",
+                                                                                "height": 400,
+                                                                                "width": "90vh",
                                                                             },
+                                                                            fixed_rows={
+                                                                                "headers": True
+                                                                            },
+                                                                            style_cell={
+                                                                                # all three widths are needed
+                                                                                "minWidth": "100px",
+                                                                                "width": "60px",
+                                                                                "maxWidth": "60px",
+                                                                                "overflow": "hidden",
+                                                                                "textOverflow": "ellipsis",
+                                                                            },
+                                                                            style_data_conditional=[
+                                                                                {
+                                                                                    "if": {
+                                                                                        "row_index": "odd"
+                                                                                    },
+                                                                                    "backgroundColor": "rgb(248, 248, 248)",
+                                                                                }
+                                                                            ],
+                                                                            style_header={
+                                                                                "backgroundColor": "rgb(230, 230, 230)",
+                                                                                "fontWeight": "bold",
+                                                                            },
+                                                                            data=[
+                                                                                {
+                                                                                    "analyte-{}".format(
+                                                                                        i
+                                                                                    ): (
+                                                                                        (
+                                                                                            i
+                                                                                            - 1
+                                                                                        )
+                                                                                        * 5
+                                                                                    )
+                                                                                    for i in range(
+                                                                                        1,
+                                                                                        10,
+                                                                                    )
+                                                                                }
+                                                                            ],
+                                                                            editable=True,
+                                                                            row_deletable=False,
+                                                                            export_format="xlsx",
+                                                                            export_headers="display",
                                                                         ),
                                                                     ]
-                                                                ),
-                                                                dash_table.DataTable(
-                                                                    id="concentrations_table",
-                                                                    columns=[
-                                                                        {
-                                                                            "name": "Spot",
-                                                                            "id": "Spot",
-                                                                            "renamable": False,
-                                                                        },
-                                                                        {
-                                                                            "name": "Int. Std. Conc.",
-                                                                            "id": "Int. Std. Conc.",
-                                                                            "renamable": False,
-                                                                        },
-                                                                        {
-                                                                            "name": "Int. Std. 1 stdev %",
-                                                                            "id": "Int. Std. 1 stdev %",
-                                                                            "renamable": False,
-                                                                        },
-                                                                    ]
-                                                                    + [
-                                                                        {
-                                                                            "name": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "id": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "renamable": False,
-                                                                        }
-                                                                        for i in range(
-                                                                            1, 10
-                                                                        )
-                                                                    ],
-                                                                    style_table={
-                                                                        "overflowX": "auto",
-                                                                        "height": 400,
-                                                                        "width": "80vh",
-                                                                    },
-                                                                    fixed_rows={
-                                                                        "headers": True
-                                                                    },
-                                                                    style_cell={
-                                                                        # all three widths are needed
-                                                                        "minWidth": "100px",
-                                                                        "width": "60px",
-                                                                        "maxWidth": "60px",
-                                                                        "overflow": "hidden",
-                                                                        "textOverflow": "ellipsis",
-                                                                    },
-                                                                    style_data_conditional=[
-                                                                        {
-                                                                            "if": {
-                                                                                "row_index": "odd"
-                                                                            },
-                                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                                        }
-                                                                    ],
-                                                                    style_header={
-                                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                                        "fontWeight": "bold",
-                                                                    },
-                                                                    data=[
-                                                                        {
-                                                                            "analyte-{}".format(
-                                                                                i
-                                                                            ): (
-                                                                                (i - 1)
-                                                                                * 5
-                                                                            )
-                                                                            for i in range(
-                                                                                1, 10
-                                                                            )
-                                                                        }
-                                                                    ],
-                                                                    editable=True,
-                                                                    row_deletable=False,
-                                                                    export_format="xlsx",
-                                                                    export_headers="display",
-                                                                ),
-                                                            ]
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
                                                         ),
                                                     ]
                                                 ),
@@ -1442,6 +1853,180 @@ def move_sample(next_clicks, prev_clicks, stored_data, spot, filename):
                         new_spot_idx = 1
 
                 return spots[new_spot_idx]
+
+
+# LaserCalc
+# upload data from lasertram output button
+@app.callback(
+    [
+        Output("stored_old_data", "data"),
+        Output("int_std_dropdown_reprocess", "options"),
+        Output("old_data_table", "columns"),
+        Output("old_data_table", "data"),
+        Output("int_std_dropdown_reprocess", "value"),
+    ],
+    Input("upload-data_reprocess", "contents"),
+    State("upload-data_reprocess", "filename"),
+    State("new_data_table", "columns"),
+    State("old_data_table", "columns"),
+    State("reprocess_header", "children"),
+)
+def get_oldratio_data(contents, filename, columns, int_std_columns, header):
+    # list of standard reference materials currently supported. This can be a
+    # fluid list based on what is in the spreadsheet with accepted values
+
+    if filename == None:
+        # arbitrary fillers when no data is uploaded
+        analytes = [
+            {
+                "label": "please upload an old LT file",
+                "value": "please upload an old LT file",
+            }
+        ]
+
+        # calib_std_list = [{"label": "Choose calibration std.", "value": "None"}]
+        data = pd.DataFrame(np.zeros(len(columns)))
+        table_data = pd.DataFrame(np.zeros(len(columns)))
+        table_columns = columns.copy()
+
+        # int_std_data = pd.DataFrame(np.zeros(len(int_std_columns)))
+
+        # int_std_table_data = int_std_data.to_dict("records")
+        # calib_std = None
+
+    elif "xls" in filename:
+        # retrieve data from uploaded file. This is the output from the above
+        # tabs (either lasertram or lasertram profiler)
+        content_type, content_string = contents.split(",")
+
+        decoded = base64.b64decode(content_string)
+        # Assume that the user uploaded an excel file
+        data = pd.read_excel(io.BytesIO(decoded))
+        data.dropna(inplace=True)
+
+        data = data.set_index(["Spot"])
+
+        analytes = [
+            {"label": l, "value": l} for l in data.iloc[:, 6:].columns if "_se" not in l
+        ]
+
+        table_data = data.reset_index()
+        table_columns = [{"id": str(c), "name": str(c)} for c in table_data.columns]
+
+    return (
+        data.to_json(orient="split"),
+        analytes,
+        table_columns,
+        table_data.to_dict("records"),
+        analytes[0]["value"],
+    )
+
+
+@app.callback(
+    [Output("new_data_table", "columns"), Output("new_data_table", "data"),],
+    Input("stored_old_data", "data"),
+    Input("stored_data", "data"),
+    Input("int_std_dropdown_reprocess", "options"),
+    Input("int_std_dropdown_reprocess", "value"),
+    Input("reprocess_btn", "n_clicks"),
+)
+def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
+
+    # dont do anything if the button hasn't been clicked. Need to prevent
+    # error from being thrown
+    if n_clicks < 1:
+        raise exceptions.PreventUpdate
+
+    # once clicked it's go time
+    if n_clicks >= 1:
+
+        df = pd.read_json(stored_df, orient="split").set_index("SampleLabel").dropna()
+        old_df = pd.read_json(stored_old_df, orient="split").dropna()
+
+        spots_with_data = []
+        for spot in df.index.unique().tolist():
+            for old_spot in old_df.index.unique().tolist():
+                if spot == old_spot:
+                    spots_with_data.append(spot)
+
+        df_for_reprocessing = df.loc[spots_with_data, :]
+
+        elements = df_for_reprocessing.iloc[:, 1:].columns.tolist()
+
+        medians = []
+        rel_ses = []
+        norm_counts = []
+        for spot in spots_with_data:
+
+            # get each spot
+            spot_data = df_for_reprocessing.loc[spot, :].copy()
+            # get time in seconds
+            spot_data.loc[:, "Time"] = spot_data["Time"] / 1000
+
+            # get bkgd and interval times from old experiment data
+            bkgd_start_idx = np.where(
+                spot_data["Time"] > old_df.loc[spot, "bkgd_start"]
+            )[0][0]
+            bkgd_stop_idx = np.where(spot_data["Time"] > old_df.loc[spot, "bkgd_stop"])[
+                0
+            ][0]
+            int_start_idx = np.where(spot_data["Time"] > old_df.loc[spot, "int_start"])[
+                0
+            ][0]
+            int_stop_idx = np.where(spot_data["Time"] > old_df.loc[spot, "int_stop"])[
+                0
+            ][0]
+
+            # make numpy array, this is all the same as the actual lasertram
+            df_n = spot_data.to_numpy()
+            int_std_loc = [elements.index(i) for i in elements if int_std in i][0]
+            bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+            detection_limits = (
+                np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
+            )
+            bkgd_correct_data = (
+                df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data[int_std_loc]
+            )
+            bkgd_correct_normal_data = (
+                bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
+            )
+            bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+            bkgd_correct_med[
+                np.median(bkgd_correct_data, axis=0) <= detection_limits
+            ] = -9999
+            bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+            se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
+                abs(int_stop_idx - int_start_idx)
+            )
+            rel_se = 100 * (se / bkgd_correct_med)
+            norm_counts.append(np.median(bkgd_correct_data[:, int_std_loc]))
+            medians.append(bkgd_correct_med)
+            rel_ses.append(rel_se)
+
+        medians_df = pd.DataFrame(medians, columns=elements)
+        rel_se_df = pd.DataFrame(
+            rel_ses, columns=["{}_se".format(element) for element in elements]
+        )
+
+        reprocessed_data = pd.concat(
+            [
+                old_df.loc[
+                    spots_with_data,
+                    ["bkgd_start", "bkgd_stop", "int_start", "int_stop"],
+                ].reset_index(),
+                medians_df,
+                rel_se_df,
+            ],
+            axis="columns",
+        )
+        reprocessed_data.insert(0, "Spot", spots_with_data)
+        reprocessed_data.insert(5, "norm", int_std)
+        reprocessed_data.insert(6, "norm_cps", norm_counts)
+
+        return (
+            [{"id": str(c), "name": str(c)} for c in reprocessed_data.columns],
+            reprocessed_data.to_dict("records"),
+        )
 
 
 #%%
