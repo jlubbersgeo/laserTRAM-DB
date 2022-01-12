@@ -3,6 +3,15 @@
 
 Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/)
 
+***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
+- loading in previous experiments such that they can be re-processed using a different internal standard
+- Batch loading of internal standard concentrations for ```LaserCalc```
+- Adding detection limit concentrations in a metadata output
+- Adding preprocessing scripts found [here](https://github.com/jlubbersgeo/laicpms_general) so that this software is a standalone "mass-spec to plotting" pipeline
+
+*Happy processing!* <br>
+-Jordan
+
 ## Summary
 LaserTRAM-DB is a dashboard for the complete processing pipeline of Laser Ablation Inductively Coupled Plasma Mass Spectrometry (LA-ICP-MS) data in complex materials such as geologic samples. As LA-ICP-MS data in geologic samples frequently have multiple phases, inclusions, and other compositional complexities within them that do not represent the material of interest, user interaction is required to filter unwanted signals out of the overall ablation signal. LaserTRAM-DB allows the user to filter which portion of the ablation peak is utilized in calculating concentrations, subsequently allowing for more accurate data to be obtained. Furthermore, it allows for the processing of both individual spot analysis data and a line of spots gathered in rapid succession, reducing the time required for data reduction while preserving spatial definition and still ensuring data quality.
 
