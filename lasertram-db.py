@@ -24,6 +24,7 @@ import io
 import re
 import statsmodels.api as sm
 from statsmodels.tools.eval_measures import rmse
+from scipy import stats
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
@@ -345,21 +346,23 @@ app.layout = html.Div(
                                                     ]
                                                 ),
                                                 dbc.Row(
-                                                    [
-                                                        dbc.Col(
-                                                            [
-                                                                html.H4(
-                                                                    "Analyte Uncertainties"
-                                                                ),
-                                                                dcc.Graph(
-                                                                    id="error-data",
-                                                                    style={
-                                                                        "width": "100vh"
-                                                                    },
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        dbc.Col(
+                                                    [html.Div([dbc.Col(
+                                                        [
+                                                            html.H4(
+                                                                "Analyte Uncertainties"
+                                                            ),
+                                                            dcc.Graph(
+                                                                id="error-data",
+                                                                style={
+                                                                    "width": "90vh"
+                                                                },
+                                                            ),
+                                                        ]
+                                                    )],style={
+                                                        "width": "50%",
+                                                        "display": "inline-block",
+                                                    },)
+                                                        ,html.Div([dbc.Col(
                                                             [
                                                                 html.H4(
                                                                     "Saved Spot Data"
@@ -384,7 +387,7 @@ app.layout = html.Div(
                                                                     style_table={
                                                                         "overflowX": "auto",
                                                                         "height": 275,
-                                                                        "width": "80vh",
+                                                                        "width": "70vh",
                                                                     },
                                                                     fixed_rows={
                                                                         "headers": True
@@ -428,7 +431,11 @@ app.layout = html.Div(
                                                                     export_headers="display",
                                                                 ),
                                                             ]
-                                                        ),
+                                                        )],style={
+                                                            "width": "50%",
+                                                            "display": "inline-block",
+                                                        })
+                                                        ,
                                                     ]
                                                 ),
                                             ]
@@ -1129,6 +1136,9 @@ app.layout = html.Div(
                                                                                             placeholder="Choose calibration std.",
                                                                                             value=None,
                                                                                         ),
+                                                                                      
+                                                                                        
+                                                                                        
                                                                                     ]
                                                                                 ),
                                                                             ]
@@ -1140,7 +1150,27 @@ app.layout = html.Div(
                                                                     [
                                                                         dbc.Row(
                                                                             [
-                                                                                dbc.Col(),
+                                                                                html.Label('Drift significance threshold: '),
+                                                                                dcc.Input(id = 'drift_alpha',
+                                                                                          type = 'number',
+                                                                                          value = .01,
+                                                                                          min = float(0),
+                                                                                          max = float(1),
+                                                                                          step = float(0.01)
+                                                                                          
+                                                                                    
+                                                                                    )
+                                                                                ]
+                                                                            
+                                                                            )
+                                                                        ],
+                                                                    width = 2
+                                                                    
+                                                                    ),
+                                                                dbc.Col(
+                                                                    [
+                                                                        dbc.Row(
+                                                                            [
                                                                                 dbc.Col(
                                                                                     [
                                                                                         dbc.Button(
@@ -1155,7 +1185,7 @@ app.layout = html.Div(
                                                                             ]
                                                                         ),
                                                                     ],
-                                                                    width=4,
+                                                                    width=2,
                                                                 ),
                                                             ],
                                                         )
@@ -2755,12 +2785,13 @@ def get_stds(contents, filename):
         Input("std_dropdown", "value"),
         Input("calculate_btn", "n_clicks"),
         Input("int_std_table", "data"),
+        Input("drift_alpha", "value"),
         State("table_header", "children"),
     ],
 )
 # This is the money maker function that does all the heavy lifting.
 def calculate_concentrations(
-    stored_data, stds_data, stds, calib_std, n_clicks, table_data, header,
+    stored_data, stds_data, stds, calib_std, n_clicks, table_data,alpha, header,
 ):
     # dont do anything if the button hasn't been clicked. Need to prevent
     # error from being thrown
@@ -2860,7 +2891,7 @@ def calculate_concentrations(
         myanalytes_nomass = []
         # go through each analyte and check to see whether or not it needs to be
         # drift corrected. This is outlined in the documentation for the criteria
-        # if RMSE < std err of mean then drift correct. Else just take mean of
+        # If regression has significant p val and F stat, correct. Else just take mean of
         # calibration standard data
         for j in range(len(myanalytes)):
 
@@ -2891,12 +2922,29 @@ def calculate_concentrations(
             calib_std_rmses.append(RMSE)
             calib_std_slopes.append(model.params[1])
             calib_std_intercepts.append(model.params[0])
-
-            if 100 * RMSE / calib_std_means[j] < calib_std_ses[j]:
-                drift_check.append("True")
-
+            
+            
+            
+     
+            #f value stuff
+            fvalue = model.fvalue
+            f_pvalue = model.f_pvalue
+            # alpha is our confidence value. Default would be 99% so it has 
+            # to be very linear to drift correct
+            fcrit = stats.f.ppf(q = 1 - alpha, dfn = len(x) - 1, dfd = len(y) - 1)
+            
+            if (f_pvalue < alpha) and (fvalue > fcrit):
+                drift = "True"
+                drift_check.append(drift)
             else:
-                drift_check.append("False")
+                drift = "False"
+                drift_check.append(drift)
+
+            # if 100 * RMSE / calib_std_means[j] < calib_std_ses[j]:
+            #     drift_check.append("True")
+
+            # else:
+            #     drift_check.append("False")
 
         for i in range(len(myanalytes)):
             # strip the atomic number from our analyte data
@@ -3311,10 +3359,11 @@ def calculate_concentrations(
     [
         Input("analyte_dropdown", "value"),
         Input("stored_calibstd_data", "data"),
+        Input("drift_alpha", "value"),
         Input("calculate_btn", "n_clicks"),
     ],
 )
-def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
+def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
 
     if n_clicks < 1:
         raise exceptions.PreventUpdate
@@ -3345,6 +3394,20 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         mean = np.mean(y)
         std = np.std(y)
         se = 100 * ((std / mean) / np.sqrt(len(y)))
+        
+        #f value stuff
+        fvalue = model.fvalue
+        f_pvalue = model.f_pvalue
+        # alpha is our confidence value. Default would be 99% so it has 
+        # to be very linear to drift correct
+        fcrit = stats.f.ppf(q = 1 - alpha, dfn = len(x) - 1, dfd = len(y) - 1)
+        
+        #drift correct only if both conditions are true
+        if (f_pvalue < alpha) and (fvalue > fcrit):
+            drift = "True"
+        else:
+            drift = "False"
+
 
         # scatter plot
         drift_fig = px.scatter(
@@ -3381,7 +3444,7 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
         )
 
         # annotations for the std error of the mean, the RMSE, and whether or not its drift corrected
-        # this gets tripped if the RMSE is less than the relative standard error of the mean
+        
         drift_fig.add_annotation(x=0, y=mean, text="Mean", showarrow=True, arrowhead=6)
         drift_fig.add_annotation(
             xref="x domain",
@@ -3391,41 +3454,61 @@ def plot_calib_stds(drift_analyte, calib_std_data, n_clicks):
             text="Std. Err. of mean %: <b><i>{}</i></b>".format(np.round(se, 3)),
             showarrow=False,
         )
+ 
         drift_fig.add_annotation(
             xref="x domain",
             yref="y domain",
             x=0.15,
             y=1.05,
-            text="RMSE of regression % : <b><i>{}</i></b>".format(
-                np.round(100 * RMSE / mean, 3)
+            text="Regression stats: <br> RMSE % : <b><i>{}</i></b> <br> p: <b><i>{:E}</i></b>".format(
+                np.round(100 * RMSE / mean, 3),
+                np.round(f_pvalue,3),
             ),
             showarrow=False,
         )
-        if 100 * RMSE / mean < se:
-            drift_check = "True"
-
+        
+        drift_fig.add_annotation(
+            xref="x domain",
+            yref="y domain",
+            x=0.23,
+            y=0.98,
+            text="F<sub>val</sub>: <b><i>{}</i></b> <br> F<sub>crit</sub>: <b><i>{}</i></b>".format(
+                np.round(fvalue,3),
+                np.round(fcrit,3)
+            ),
+            showarrow=False,
+        )
+        
+        
+        
+        if drift == "True":
+            
             drift_fig.add_annotation(
                 xref="x domain",
                 yref="y domain",
                 x=0.4,
                 y=1.05,
                 text="Drift Corrected: <b>{} <br> <i>y = {}x + {}</i></b>".format(
-                    drift_check, np.round(slope, 2), np.round(intercept, 2),
+                    drift, np.round(slope, 2), np.round(intercept, 2),
                 ),
                 showarrow=False,
             )
-
+            
         else:
-            drift_check = "False"
-
+            
             drift_fig.add_annotation(
                 xref="x domain",
                 yref="y domain",
                 x=0.4,
                 y=1.05,
-                text="Drift Corrected: <b>{}</b>".format(drift_check),
+                text="Drift Corrected: <b>{} </b>".format(
+                    drift,
+                ),
                 showarrow=False,
             )
+            
+
+        
 
         drift_fig.update_layout(
             template="simple_white",
