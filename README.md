@@ -64,7 +64,7 @@ python lasertram-db.py
 ### Caveats
 
 #### Installation
-On windows you may need to add the following channel for downloading the ```requirements.txt```file:
+On windows you may need to add the following channel for downloading the ```local_requirements.txt```file:
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 cd /path/to/laserTRAM-DB
@@ -74,6 +74,11 @@ conda config --append channels conda-forge
 conda install --file requirements.txt
 python lasertram-db.py
 ```
+If you are on a computer where you do not have admin permissions, ```git``` may not be installed when you create a new virtual environment. A workaround for this is simply downloading the repository as a zip file and unpacking. This will accomplish the same task as:
+```
+git clone https://github.com/jlubbersgeo/laserTRAM-DB
+```
+
 
 #### Internal Standards
 While you can technically use any analyte for an internal standard in ```LaserTRAM``` (i.e., it will still generate a ratio normalized to any analyte in the experiment), concentrations will only be calculated in ```LaserCalc``` from internal standards that can be make the following oxides:
