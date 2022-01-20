@@ -1,7 +1,8 @@
 # ```LaserTRAM-DB```: A dashboard for the complete laser ablation icp-ms data reduction pipeline. 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5620858.svg)](https://doi.org/10.5281/zenodo.5620858)
 
-Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/)
+Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/
+
 
 ***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
 - Batch loading of internal standard concentrations for ```LaserCalc```
@@ -17,15 +18,15 @@ LaserTRAM-DB is a dashboard for the complete processing pipeline of Laser Ablati
 It is comprised of 3 parts: 
 1. **LaserTRAM:** Choosing an interval of interest from raw cps data in individual spot analyses and normalizing it to an internal standard.
 
-![LaserTRAM GUI](images/LaserTRAM_profiler_GUI.png)
+![LaserTRAM GUI](images/LaserTRAM_tab.png)
 
 2. **LaserTRAM profiler:** Functionally the same as LaserTRAM, however has tools that allow for the rapid inspection of a line of spot analyses gathered in quick succession.
 
-![LaserTRAM profiler GUI](images/LaserTRAM_GUI.png)
+![LaserTRAM profiler GUI](images/LaserTRAM_profiler_tab.png)
 
 3. **LaserCalc:** Takes the output from either LaserTRAM or LaserTRAM profiler and converts the normalized data into concentrations using the equations outlined below.
 
-![LaserCalc GUI](images/LaserCalc_GUI.png)
+![LaserCalc GUI](images/LaserCalc_concentrations_tab.png)
 
 ## Installation and Use
 
@@ -40,7 +41,7 @@ git clone https://github.com/jlubbersgeo/laserTRAM-DB
 cd /path/to/laserTRAM-DB
 conda create -n lasertram-db python=3.7.7
 conda activate lasertram-db
-conda install --file requirements.txt
+conda install --file local_requirements.txt
 python lasertram-db.py
 ```
 
