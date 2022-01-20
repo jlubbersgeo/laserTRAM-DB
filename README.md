@@ -106,9 +106,9 @@ Video tutorials on how to use each piece of software can be found at the followi
 ## Quickstart
 
 With LaserTRAM-DB up and running, to get started, please watch the videos above in the Demos section. After that, sample data may be found in the "tests" folder:
-- LaserTRAM test data: ```spot_test_raw_data.xlsx```
+- LaserTRAM test data: ```spot_test_raw_data.xlsx``` or ```spot_test_timestamp_raw_data.xlsx```
 - LaserTRAM profile test data: Any of the following files: ```ATHO-G-7.csv```, ```BCR-2G-12.csv```,```BCR-2G-1.csv```,```BHVO-2G-3.csv```,```unknown_nist.csv```
-- LaserCalc test data: ```spot_test_lasertram_complete.xlsx```,```profile_test_lasertram_profiler_complete.xlsx```
+- LaserCalc test data: ```spot_test_lasertram_complete.xlsx```,```spot_test_timestamp_lasertram_complete.xlsx```,```profile_test_lasertram_profiler_complete.xlsx```
 - LaserCalc standards data: ```laicpms_stds_tidy.xlsx```
 
 ## Contributing
