@@ -3,6 +3,8 @@
 
 Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/)
 
+[Documentation](https://github.com/jlubbersgeo/laserTRAM-DB/blob/main/docs/LaserTRAM_DB_documentation.pdf)
+
 
 ***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
 - Batch loading of internal standard concentrations for ```LaserCalc```
