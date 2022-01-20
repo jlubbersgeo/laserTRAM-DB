@@ -1,7 +1,7 @@
 # ```LaserTRAM-DB```: A dashboard for the complete laser ablation icp-ms data reduction pipeline. 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5620858.svg)](https://doi.org/10.5281/zenodo.5620858)
 
-Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/
+Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/)
 
 
 ***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
