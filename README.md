@@ -71,7 +71,7 @@ cd /path/to/laserTRAM-DB
 conda create -n lasertram-db python=3.7.7
 conda activate lasertram-db
 conda config --append channels conda-forge
-conda install --file requirements.txt
+conda install --file local_requirements.txt
 python lasertram-db.py
 ```
 If you are on a computer where you do not have admin permissions, ```git``` may not be installed when you create a new virtual environment. A workaround for this is simply downloading the repository as a zip file and unpacking. This will accomplish the same task as:
