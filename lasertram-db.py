@@ -346,96 +346,110 @@ app.layout = html.Div(
                                                     ]
                                                 ),
                                                 dbc.Row(
-                                                    [html.Div([dbc.Col(
-                                                        [
-                                                            html.H4(
-                                                                "Analyte Uncertainties"
-                                                            ),
-                                                            dcc.Graph(
-                                                                id="error-data",
-                                                                style={
-                                                                    "width": "90vh"
-                                                                },
-                                                            ),
-                                                        ]
-                                                    )],style={
-                                                        "width": "50%",
-                                                        "display": "inline-block",
-                                                    },)
-                                                        ,html.Div([dbc.Col(
+                                                    [
+                                                        html.Div(
                                                             [
-                                                                html.H4(
-                                                                    "Saved Spot Data"
-                                                                ),
-                                                                dash_table.DataTable(
-                                                                    id="adding-rows-table",
-                                                                    columns=[
-                                                                        {
-                                                                            "name": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "id": "analyte-{}".format(
-                                                                                i
-                                                                            ),
-                                                                            "deletable": True,
-                                                                            "renamable": False,
-                                                                        }
-                                                                        for i in range(
-                                                                            1, 5
-                                                                        )
-                                                                    ],
-                                                                    style_table={
-                                                                        "overflowX": "auto",
-                                                                        "height": 275,
-                                                                        "width": "70vh",
-                                                                    },
-                                                                    fixed_rows={
-                                                                        "headers": True
-                                                                    },
-                                                                    style_cell={
-                                                                        # all three widths are needed
-                                                                        "minWidth": "100px",
-                                                                        "width": "60px",
-                                                                        "maxWidth": "60px",
-                                                                        "overflow": "hidden",
-                                                                        "textOverflow": "ellipsis",
-                                                                    },
-                                                                    style_data_conditional=[
-                                                                        {
-                                                                            "if": {
-                                                                                "row_index": "odd"
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Analyte Uncertainties"
+                                                                        ),
+                                                                        dcc.Graph(
+                                                                            id="error-data",
+                                                                            style={
+                                                                                "width": "90vh"
                                                                             },
-                                                                            "backgroundColor": "rgb(248, 248, 248)",
-                                                                        }
-                                                                    ],
-                                                                    style_header={
-                                                                        "backgroundColor": "rgb(230, 230, 230)",
-                                                                        "fontWeight": "bold",
-                                                                    },
-                                                                    data=[
-                                                                        {
-                                                                            "analyte-{}".format(
-                                                                                i
-                                                                            ): (
-                                                                                (i - 1)
-                                                                                * 5
-                                                                            )
-                                                                            for i in range(
-                                                                                1, 5
-                                                                            )
-                                                                        }
-                                                                    ],
-                                                                    editable=True,
-                                                                    row_deletable=False,
-                                                                    export_format="xlsx",
-                                                                    export_headers="display",
-                                                                ),
-                                                            ]
-                                                        )],style={
-                                                            "width": "50%",
-                                                            "display": "inline-block",
-                                                        })
-                                                        ,
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
+                                                        ),
+                                                        html.Div(
+                                                            [
+                                                                dbc.Col(
+                                                                    [
+                                                                        html.H4(
+                                                                            "Saved Spot Data"
+                                                                        ),
+                                                                        dash_table.DataTable(
+                                                                            id="adding-rows-table",
+                                                                            columns=[
+                                                                                {
+                                                                                    "name": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "id": "analyte-{}".format(
+                                                                                        i
+                                                                                    ),
+                                                                                    "deletable": True,
+                                                                                    "renamable": False,
+                                                                                }
+                                                                                for i in range(
+                                                                                    1, 5
+                                                                                )
+                                                                            ],
+                                                                            style_table={
+                                                                                "overflowX": "auto",
+                                                                                "height": 275,
+                                                                                "width": "70vh",
+                                                                            },
+                                                                            fixed_rows={
+                                                                                "headers": True
+                                                                            },
+                                                                            style_cell={
+                                                                                # all three widths are needed
+                                                                                "minWidth": "100px",
+                                                                                "width": "60px",
+                                                                                "maxWidth": "60px",
+                                                                                "overflow": "hidden",
+                                                                                "textOverflow": "ellipsis",
+                                                                            },
+                                                                            style_data_conditional=[
+                                                                                {
+                                                                                    "if": {
+                                                                                        "row_index": "odd"
+                                                                                    },
+                                                                                    "backgroundColor": "rgb(248, 248, 248)",
+                                                                                }
+                                                                            ],
+                                                                            style_header={
+                                                                                "backgroundColor": "rgb(230, 230, 230)",
+                                                                                "fontWeight": "bold",
+                                                                            },
+                                                                            data=[
+                                                                                {
+                                                                                    "analyte-{}".format(
+                                                                                        i
+                                                                                    ): (
+                                                                                        (
+                                                                                            i
+                                                                                            - 1
+                                                                                        )
+                                                                                        * 5
+                                                                                    )
+                                                                                    for i in range(
+                                                                                        1,
+                                                                                        5,
+                                                                                    )
+                                                                                }
+                                                                            ],
+                                                                            editable=True,
+                                                                            row_deletable=False,
+                                                                            export_format="xlsx",
+                                                                            export_headers="display",
+                                                                        ),
+                                                                    ]
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "width": "50%",
+                                                                "display": "inline-block",
+                                                            },
+                                                        ),
                                                     ]
                                                 ),
                                             ]
@@ -1136,9 +1150,6 @@ app.layout = html.Div(
                                                                                             placeholder="Choose calibration std.",
                                                                                             value=None,
                                                                                         ),
-                                                                                      
-                                                                                        
-                                                                                        
                                                                                     ]
                                                                                 ),
                                                                             ]
@@ -1150,23 +1161,28 @@ app.layout = html.Div(
                                                                     [
                                                                         dbc.Row(
                                                                             [
-                                                                                html.Label('Drift significance threshold: '),
-                                                                                dcc.Input(id = 'drift_alpha',
-                                                                                          type = 'number',
-                                                                                          value = .01,
-                                                                                          min = float(0),
-                                                                                          max = float(1),
-                                                                                          step = float(0.01)
-                                                                                          
-                                                                                    
-                                                                                    )
-                                                                                ]
-                                                                            
-                                                                            )
-                                                                        ],
-                                                                    width = 2
-                                                                    
-                                                                    ),
+                                                                                html.Label(
+                                                                                    "Drift significance threshold: "
+                                                                                ),
+                                                                                dcc.Input(
+                                                                                    id="drift_alpha",
+                                                                                    type="number",
+                                                                                    value=0.01,
+                                                                                    min=float(
+                                                                                        0
+                                                                                    ),
+                                                                                    max=float(
+                                                                                        1
+                                                                                    ),
+                                                                                    step=float(
+                                                                                        0.01
+                                                                                    ),
+                                                                                ),
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    width=2,
+                                                                ),
                                                                 dbc.Col(
                                                                     [
                                                                         dbc.Row(
@@ -1493,38 +1509,22 @@ def get_data(contents, filename):
         # Assume that the user uploaded an excel file
         data = pd.read_excel(io.BytesIO(decoded))
         data.dropna(inplace=True)
-        
+
         data = data.set_index(["SampleLabel"])
 
-        #check for timestamp column
-        # if 'timestamp' in data.columns.tolist():
-        if 'timestamp' in data.columns.tolist():
-            
-            columns = (
-                [{"id": "timestamp", "name": "timestamp"}]
-                + [{"id": "Spot", "name": "Spot"}]
-                + [{"id": "bkgd_start", "name": "bkgd_start"}]
-                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
-                + [{"id": "int_start", "name": "int_start"}]
-                + [{"id": "int_stop", "name": "int_stop"}]
-                + [{"id": "norm", "name": "norm"}]
-                + [{"id": "norm_cps", "name": "norm_cps"}]
-                + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
-                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
-            )
-            
-        else:
-            columns = (
-                [{"id": "Spot", "name": "Spot"}]
-                + [{"id": "bkgd_start", "name": "bkgd_start"}]
-                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
-                + [{"id": "int_start", "name": "int_start"}]
-                + [{"id": "int_stop", "name": "int_stop"}]
-                + [{"id": "norm", "name": "norm"}]
-                + [{"id": "norm_cps", "name": "norm_cps"}]
-                + [{"id": c, "name": c} for c in data.iloc[:, 1:].columns]
-                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 1:].columns]
-            )
+        # initial columns
+        columns = (
+            [{"id": "timestamp", "name": "timestamp"}]
+            + [{"id": "Spot", "name": "Spot"}]
+            + [{"id": "bkgd_start", "name": "bkgd_start"}]
+            + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+            + [{"id": "int_start", "name": "int_start"}]
+            + [{"id": "int_stop", "name": "int_stop"}]
+            + [{"id": "norm", "name": "norm"}]
+            + [{"id": "norm_cps", "name": "norm_cps"}]
+            + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
+            + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
+        )
 
         spots = list(data.index.unique())
         spot_list = [{"label": spot, "value": spot} for spot in spots]
@@ -1577,15 +1577,15 @@ def plot(spot, stored_data, interval_slider, int_std, filename):
             # retrieve data stored in background
             data = pd.read_json(stored_data, orient="split")
             data.set_index("SampleLabel", inplace=True)
-            
+
             # filter for spot chosen and exclude timestamp column
-            if 'timestamp' in data.columns.tolist():
-                
+            if "timestamp" in data.columns.tolist():
+
                 df = data.loc[spot, :]
-                df = df.iloc[:,1:]
+                df = df.iloc[:, 1:]
             else:
-                
-                df = data.loc[spot,:]
+
+                df = data.loc[spot, :]
 
             # get time in units of seconds
             df["Time"] = df["Time"] / 1000
@@ -1804,17 +1804,17 @@ def add_row(
 
                 data = pd.read_json(stored_data, orient="split")
                 data.set_index("SampleLabel", inplace=True)
-                
+
                 # filter for spot chosen and exclude timestamp column
-                if 'timestamp' in data.columns.tolist():
-                    timestamp = str(data.loc[spot,'timestamp'].unique()[0])
+                if "timestamp" in data.columns.tolist():
+                    timestamp = str(data.loc[spot, "timestamp"].unique()[0])
                     df = data.loc[spot, :]
-                    df = df.iloc[:,1:]
+                    df = df.iloc[:, 1:]
 
                 else:
-                    timestamp = 'N/A'
-                    df = data.loc[spot,:]
-                    
+                    timestamp = "N/A"
+                    df = data.loc[spot, :]
+
                 elements = df.iloc[:, 1:].columns.tolist()
 
                 df["Time"] = df["Time"] / 1000
@@ -1823,8 +1823,6 @@ def add_row(
                 bkgd_stop_idx = np.where(df["Time"] > interval_slider[1])[0][0]
                 int_start_idx = np.where(df["Time"] > interval_slider[2])[0][0]
                 int_stop_idx = np.where(df["Time"] > interval_slider[3])[0][0]
-
-                
 
                 for e, i in zip(elements, range(len(elements))):
                     if e == int_std:
@@ -1858,17 +1856,18 @@ def add_row(
                 # start and stop times as well as the int std cps value
                 row_data = list(bkgd_correct_med) + list(rel_se)
                 row_data.insert(0, spot)
-                
-                
-                    
+
                 row_data.insert(1, df["Time"][bkgd_start_idx])
                 row_data.insert(2, df["Time"][bkgd_stop_idx])
                 row_data.insert(3, df["Time"][int_start_idx])
                 row_data.insert(4, df["Time"][int_stop_idx])
                 row_data.insert(5, int_std)
                 row_data.insert(6, np.median(bkgd_correct_data[int_std_loc]))
-                
-                row_data.insert(0,timestamp)
+
+                row_data.insert(0, timestamp)
+
+                # NEED TO ADD COLUMN CHANGE TO REFLECT IF THERE IS NOT A TIMESTAMP
+                # RIGHT NOW DEFAULT IS IF THERE IS A TIMESTAMP
 
                 rows.append({c["id"]: r for c, r in zip(columns, row_data)})
 
@@ -1960,8 +1959,6 @@ def get_oldratio_data(contents, filename, columns, int_std_columns, header):
         table_data = pd.DataFrame(np.zeros(len(columns)))
         table_columns = columns.copy()
 
-     
-
     elif "xls" in filename:
         # retrieve data from uploaded file. This is the output from the above
         # tabs (either lasertram or lasertram profiler)
@@ -1974,20 +1971,23 @@ def get_oldratio_data(contents, filename, columns, int_std_columns, header):
         cols = data.columns.tolist()
 
         data = data.set_index(["Spot"])
-        if 'timestamp' in data.columns.tolist():
-            
+        if "timestamp" in data.columns.tolist():
+
             analytes = [
-                {"label": l, "value": l} for l in data.iloc[:, 8:].columns if "_se" not in l
+                {"label": l, "value": l}
+                for l in data.iloc[:, 8:].columns
+                if "_se" not in l
             ]
-        
+
         else:
             analytes = [
-                {"label": l, "value": l} for l in data.iloc[:, 7:].columns if "_se" not in l
+                {"label": l, "value": l}
+                for l in data.iloc[:, 7:].columns
+                if "_se" not in l
             ]
-        
 
         table_data = data.reset_index()
-        table_data = table_data.loc[:,cols]
+        table_data = table_data.loc[:, cols]
         table_columns = [{"id": str(c), "name": str(c)} for c in table_data.columns]
 
     return (
@@ -2027,15 +2027,13 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
                     spots_with_data.append(spot)
 
         df_for_reprocessing = df.loc[spots_with_data, :]
-        if 'timestamp' in df_for_reprocessing.columns.tolist():
-            
+        if "timestamp" in df_for_reprocessing.columns.tolist():
+
             elements = df_for_reprocessing.iloc[:, 2:].columns.tolist()
 
         else:
-            
+
             elements = df_for_reprocessing.iloc[:, 1:].columns.tolist()
-            
-        
 
         medians = []
         rel_ses = []
@@ -2063,15 +2061,15 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             ][0]
 
             # make numpy array, this is all the same as the actual lasertram
-            if 'timestamp' in spot_data.columns.tolist():
-                
-                timestamp = str(spot_data['timestamp'].unique()[0])
-                df_n = spot_data.iloc[:,1:].to_numpy()
-            
+            if "timestamp" in spot_data.columns.tolist():
+
+                timestamp = str(spot_data["timestamp"].unique()[0])
+                df_n = spot_data.iloc[:, 1:].to_numpy()
+
             else:
-                timestamp = 'N/A'
+                timestamp = "N/A"
                 df_n = spot_data.to_numpy()
-                
+
             int_std_loc = [elements.index(i) for i in elements if int_std in i][0]
             bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
             detection_limits = (
@@ -2101,28 +2099,26 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
         rel_se_df = pd.DataFrame(
             rel_ses, columns=["{}_se".format(element) for element in elements]
         )
-            
+
         reprocessed_data = pd.concat(
             [
                 old_df.loc[
                     spots_with_data,
                     ["bkgd_start", "bkgd_stop", "int_start", "int_stop"],
-                ].reset_index().drop('index',axis = 'columns'),
+                ]
+                .reset_index()
+                .drop("index", axis="columns"),
                 medians_df,
                 rel_se_df,
             ],
             axis="columns",
         )
-        
-        reprocessed_data.insert(0,'timestamp',timestamps)
+
+        reprocessed_data.insert(0, "timestamp", timestamps)
         reprocessed_data.insert(1, "Spot", spots_with_data)
-        
-        
-            
+
         reprocessed_data.insert(6, "norm", int_std)
         reprocessed_data.insert(7, "norm_cps", norm_counts)
-        
-        
 
         return (
             [{"id": str(c), "name": str(c)} for c in reprocessed_data.columns],
@@ -2696,9 +2692,16 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 
         stds_column = [std for sublist in stds_column for std in sublist]
 
-        potential_standards = list(np.unique(stds_column))
-
+        # standards that can be used as calibrations standards (must have more than 1 analysis)
+        # potential_standards = list(np.unique(stds_column))
+        potential_standards = [
+            std for std in np.unique(stds_column) if stds_column.count(std) > 1
+        ]
         potential_standards.remove("unknown")
+
+        # all of the samples in your input sheet that are NOT potential standards
+        all_standards = list(np.unique(stds_column))
+        all_standards.remove("unknown")
 
         # This now denotes whether or not something is a standard
         # or an unknown
@@ -2720,7 +2723,6 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         )
         columns = [{"id": c, "name": c} for c in data.columns]
         int_std_columns = [{"id": c, "name": c} for c in int_std_data.columns]
-        
 
         int_std_table_data = int_std_data.to_dict("records")
         calib_std = potential_standards[0]
@@ -2791,7 +2793,7 @@ def get_stds(contents, filename):
 )
 # This is the money maker function that does all the heavy lifting.
 def calculate_concentrations(
-    stored_data, stds_data, stds, calib_std, n_clicks, table_data,alpha, header,
+    stored_data, stds_data, stds, calib_std, n_clicks, table_data, alpha, header,
 ):
     # dont do anything if the button hasn't been clicked. Need to prevent
     # error from being thrown
@@ -2814,8 +2816,6 @@ def calculate_concentrations(
                 or "Spot" in analyte
                 or "wt%" in analyte
                 or "1stdev%" in analyte
-                or "CaO wt%" in analyte
-                or "CaO 1stdev%" in analyte
                 or "start" in analyte
                 or "stop" in analyte
                 or "long" in analyte
@@ -2849,9 +2849,16 @@ def calculate_concentrations(
 
         stds_column = [std for sublist in stds_column for std in sublist]
 
-        potential_standards = list(np.unique(stds_column))
-
+        # standards that can be used as calibrations standards (must have more than 1 analysis)
+        # potential_standards = list(np.unique(stds_column))
+        potential_standards = [
+            std for std in np.unique(stds_column) if stds_column.count(std) > 1
+        ]
         potential_standards.remove("unknown")
+
+        # all of the samples in your input sheet that are NOT potential standards
+        all_standards = list(np.unique(stds_column))
+        all_standards.remove("unknown")
 
         # This now denotes whether or not something is a standard
         # or an unknown
@@ -2898,16 +2905,17 @@ def calculate_concentrations(
             # Getting regression statistics on analyte normalized ratios through time
             # for the calibration standard. This is what we use to check to see if it needs
             # to be drift corrected
-            if 'timestamp' in calib_std_data.columns.tolist():
-                # get an array in time units based on timestamp column. This is 
+            if "timestamp" in calib_std_data.columns.tolist():
+                # get an array in time units based on timestamp column. This is
                 # is in seconds
-                x = np.array([np.datetime64(d,'m') for d in calib_std_data['timestamp']]).astype(np.float64)
+                x = np.array(
+                    [np.datetime64(d, "m") for d in calib_std_data["timestamp"]]
+                ).astype(np.float64)
 
-            
             else:
-                
+                #uses the analysis number if there is not a timestamp column
                 x = calib_std_data["index"]
-                
+
             y = calib_std_data[myanalytes[j]]
 
             X = sm.add_constant(x)
@@ -2922,17 +2930,14 @@ def calculate_concentrations(
             calib_std_rmses.append(RMSE)
             calib_std_slopes.append(model.params[1])
             calib_std_intercepts.append(model.params[0])
-            
-            
-            
-     
-            #f value stuff
+
+            # f value stuff
             fvalue = model.fvalue
             f_pvalue = model.f_pvalue
-            # alpha is our confidence value. Default would be 99% so it has 
+            # alpha is our confidence value. Default would be 99% so it has
             # to be very linear to drift correct
-            fcrit = stats.f.ppf(q = 1 - alpha, dfn = len(x) - 1, dfd = len(y) - 1)
-            
+            fcrit = stats.f.ppf(q=1 - alpha, dfn=len(x) - 1, dfd=len(y) - 1)
+
             if (f_pvalue < alpha) and (fvalue > fcrit):
                 drift = "True"
                 drift_check.append(drift)
@@ -2940,11 +2945,6 @@ def calculate_concentrations(
                 drift = "False"
                 drift_check.append(drift)
 
-            # if 100 * RMSE / calib_std_means[j] < calib_std_ses[j]:
-            #     drift_check.append("True")
-
-            # else:
-            #     drift_check.append("False")
 
         for i in range(len(myanalytes)):
             # strip the atomic number from our analyte data
@@ -2967,7 +2967,7 @@ def calculate_concentrations(
         std_conc_ratios = np.array(std_conc_ratios)
 
     # all of the samples in your input sheet that are NOT potential calibration standards
-    samples_nostandards = list(np.setdiff1d(stds_column, potential_standards))
+    samples_nostandards = list(np.setdiff1d(stds_column, all_standards))
 
     # get corresponding oxide for internal standard analyte and convert its
     # concentrations from wt% oxide to ppm. Only works with the supported
@@ -2986,14 +2986,16 @@ def calculate_concentrations(
         table_data_df.loc[samples_nostandards, "{} 1stdev%".format(oxide)]
     ).to_numpy()
 
-    secondary_standards = potential_standards.copy()
+
+    # iterate through list of all standards in dataset that have data in the 
+    # laicpms_stds_tidy.xlsx sheet
+    secondary_standards = all_standards.copy()
     secondary_standards.remove(calib_std)
     concentrations_list = []
-    
-    
+
     for standard in secondary_standards:
         drift_concentrations_list = []
-    
+
         for j, analyte, slope, intercept, drift in zip(
             range(len(myanalytes)),
             myanalytes,
@@ -3001,15 +3003,30 @@ def calculate_concentrations(
             calib_std_intercepts,
             drift_check,
         ):
-    
+            #working with analytes that have been drift corrected
             if "True" in drift:
-                if 'timestamp' in data.columns.tolist():
-                    frac = slope*np.array([np.datetime64(d, "m") for d in data.loc[standard,"timestamp"]]).astype(np.float64) + intercept
+                if "timestamp" in data.columns.tolist():
+                    # if there is timestamp data use that to get the normalized
+                    #ratio of the analyte in the calibration standard rather 
+                    # than the mean
+                    frac = (
+                        slope
+                        * np.array(
+                            [
+                                np.datetime64(d, "m")
+                                for d in data.loc[standard, "timestamp"]
+                            ]
+                        ).astype(np.float64)
+                        + intercept
+                    )
+                    
                 else:
-                    
-                    
+                    #if there is no timestamp info just do the same as above with 
+                    # the analysis number as the x var
                     frac = slope * data.loc[standard, "index"] + intercept
-    
+                    
+                    
+                # concentration of analyte that has been drift corrected
                 drift_concentrations = (
                     (
                         stds_data.loc[
@@ -3020,53 +3037,91 @@ def calculate_concentrations(
                     * (std_conc_ratios[j] / frac)
                     * data.loc[standard, analyte]
                 )
-    
-                df = pd.DataFrame(drift_concentrations, columns=[analyte])
-    
+                
+                # take care of potential standards that have only one analysis
+                # i.e. a 1D array. This forces things to be in the right shape 
+                # to be in a pandas dataframe later
+                if type(drift_concentrations) == np.float64:
+                    df = pd.DataFrame(
+                        np.array([drift_concentrations]), columns=[analyte]
+                    )
+
+                else:
+                    df = pd.DataFrame(drift_concentrations, columns=[analyte])
+
                 drift_concentrations_list.append(df)
-    
+
+        # if there are more than one secondary standard combine the individual
+        # dataframes into one
         if len(drift_concentrations_list) > 0:
-    
+
             drift_df = pd.concat(drift_concentrations_list, axis="columns")
-    
+            #takes care of one analysis standards so they are compatible with
+            # standards that are more than one analysis
+            if drift_df.shape[0] == 1:
+                drift_df["sample"] = standard
+                drift_df.set_index("sample", inplace=True)
+                
+            #calculate concentrations
             concentrations = (
                 (
                     stds_data.loc[
-                        standard, re.split("(\d+)", calib_std_data["norm"].unique()[0])[2]
+                        standard,
+                        re.split("(\d+)", calib_std_data["norm"].unique()[0])[2],
                     ]
                 )
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * data.loc[standard, myanalytes]
             )
-    
+            
+            # Replace analyte values with drift corrected
+            # value
             for column in drift_df.columns.tolist():
-                concentrations[column] = drift_df[column]
-    
+                #this situation should rarely be encountered but takes care of 
+                # 1 analysis standards
+                if type(concentrations) == pd.Series:
+                    concentrations.loc[column] = drift_df[column].to_numpy()[0]
+
+                else:
+                    #multiple analysis standards
+                    concentrations[column] = drift_df[column]
+                    
+                    
+            # If 1 analysis standard force into correct shape for concating 
+            # later
+            if type(concentrations) == pd.Series:
+                concentrations = pd.DataFrame(concentrations).T
+                concentrations["sample"] = standard
+                concentrations.set_index("sample", inplace=True)
+
             concentrations_list.append(concentrations)
+            
+            
+            
         else:
             concentrations = (
                 (
                     stds_data.loc[
-                        standard, re.split("(\d+)", calib_std_data["norm"].unique()[0])[2]
+                        standard,
+                        re.split("(\d+)", calib_std_data["norm"].unique()[0])[2],
                     ]
                 )
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * data.loc[standard, myanalytes]
             )
             concentrations_list.append(concentrations)
-    
-    
-    # All of our samples that are not potential secondary standards. The concentrations for the internal standard are
-    # specified in the cell above
-    
-    
+
+    # Below calculates the concentrations of all unknown analyses using the same 
+    # logic as above with the standards, it just does not search the uploaded standards
+    # data for internal standards concentration. This is instead input by the user
+
     unknown_concentrations_list = []
     # creates a list of dataframes, one for each sample, that holds the concentration information
-    
+
     for sample in samples_nostandards:
-    
+
         drift_concentrations_list = []
-    
+
         for j, analyte, slope, intercept, drift in zip(
             range(len(myanalytes)),
             myanalytes,
@@ -3074,38 +3129,64 @@ def calculate_concentrations(
             calib_std_intercepts,
             drift_check,
         ):
-    
+
             if "True" in drift:
-                if 'timestamp' in data.columns.tolist():
-                    frac = slope * np.array([np.datetime64(d, "m") for d in data.loc[sample,"timestamp"]]).astype(np.float64) + intercept
+                if "timestamp" in data.columns.tolist():
+                    frac = (
+                        slope
+                        * np.array(
+                            [
+                                np.datetime64(d, "m")
+                                for d in data.loc[sample, "timestamp"]
+                            ]
+                        ).astype(np.float64)
+                        + intercept
+                    )
                 else:
-                    
+
                     frac = data.loc[sample, "index"] + intercept
-                
-    
+
                 drift_concentrations = (
                     data.loc[sample, analyte]
                     * (std_conc_ratios[j] / frac)
                     * (int_std_concentration)
                 )
-    
-                df = pd.DataFrame(drift_concentrations, columns=[analyte])
-    
+
+                if type(drift_concentrations) == np.float64:
+                    df = pd.DataFrame(
+                        np.array([drift_concentrations]), columns=[analyte]
+                    )
+
+                else:
+                    df = pd.DataFrame(drift_concentrations, columns=[analyte])
+
                 drift_concentrations_list.append(df)
-                
+
         if len(drift_concentrations_list) > 0:
-    
+
             drift_df = pd.concat(drift_concentrations_list, axis="columns")
-    
+            if drift_df.shape[0] == 1:
+                drift_df["sample"] = standard
+                drift_df.set_index("sample", inplace=True)
+
             unknown_concentrations = (
                 data.loc[sample, myanalytes]
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * (int_std_concentration[:, np.newaxis])
             )
-    
+
             for column in drift_df.columns.tolist():
-                unknown_concentrations[column] = drift_df[column]
-    
+                if type(unknown_concentrations) == pd.Series:
+                    unknown_concentrations.loc[column] = drift_df[column].to_numpy()[0]
+
+                else:
+                    unknown_concentrations[column] = drift_df[column]
+
+        if type(unknown_concentrations) == pd.Series:
+            unknown_concentrations = pd.DataFrame(concentrations).T
+            unknown_concentrations["sample"] = sample
+            unknown_concentrations.set_index("sample", inplace=True)
+
             unknown_concentrations_list.append(unknown_concentrations)
         else:
             unknown_concentrations = (
@@ -3113,7 +3194,7 @@ def calculate_concentrations(
                 * (std_conc_ratios / calib_std_means[myanalytes])
                 * (int_std_concentration[:, np.newaxis])
             )
-    
+
             unknown_concentrations_list.append(unknown_concentrations)
 
     # Incorporating uncertainty in the calibration standard
@@ -3181,11 +3262,17 @@ def calculate_concentrations(
 
         if calib_uncertainty == True:
             stds_values = concentration * np.sqrt(
-                t1
-                + t2
-                + std_conc_stds
-                + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                + (data.loc[standard, myuncertainties].to_numpy() / 100) ** 2
+                np.array(
+                    t1
+                    + t2
+                    + std_conc_stds
+                    + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
+                    + (
+                        (data.loc[standard, myuncertainties].to_numpy() / 100)
+                        / data.loc[standard, myanalytes].to_numpy()
+                    )
+                    ** 2
+                ).astype(np.float64)
             )
             stds_values.columns = myuncertainties
             stds_list.append(stds_values)
@@ -3292,8 +3379,6 @@ def calculate_concentrations(
             * 100,
         )
 
-        
-
         final_standards_list.append(df)
 
     # doing the same thing as above where we make one dataframe for each sample
@@ -3308,7 +3393,6 @@ def calculate_concentrations(
         df.insert(loc=1, column="{} wt%".format(oxide), value=int_std_oxide_array)
         df.insert(loc=2, column="{} 1stdev%".format(oxide), value=unknown_int_std_unc)
 
-
         final_unknowns_list.append(df)
 
     # get final dataframes for secondary standards and unknowns
@@ -3322,8 +3406,10 @@ def calculate_concentrations(
 
     header = "Calculated Concentrations: "
 
+    # placeholder analyte until changed by user
     init_analyte = myanalytes[0]
-
+    
+    # calibration standard table data in "Primary Standard" tab
     table_df = calib_std_data.copy()
     table_df.loc["mean"] = table_df.mean()
     table_df.loc["mean", "Spot"] = "average"
@@ -3363,20 +3449,22 @@ def calculate_concentrations(
         Input("calculate_btn", "n_clicks"),
     ],
 )
-def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
+def plot_calib_stds(drift_analyte, calib_std_data, alpha, n_clicks):
 
     if n_clicks < 1:
         raise exceptions.PreventUpdate
     else:
         calib_std_data = pd.read_json(calib_std_data, orient="split")
         norm_analyte = calib_std_data["norm"].unique().tolist()[0]
-        if 'timestamp' in calib_std_data.columns.tolist():
-           # get an array in time units based on timestamp column. This is 
-           # is in seconds
-           x = np.array([np.datetime64(d,'m') for d in calib_std_data['timestamp']]).astype(np.float64)
+        if "timestamp" in calib_std_data.columns.tolist():
+            # get an array in time units based on timestamp column. This is
+            # is in seconds
+            x = np.array(
+                [np.datetime64(d, "m") for d in calib_std_data["timestamp"]]
+            ).astype(np.float64)
         else:
             x = calib_std_data["index"]
-           
+
         y = calib_std_data[drift_analyte].to_numpy()
 
         X = sm.add_constant(x)
@@ -3394,25 +3482,24 @@ def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
         mean = np.mean(y)
         std = np.std(y)
         se = 100 * ((std / mean) / np.sqrt(len(y)))
-        
-        #f value stuff
+
+        # f value stuff
         fvalue = model.fvalue
         f_pvalue = model.f_pvalue
-        # alpha is our confidence value. Default would be 99% so it has 
+        # alpha is our confidence value. Default would be 99% so it has
         # to be very linear to drift correct
-        fcrit = stats.f.ppf(q = 1 - alpha, dfn = len(x) - 1, dfd = len(y) - 1)
-        
-        #drift correct only if both conditions are true
+        fcrit = stats.f.ppf(q=1 - alpha, dfn=len(x) - 1, dfd=len(y) - 1)
+
+        # drift correct only if both conditions are true
         if (f_pvalue < alpha) and (fvalue > fcrit):
             drift = "True"
         else:
             drift = "False"
 
-
         # scatter plot
         drift_fig = px.scatter(
             calib_std_data,
-            x=np.cumsum(np.diff(x, prepend = x[0])),
+            x=np.cumsum(np.diff(x, prepend=x[0])),
             y=drift_analyte,
             title="Normalized ratios for {} over time".format(
                 list(calib_std_data.index.unique())[0]
@@ -3435,7 +3522,7 @@ def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
         # line for the linear regression through the points
         drift_fig.add_trace(
             go.Scatter(
-                x=np.cumsum(np.diff(x, prepend = x[0])),
+                x=np.cumsum(np.diff(x, prepend=x[0])),
                 y=ypred,
                 mode="lines",
                 line=dict(color="black", width=3, dash="dash"),
@@ -3444,7 +3531,7 @@ def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
         )
 
         # annotations for the std error of the mean, the RMSE, and whether or not its drift corrected
-        
+
         drift_fig.add_annotation(x=0, y=mean, text="Mean", showarrow=True, arrowhead=6)
         drift_fig.add_annotation(
             xref="x domain",
@@ -3454,35 +3541,31 @@ def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
             text="Std. Err. of mean %: <b><i>{}</i></b>".format(np.round(se, 3)),
             showarrow=False,
         )
- 
+
         drift_fig.add_annotation(
             xref="x domain",
             yref="y domain",
             x=0.15,
             y=1.05,
             text="Regression stats: <br> RMSE % : <b><i>{}</i></b> <br> p: <b><i>{:E}</i></b>".format(
-                np.round(100 * RMSE / mean, 3),
-                np.round(f_pvalue,3),
+                np.round(100 * RMSE / mean, 3), np.round(f_pvalue, 3),
             ),
             showarrow=False,
         )
-        
+
         drift_fig.add_annotation(
             xref="x domain",
             yref="y domain",
             x=0.23,
             y=0.98,
             text="F<sub>val</sub>: <b><i>{}</i></b> <br> F<sub>crit</sub>: <b><i>{}</i></b>".format(
-                np.round(fvalue,3),
-                np.round(fcrit,3)
+                np.round(fvalue, 3), np.round(fcrit, 3)
             ),
             showarrow=False,
         )
-        
-        
-        
+
         if drift == "True":
-            
+
             drift_fig.add_annotation(
                 xref="x domain",
                 yref="y domain",
@@ -3493,22 +3576,17 @@ def plot_calib_stds(drift_analyte, calib_std_data,alpha, n_clicks):
                 ),
                 showarrow=False,
             )
-            
+
         else:
-            
+
             drift_fig.add_annotation(
                 xref="x domain",
                 yref="y domain",
                 x=0.4,
                 y=1.05,
-                text="Drift Corrected: <b>{} </b>".format(
-                    drift,
-                ),
+                text="Drift Corrected: <b>{} </b>".format(drift,),
                 showarrow=False,
             )
-            
-
-        
 
         drift_fig.update_layout(
             template="simple_white",
