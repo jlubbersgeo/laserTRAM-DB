@@ -1511,20 +1511,41 @@ def get_data(contents, filename):
         data.dropna(inplace=True)
 
         data = data.set_index(["SampleLabel"])
+        
+        #######
+        if 'timestamp' in [c for c in data.columns]:
+            
 
-        # initial columns
-        columns = (
-            [{"id": "timestamp", "name": "timestamp"}]
-            + [{"id": "Spot", "name": "Spot"}]
-            + [{"id": "bkgd_start", "name": "bkgd_start"}]
-            + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
-            + [{"id": "int_start", "name": "int_start"}]
-            + [{"id": "int_stop", "name": "int_stop"}]
-            + [{"id": "norm", "name": "norm"}]
-            + [{"id": "norm_cps", "name": "norm_cps"}]
-            + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
-            + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
-        )
+            # initial columns
+            columns = (
+                [{"id": "timestamp", "name": "timestamp"}]
+                + [{"id": "Spot", "name": "Spot"}]
+                + [{"id": "bkgd_start", "name": "bkgd_start"}]
+                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+                + [{"id": "int_start", "name": "int_start"}]
+                + [{"id": "int_stop", "name": "int_stop"}]
+                + [{"id": "norm", "name": "norm"}]
+                + [{"id": "norm_cps", "name": "norm_cps"}]
+                + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
+                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
+            )
+            
+        else:
+            # initial columns
+            columns = (
+                [{"id": "timestamp", "name": "timestamp"}]
+                + [{"id": "Spot", "name": "Spot"}]
+                + [{"id": "bkgd_start", "name": "bkgd_start"}]
+                + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+                + [{"id": "int_start", "name": "int_start"}]
+                + [{"id": "int_stop", "name": "int_stop"}]
+                + [{"id": "norm", "name": "norm"}]
+                + [{"id": "norm_cps", "name": "norm_cps"}]
+                + [{"id": c, "name": c} for c in data.iloc[:, 1:].columns]
+                + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 1:].columns]
+            )
+        ########
+            
 
         spots = list(data.index.unique())
         spot_list = [{"label": spot, "value": spot} for spot in spots]
