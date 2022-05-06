@@ -32,11 +32,7 @@ It is comprised of 3 parts:
 
 ## Installation and Use
 
-The easiest way to use LaserTRAM-DB is to use the following link: 
-
-[https://lasertram-db.herokuapp.com/](https://lasertram-db.herokuapp.com/)
-
-Alternatively, LaserTRAM-DB can be installed locally and run by creating a virtual environment. If you are new to python, we recommend doing this through [Anaconda](https://www.anaconda.com/products/individual).
+LaserTRAM-DB can be installed locally and run by creating a virtual environment. If you are new to python, we recommend doing this through [Anaconda](https://www.anaconda.com/products/individual).
 
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
@@ -99,9 +95,8 @@ While you can technically use any analyte for an internal standard in ```LaserTR
 ## Demos
 Video tutorials on how to use each piece of software can be found at the following links:
 
-- [LaserTRAM video](https://www.youtube.com/watch?v=ALVzTdMnS-k&t=338s&ab_channel=JordanLubbers)
-- [LaserTRAM profiler video](https://youtu.be/x6FINd_jvps)
-- [LaserCalc video](https://www.youtube.com/watch?v=vWmwE5XO5l0&t=1s&ab_channel=JordanLubbers)
+- [LaserTRAM video](https://youtu.be/7W3_tyhZTmg)
+- [LaserCalc video](https://youtu.be/CF6Jjfk9UWA)
 
 ## Quickstart
 
