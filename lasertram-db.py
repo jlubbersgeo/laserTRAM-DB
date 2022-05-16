@@ -3203,12 +3203,12 @@ def calculate_concentrations(
                 else:
                     unknown_concentrations[column] = drift_df[column]
 
-        if type(unknown_concentrations) == pd.Series:
-            unknown_concentrations = pd.DataFrame(concentrations).T
-            unknown_concentrations["sample"] = sample
-            unknown_concentrations.set_index("sample", inplace=True)
-
-            unknown_concentrations_list.append(unknown_concentrations)
+            if type(unknown_concentrations) == pd.Series:
+                unknown_concentrations = pd.DataFrame(concentrations).T
+                unknown_concentrations["sample"] = sample
+                unknown_concentrations.set_index("sample", inplace=True)
+    
+                unknown_concentrations_list.append(unknown_concentrations)
         else:
             unknown_concentrations = (
                 data.loc[sample, myanalytes]
