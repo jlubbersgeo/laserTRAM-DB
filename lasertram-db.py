@@ -2092,29 +2092,49 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
                 df_n = spot_data.to_numpy()
 
             int_std_loc = [elements.index(i) for i in elements if int_std in i][0]
+            
+           
+            # get median background counts per second for each analyte
             bkgd_data = np.median(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0)
+
+            # get detection limits for each analyte: 3 std devs from bkgd_data
             detection_limits = (
                 np.std(df_n[bkgd_start_idx:bkgd_stop_idx, 1:], axis=0) * 3
             )
-            bkgd_correct_data = (
-                df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data[int_std_loc]
-            )
+
+            # subtract background from interval signal
+            bkgd_correct_data = df_n[int_start_idx:int_stop_idx, 1:] - bkgd_data
+
+            # normalize background corrected data to internal standard data
             bkgd_correct_normal_data = (
                 bkgd_correct_data / bkgd_correct_data[:, int_std_loc][:, None]
             )
+
+            # median values for normalized data for interval
             bkgd_correct_med = np.median(bkgd_correct_normal_data, axis=0)
+
+            # flag median values that are below detection limit or 0 with -9999. This flag
+            # is used later in laser calc to say they are "b.d.l"
             bkgd_correct_med[
                 np.median(bkgd_correct_data, axis=0) <= detection_limits
             ] = -9999
             bkgd_correct_med[np.median(bkgd_correct_data, axis=0) == 0] = -9999
+
+            # standard error of the normalized data over the chosen interval
             se = bkgd_correct_normal_data.std(axis=0) / np.sqrt(
                 abs(int_stop_idx - int_start_idx)
             )
+
+            # relative standard error
             rel_se = 100 * (se / bkgd_correct_med)
+
+            
             norm_counts.append(np.median(bkgd_correct_data[:, int_std_loc]))
             medians.append(bkgd_correct_med)
             rel_ses.append(rel_se)
             timestamps.append(timestamp)
+            
+           
 
         medians_df = pd.DataFrame(medians, columns=elements)
         rel_se_df = pd.DataFrame(
