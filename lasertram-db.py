@@ -2967,10 +2967,19 @@ def calculate_concentrations(
 
             # calc rmse
             RMSE = rmse(y, ypred)
+            
+            if model.params.shape[0] < 2:
+               calib_std_slopes.append(model.params[0])
+               calib_std_intercepts.append(0)
+               
+            else:
+               
+               calib_std_slopes.append(model.params[1])
+               calib_std_intercepts.append(model.params[0])
 
             calib_std_rmses.append(RMSE)
-            calib_std_slopes.append(model.params[1])
-            calib_std_intercepts.append(model.params[0])
+            # calib_std_slopes.append(model.params[1])
+            # calib_std_intercepts.append(model.params[0])
 
             # f value stuff
             fvalue = model.fvalue
@@ -3308,11 +3317,7 @@ def calculate_concentrations(
                     + t2
                     + std_conc_stds
                     + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                    + (
-                        (data.loc[standard, myuncertainties].to_numpy() / 100)
-                        / data.loc[standard, myanalytes].to_numpy()
-                    )
-                    ** 2
+                    + (data.loc[standard, myuncertainties].to_numpy() / 100)** 2
                 ).astype(np.float64)
             )
             stds_values.columns = myuncertainties
@@ -3371,11 +3376,7 @@ def calculate_concentrations(
                 + t2
                 + std_conc_stds
                 + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                + (
-                    (data.loc[sample, myuncertainties].to_numpy() / 100)
-                    / data.loc[sample, myanalytes].to_numpy()
-                )
-                ** 2
+                +  (data.loc[sample, myuncertainties].to_numpy() / 100)** 2
             )
             unknown_stds_values.columns = myuncertainties
             unknowns_list.append(unknown_stds_values)
@@ -3384,11 +3385,7 @@ def calculate_concentrations(
                 t2
                 + std_conc_stds
                 + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                + (
-                    (data.loc[sample, myuncertainties].to_numpy() / 100)
-                    / data.loc[sample, myanalytes].to_numpy()
-                )
-                ** 2
+                + (data.loc[sample, myuncertainties].to_numpy() / 100)** 2
             )
             unknown_stds_values.columns = myuncertainties
             unknowns_list.append(unknown_stds_values)
