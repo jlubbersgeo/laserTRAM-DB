@@ -95,8 +95,8 @@ While you can technically use any analyte for an internal standard in ```LaserTR
 ## Demos
 Video tutorials on how to use each piece of software can be found at the following links:
 
-- [LaserTRAM video](https://youtu.be/7W3_tyhZTmg)
-- [LaserCalc video](https://youtu.be/CF6Jjfk9UWA)
+- [LaserTRAM video](https://youtu.be/CF6Jjfk9UWA)
+- [LaserCalc video](https://youtu.be/7W3_tyhZTmg)
 
 ## Quickstart
 
