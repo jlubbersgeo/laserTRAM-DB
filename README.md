@@ -68,6 +68,9 @@ If you are on a computer where you do not have admin permissions, ```git``` may 
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 ```
 
+### Windows ```exe``` file
+Optionally, for those using Windows operating systems, ```LaserTRAM-DB``` can be run through an executable app downloaded [here](https://drive.google.com/file/d/1ilEzRteeWIhNE8B41E_wkN2etjl029dn/view?usp=sharing). Download the zip file, unpack it, and follow the README instructions included to create a Desktop icon that runs the dashboard.
+
 ## Internal Standards
 While you can technically use any analyte for an internal standard in ```LaserTRAM``` (i.e., it will still generate a ratio normalized to any analyte in the experiment), concentrations will only be calculated in ```LaserCalc``` from internal standards that can be make the following oxides:
 - SiO2 (e.g., 29Si)
