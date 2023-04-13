@@ -29,6 +29,8 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
 import mendeleev
+import webbrowser as web
+#ToDo: browser
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -145,6 +147,9 @@ tab_selected_style = {
     "color": "white",
     "padding": "6px",
 }
+
+
+web.open_new_tab('http://127.0.0.1:8049/')
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 formtext_color = "secondary"
@@ -2133,8 +2138,6 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             medians.append(bkgd_correct_med)
             rel_ses.append(rel_se)
             timestamps.append(timestamp)
-            
-           
 
         medians_df = pd.DataFrame(medians, columns=elements)
         rel_se_df = pd.DataFrame(
@@ -2967,6 +2970,10 @@ def calculate_concentrations(
 
             # calc rmse
             RMSE = rmse(y, ypred)
+
+            # calib_std_rmses.append(RMSE)
+            # calib_std_slopes.append(model.params[1])
+            # calib_std_intercepts.append(model.params[0])
             
             if model.params.shape[0] < 2:
                calib_std_slopes.append(model.params[0])
@@ -2978,8 +2985,6 @@ def calculate_concentrations(
                calib_std_intercepts.append(model.params[0])
 
             calib_std_rmses.append(RMSE)
-            # calib_std_slopes.append(model.params[1])
-            # calib_std_intercepts.append(model.params[0])
 
             # f value stuff
             fvalue = model.fvalue
@@ -3236,7 +3241,7 @@ def calculate_concentrations(
                 unknown_concentrations = pd.DataFrame(concentrations).T
                 unknown_concentrations["sample"] = sample
                 unknown_concentrations.set_index("sample", inplace=True)
-    
+
             unknown_concentrations_list.append(unknown_concentrations)
         else:
             unknown_concentrations = (
@@ -3376,7 +3381,7 @@ def calculate_concentrations(
                 + t2
                 + std_conc_stds
                 + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                +  (data.loc[sample, myuncertainties].to_numpy() / 100)** 2
+                + (data.loc[sample, myuncertainties].to_numpy() / 100) ** 2
             )
             unknown_stds_values.columns = myuncertainties
             unknowns_list.append(unknown_stds_values)
@@ -3385,7 +3390,7 @@ def calculate_concentrations(
                 t2
                 + std_conc_stds
                 + (calib_std_ses[myanalytes].to_numpy()[np.newaxis, :] / 100) ** 2
-                + (data.loc[sample, myuncertainties].to_numpy() / 100)** 2
+                + (data.loc[sample, myuncertainties].to_numpy() / 100) ** 2
             )
             unknown_stds_values.columns = myuncertainties
             unknowns_list.append(unknown_stds_values)
@@ -3649,4 +3654,4 @@ def plot_calib_stds(drift_analyte, calib_std_data, alpha, n_clicks):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0', port=8049)

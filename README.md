@@ -9,10 +9,10 @@ Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/re
 ***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
 - Batch loading of internal standard concentrations for ```LaserCalc```
 - Adding detection limit concentrations in a metadata output
-- Adding preprocessing scripts found [here](https://github.com/jlubbersgeo/laicpms_general) so that this software is a standalone "mass-spec to plotting" pipeline
+
 
 *Happy processing!* <br>
--Jordan
+-```Jordan```
 
 ## Summary
 LaserTRAM-DB is a dashboard for the complete processing pipeline of Laser Ablation Inductively Coupled Plasma Mass Spectrometry (LA-ICP-MS) data in complex materials such as geologic samples. As LA-ICP-MS data in geologic samples frequently have multiple phases, inclusions, and other compositional complexities within them that do not represent the material of interest, user interaction is required to filter unwanted signals out of the overall ablation signal. LaserTRAM-DB allows the user to filter which portion of the ablation peak is utilized in calculating concentrations, subsequently allowing for more accurate data to be obtained. Furthermore, it allows for the processing of both individual spot analysis data and a line of spots gathered in rapid succession, reducing the time required for data reduction while preserving spatial definition and still ensuring data quality.
@@ -32,14 +32,24 @@ It is comprised of 3 parts:
 
 ## Installation and Use
 
-LaserTRAM-DB can be installed locally and run by creating a virtual environment. If you are new to python, we recommend doing this through [Anaconda](https://www.anaconda.com/products/individual).
+LaserTRAM-DB can be installed locally and run by creating a virtual environment using the provided ```yml``` files. If you are new to python, we recommend doing this through [Anaconda](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file).
+
+### On Windows:
 
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 cd /path/to/laserTRAM-DB
-conda create -n lasertram-db python=3.7.7
-conda activate lasertram-db
-conda install --file local_requirements.txt
+conda env create -f lasertram-db_windows.yml
+conda activate lasertram-db_windows
+python lasertram-db.py
+```
+
+### On Mac:
+```
+git clone https://github.com/jlubbersgeo/laserTRAM-DB
+cd /path/to/laserTRAM-DB
+conda env create -f lasertram-db_mac.yml
+conda activate lasertram-db_mac
 python lasertram-db.py
 ```
 
@@ -49,34 +59,16 @@ When the program is running, copy and paste the provided link provided in the te
 conda deactivate
 ```
 
-From now on any time you wish to use the program, simply re-activate the virtual environment and run the script like above:
-
-```
-conda activate lasertram-db
-cd /path/to/laserTRAM-DB
-python lasertram-db.py
-```
+From now on any time you wish to use the program, simply re-activate the virtual environment and run the script like above
 
 ### Caveats
 
-#### Installation
-On windows you may need to add the following channel for downloading the ```local_requirements.txt```file:
-```
-git clone https://github.com/jlubbersgeo/laserTRAM-DB
-cd /path/to/laserTRAM-DB
-conda create -n lasertram-db python=3.7.7
-conda activate lasertram-db
-conda config --append channels conda-forge
-conda install --file local_requirements.txt
-python lasertram-db.py
-```
 If you are on a computer where you do not have admin permissions, ```git``` may not be installed when you create a new virtual environment. A workaround for this is simply downloading the repository as a zip file and unpacking. This will accomplish the same task as:
 ```
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 ```
 
-
-#### Internal Standards
+## Internal Standards
 While you can technically use any analyte for an internal standard in ```LaserTRAM``` (i.e., it will still generate a ratio normalized to any analyte in the experiment), concentrations will only be calculated in ```LaserCalc``` from internal standards that can be make the following oxides:
 - SiO2 (e.g., 29Si)
 - TiO2 (e.g., 47Ti)
@@ -101,13 +93,13 @@ Video tutorials on how to use each piece of software can be found at the followi
 ## Quickstart
 
 With LaserTRAM-DB up and running, to get started, please watch the videos above in the Demos section. After that, sample data may be found in the "tests" folder:
-- LaserTRAM test data: ```spot_test_raw_data.xlsx``` or ```spot_test_timestamp_raw_data.xlsx```
+- LaserTRAM test data: ```spot_test_timestamp_raw_data.xlsx```
 - LaserTRAM profile test data: Any of the following files: ```ATHO-G-7.csv```, ```BCR-2G-12.csv```,```BCR-2G-1.csv```,```BHVO-2G-3.csv```,```unknown_nist.csv```
-- LaserCalc test data: ```spot_test_lasertram_complete.xlsx```,```spot_test_timestamp_lasertram_complete.xlsx```,```profile_test_lasertram_profiler_complete.xlsx```
+- LaserCalc test data: ```spot_test_timestamp_lasertram_complete.xlsx```,```profile_test_lasertram_profiler_complete.xlsx```
 - LaserCalc standards data: ```laicpms_stds_tidy.xlsx```
 
 ## Contributing
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-One of the main goals of this project is to bring increased transparency to the fields that utilize LA-ICP-MS data. As such, we welcome feedback and suggestions to help improve the software! If you wish to be a part of further development, or have ideas for new features please open an [issue](https://github.com/jlubbersgeo/laserTRAM-DB/issues) here on GitHub or reach out to Jordan Lubbers (jelubber@gmail.com).
+One of the main goals of this project is to bring increased transparency to the fields that utilize LA-ICP-MS data. As such, we welcome feedback and suggestions to help improve the software! If you wish to be a part of further development, or have ideas for new features please open an [issue](https://github.com/jlubbersgeo/laserTRAM-DB/issues) here on GitHub or reach out to Jordan Lubbers (jlubbers@usgs.gov).
 
