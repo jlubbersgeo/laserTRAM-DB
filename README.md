@@ -7,8 +7,8 @@ Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/re
 
 
 ***Note*** ```LaserTRAM-DB``` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
-- Batch loading of internal standard concentrations for ```LaserCalc```
-- Adding detection limit concentrations in a metadata output
+- Adding metrics for quantifying the degree of spot homogeneity (e.g., MSWD)
+
 
 
 *Happy processing!* <br>
