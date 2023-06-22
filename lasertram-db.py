@@ -14,21 +14,23 @@ Created on Wed Oct 20 13:57:37 2021
 @author: jordanlubbers
 """
 
-from dash import dcc, html, Input, Output, State, dash_table, exceptions
-import dash
-import dash_bootstrap_components as dbc
-import pandas as pd
-import numpy as np
 import base64
 import io
 import re
-import statsmodels.api as sm
-from statsmodels.tools.eval_measures import rmse
-from scipy import stats
-import plotly.graph_objs as go
-from plotly.subplots import make_subplots
-import plotly.express as px
+
+import dash
+import dash_bootstrap_components as dbc
 import mendeleev
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objs as go
+import statsmodels.api as sm
+from dash import Input, Output, State, dash_table, dcc, exceptions, html
+from plotly.subplots import make_subplots
+from scipy import stats
+from statsmodels.tools.eval_measures import rmse
+
 #ToDo: browser
 
 # this should hopefully be enough colors. Repeats after 48...
@@ -2540,7 +2542,7 @@ def analyte_to_oxide(int_std):
         of the LaserTRAM output
         
         currently supported elements:
-            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O'
+            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O', 'MgO'
 
     Returns
     -------
@@ -2572,6 +2574,7 @@ def analyte_to_oxide(int_std):
         "CaO",
         "Na2O",
         "NiO",
+        "MgO"
     ]
 
     for o in oxides:
@@ -2627,6 +2630,7 @@ def oxide_to_ppm(wt_percent, int_std):
         "CaO",
         "Na2O",
         "NiO",
+        "MgO"
     ]
 
     for o in oxides:
