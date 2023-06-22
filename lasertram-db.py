@@ -17,6 +17,7 @@ Created on Wed Oct 20 13:57:37 2021
 import base64
 import io
 import re
+import webbrowser as web
 
 import dash
 import dash_bootstrap_components as dbc
@@ -69,6 +70,7 @@ tab_selected_style = {
     "padding": "6px",
 }
 
+web.open_new_tab('http://127.0.0.1:8049/')
 
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
