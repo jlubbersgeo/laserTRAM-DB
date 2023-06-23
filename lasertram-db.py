@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Dec  4 08:26:36 2021
-
-@author: jordanlubbers
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Wed Oct 20 13:57:37 2021
 
-@author: jordanlubbers
+The source code for the LaserTRAM-DB dashboard. 
+https://github.com/jlubbersgeo/laserTRAM-DB
+
+Created and maintained by:
+Jordan Lubbers
+jlubbers@usgs.gov
+
+
+
 """
 
 import base64
@@ -31,8 +31,6 @@ from dash import Input, Output, State, dash_table, dcc, exceptions, html
 from plotly.subplots import make_subplots
 from scipy import stats
 from statsmodels.tools.eval_measures import rmse
-
-#ToDo: browser
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -70,8 +68,8 @@ tab_selected_style = {
     "padding": "6px",
 }
 
-web.open_new_tab('http://127.0.0.1:8049/')
 
+web.open_new_tab('http://127.0.0.1:8049/')
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 formtext_color = "secondary"
@@ -2522,7 +2520,7 @@ def oxide_to_ppm(wt_percent, int_std):
                                                       '47Ti')
         currently supported elements:
             
-            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O'
+            'SiO2','TiO2','Al2O3','Cr2O3','MnO','FeO','K2O','CaO','Na2O', 'MgO'
 
     Returns
     -------
