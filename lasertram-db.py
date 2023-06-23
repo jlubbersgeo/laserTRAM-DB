@@ -1808,7 +1808,7 @@ def add_row(
                 row_data.insert(3, df["Time"][int_start_idx])
                 row_data.insert(4, df["Time"][int_stop_idx])
                 row_data.insert(5, int_std)
-                row_data.insert(6, np.median(bkgd_correct_data[int_std_loc]))
+                row_data.insert(6, np.median(bkgd_correct_data[:,int_std_loc]))
 
                 row_data.insert(0, timestamp)
 
@@ -2398,7 +2398,7 @@ def add_row_p(n_clicks, stored_data, interval_slider, int_std, rows, columns, fi
             row_data.insert(3, df["Time"][int_start_idx])
             row_data.insert(4, df["Time"][int_stop_idx])
             row_data.insert(5, int_std)
-            row_data.insert(6, np.median(bkgd_correct_data[int_std_loc]))
+            row_data.insert(6, np.median(bkgd_correct_data[:,int_std_loc]))
 
             rows.append({c["id"]: r for c, r in zip(columns, row_data)})
 
