@@ -81,7 +81,7 @@ Initially, LaserTRAM requires a single spreadsheet upload that looks like:
 |:-------------------:|:-----------:|:-----:|:---------:|:---:|:---------:|
 | 2022-10-10 22:44:00 | GSE-1G_1 | 13.24 | 100000 | ... | 100 |
 
-If you are using either a Thermo iCAP series or Agilent 8900 QQQ quadrupole mass spectrometer there is a small app called `multifiler` that can do this for you [here](https://drive.google.com/drive/folders/1vECM690szcXf54rm-DI3Hz1OH5BAJYjq?usp=sharing).
+If you are using either a Thermo iCAP series or Agilent 8900 QQQ quadrupole mass spectrometer there is a small app called `multifiler` that can do this for you [here](https://drive.google.com/drive/folders/1vECM690szcXf54rm-DI3Hz1OH5BAJYjq?usp=sharing) or you can get it at the GitHub repo [here](https://github.com/jlubbersgeo/multifiler).
 
 ## Internal Standards
 
