@@ -1,0 +1,14 @@
+name: lasertram-db
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.12
+  - dash
+  - dash-bootstrap-components
+  - ca-certificates
+  - openssl
+  - pip
+  - plotly
+  - pip:
+    - lasertram>=0.0.13
