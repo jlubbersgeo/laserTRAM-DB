@@ -3,7 +3,7 @@
 """
 Created on Wed Oct 20 13:57:37 2021
 
-The source code for the LaserTRAM-DB dashboard. 
+The source code for the LaserTRAM-DB dashboard.
 https://github.com/jlubbersgeo/laserTRAM-DB
 
 Created and maintained by:
@@ -1423,7 +1423,6 @@ def plot(spot, stored_data, interval_slider, int_std, filename, slider_max):
     else:
         # empty if user has not chosen a spot yet
         if spot == None:
-
             fig = {}
             error_fig = {}
 
@@ -1552,10 +1551,20 @@ def plot(spot, stored_data, interval_slider, int_std, filename, slider_max):
                 col=1,
             )
 
-            err_colors = [
-                "gold" if current_spot.bkgd_correct_std_err_rel[x] >= 5 else "green"
-                for x in range(len(current_spot.bkgd_correct_std_err_rel))
-            ]
+            # err_colors = [
+            #     "gold" if current_spot.bkgd_correct_std_err_rel[x] >= 5 else "green"
+            #     for x in range(len(current_spot.bkgd_correct_std_err_rel))
+            # ]
+            err_colors = []
+            for val in current_spot.bkgd_correct_std_err_rel:
+                if val > 10:
+                    err_colors.append("#ad0013")
+                elif (val > 7.5) & (val <= 10):
+                    err_colors.append("#fa9d1b")
+                elif (val > 5) & (val <= 7.5):
+                    err_colors.append("#fac928")
+                else:
+                    err_colors.append("#2b8f45")
 
             error_fig = go.Figure(
                 go.Bar(
@@ -1612,12 +1621,10 @@ def add_row(
     filename,
 ):
     if filename == None:
-
         return rows, spot
 
     else:
         if spot == None:
-
             return rows, spot
 
         else:
@@ -1657,7 +1664,6 @@ def add_row(
                 new_spot_idx = current_spot_idx + 1
 
                 if new_spot_idx >= len(spots):
-
                     new_spot_idx = current_spot_idx
 
                 return rows, spots[new_spot_idx]
@@ -1673,14 +1679,11 @@ def add_row(
     [State("spot_dropdown", "value"), State("upload-data", "filename")],
 )
 def move_sample(next_clicks, stored_data, spot, filename):
-
     if filename == None:
-
         return spot
 
     else:
         if spot == None:
-
             return spot
 
         else:
@@ -1696,13 +1699,10 @@ def move_sample(next_clicks, stored_data, spot, filename):
             # which button is clicked
 
             if next_clicks != 0:
-
                 if "skip_btn" in changed_id:
-
                     new_spot_idx = current_spot_idx + 1
 
                     if new_spot_idx >= len(spots):
-
                         new_spot_idx = current_spot_idx
 
                 return spots[new_spot_idx]
@@ -1788,7 +1788,6 @@ def get_oldratio_data(contents, filename, columns, int_std_columns, header):
     Input("reprocess_btn", "n_clicks"),
 )
 def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
-
     # dont do anything if the button hasn't been clicked. Need to prevent
     # error from being thrown
     if n_clicks < 1:
@@ -1796,7 +1795,6 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
 
     # once clicked it's go time
     if n_clicks >= 1:
-
         df = pd.read_json(stored_df, orient="split").set_index("SampleLabel").dropna()
         old_df = pd.read_json(stored_old_df, orient="split").dropna()
 
@@ -1811,7 +1809,6 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
         processed_spots = []
 
         for spot in spots_with_data:
-
             # get each spot
             spot_data = df_for_reprocessing.loc[spot, :].copy()
 
@@ -1868,11 +1865,9 @@ def analyte_to_oxide(int_std):
     el = [i for i in int_std if not i.isdigit()]
 
     if len(el) == 2:
-
         element = el[0] + el[1]
 
     else:
-
         element = el[0]
 
     oxides = [
@@ -1890,9 +1885,7 @@ def analyte_to_oxide(int_std):
     ]
 
     for o in oxides:
-
         if element in o:
-
             oxide = o
 
     return oxide
@@ -1955,13 +1948,11 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
         # Assume that the user uploaded an excel file
         data = pd.read_excel(io.BytesIO(decoded))
         if "despiked" in data.columns:
-
             data["despiked"] = data["despiked"].fillna("None")
 
         else:
             data.insert(2, "despiked", ["None"] * data.shape[0])
         if "omitted_region" in data.columns:
-
             data["omitted_region"] = data["omitted_region"].fillna("None")
         else:
             data.insert(3, "omitted_region", ["None"] * data.shape[0])
@@ -2039,7 +2030,6 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 def get_stds(contents, filename):
     # This is all for retrieving the standard reference material data
     if filename == None:
-
         data = pd.DataFrame()
 
     elif "csv" in filename:
@@ -2183,7 +2173,6 @@ def calculate_concentrations(
     ],
 )
 def plot_calib_stds(drift_analyte, calib_std_data, calib_std_stats, alpha, n_clicks):
-
     if n_clicks < 1:
         raise exceptions.PreventUpdate
     else:
