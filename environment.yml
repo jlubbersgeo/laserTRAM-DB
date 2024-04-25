@@ -11,4 +11,4 @@ dependencies:
   - pip
   - plotly
   - pip:
-    - lasertram>=0.0.13
+    - lasertram>=0.1.0
