@@ -27,8 +27,6 @@ import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
 from plotly.subplots import make_subplots
 
-
-# test create develop branch
 from lasertram import LaserCalc, LaserTRAM, batch
 
 # this should hopefully be enough colors. Repeats after 48...
@@ -880,6 +878,261 @@ app.layout = html.Div(
                                             ]
                                         ),
                                     ],
+                                ),
+                            ]
+                        ),
+                    ],
+                ),
+                dcc.Tab(
+                    label="LaserTRAM profiler",
+                    style=tab_style,
+                    selected_style=tab_selected_style,
+                    children=[
+                        dcc.Store(id="stored_data_p"),
+                        dbc.Col(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H2("LaserTRAM profiler"),
+                                            ]
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    "Reducing line of spots data for LA-ICP-MS"
+                                                ),
+                                            ]
+                                        ),
+                                    ],
+                                    align="center",
+                                ),
+                                dbc.Card(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    [
+                                                        dcc.Upload(
+                                                            id="upload-data_p",
+                                                            children=dbc.Button(
+                                                                "Upload Data",
+                                                                id="upload-btn_p",
+                                                                color="dark",
+                                                                size="lg",
+                                                                n_clicks=0,
+                                                            ),
+                                                        ),
+                                                        html.Hr(),
+                                                    ],
+                                                    width=1,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label("Int. Std. "),
+                                                        dcc.Dropdown(
+                                                            id="int_std_dropdown_p",
+                                                            multi=False,
+                                                            style={
+                                                                "color": "#212121",
+                                                                "background-color": "none",
+                                                                "width": "70%",
+                                                            },
+                                                            options=[
+                                                                {
+                                                                    "label": "43Ca",
+                                                                    "value": "43Ca",
+                                                                },
+                                                                {
+                                                                    "label": "47Ti",
+                                                                    "value": "47Ti",
+                                                                },
+                                                                {
+                                                                    "label": "29Si",
+                                                                    "value": "29Si",
+                                                                },
+                                                            ],
+                                                            value="43Ca",
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label("Step Size (sec)"),
+                                                        dcc.Input(
+                                                            id="step_val_p",
+                                                            type="number",
+                                                            value=10,
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label(
+                                                            "Control Step Direction Here"
+                                                        ),
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    dbc.Button(
+                                                                        "Backwards",
+                                                                        id="back_btn_p",
+                                                                        color="warning",
+                                                                        size="lg",
+                                                                        n_clicks=0,
+                                                                    ),
+                                                                ),
+                                                                dbc.Col(
+                                                                    dbc.Button(
+                                                                        "Forwards",
+                                                                        id="forward_btn_p",
+                                                                        color="info",
+                                                                        size="lg",
+                                                                        n_clicks=0,
+                                                                    ),
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    width=3,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label(
+                                                            "Record each individual spot"
+                                                        ),
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Button(
+                                                                    "Record Spot",
+                                                                    id="record_btn_p",
+                                                                    color="success",
+                                                                    size="lg",
+                                                                    n_clicks=0,
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                            ]
+                                        )
+                                    ],
+                                    body=True,
+                                    style={"width": "100rem"},
+                                    color="secondary",
+                                    inverse=True,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Choose background and interval of interest with the sliders"
+                                                                ),
+                                                                html.Hr(),
+                                                                dcc.RangeSlider(
+                                                                    id="interval_slider_p",
+                                                                    step=1,
+                                                                    value=[
+                                                                        2,
+                                                                        12,
+                                                                        15,
+                                                                        25,
+                                                                    ],
+                                                                    tooltip={
+                                                                        "always_visible": True,
+                                                                        "placement": "bottom",
+                                                                    },
+                                                                    allowCross=False,
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ]
+                                                ),
+                                                dcc.Graph(
+                                                    id="raw-data_p",
+                                                ),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Analyte Uncertainties"),
+                                                dcc.Graph(
+                                                    id="error-data_p",
+                                                    style={"width": "100vh"},
+                                                ),
+                                            ]
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.H4("Saved Spot Data"),
+                                                dash_table.DataTable(
+                                                    id="adding-rows-table_p",
+                                                    columns=[
+                                                        {
+                                                            "name": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "id": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "deletable": True,
+                                                            "renamable": False,
+                                                        }
+                                                        for i in range(1, 5)
+                                                    ],
+                                                    style_table={
+                                                        "overflowX": "auto",
+                                                        "height": 275,
+                                                        "width": "80vh",
+                                                    },
+                                                    fixed_rows={"headers": True},
+                                                    style_cell={
+                                                        # all three widths are needed
+                                                        "minWidth": "100px",
+                                                        "width": "60px",
+                                                        "maxWidth": "60px",
+                                                        "overflow": "hidden",
+                                                        "textOverflow": "ellipsis",
+                                                    },
+                                                    style_data_conditional=[
+                                                        {
+                                                            "if": {"row_index": "odd"},
+                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                        }
+                                                    ],
+                                                    style_header={
+                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                        "fontWeight": "bold",
+                                                    },
+                                                    data=[
+                                                        {
+                                                            "analyte-{}".format(i): (
+                                                                (i - 1) * 5
+                                                            )
+                                                            for i in range(1, 5)
+                                                        }
+                                                    ],
+                                                    editable=True,
+                                                    row_deletable=False,
+                                                    export_format="xlsx",
+                                                    export_headers="display",
+                                                ),
+                                            ]
+                                        ),
+                                    ]
                                 ),
                             ]
                         ),
