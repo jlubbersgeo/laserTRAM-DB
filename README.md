@@ -51,10 +51,6 @@ If you are on a computer where you do not have admin permissions, `git` may not 
 git clone https://github.com/jlubbersgeo/laserTRAM-DB
 ```
 
-### Windows `exe` file
-
-Optionally, for those using Windows operating systems, `LaserTRAM-DB` can be run through an executable app downloaded [here](https://drive.google.com/drive/folders/1vECM690szcXf54rm-DI3Hz1OH5BAJYjq?usp=sharing). Download the zip file, unpack it, and follow the README instructions included to create a Desktop icon that runs the dashboard.
-
 ## Data input format
 
 Initially, LaserTRAM requires a single spreadsheet upload that looks like:
@@ -83,12 +79,6 @@ Should you wish to build your own scripts or dashboard, a basic walkthrough of t
 
 - [walkthrough](https://jlubbersgeo.github.io/lasertram/lasertram_tutorial/)
 
-## Demos
-
-Video tutorials on how to use each piece of software can be found at the following links:
-
-- [LaserTRAM video](https://youtu.be/CF6Jjfk9UWA)
-- [LaserCalc video](https://youtu.be/7W3_tyhZTmg)
 
 ## Quickstart
 
