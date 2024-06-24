@@ -1812,13 +1812,13 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             spot_data = df_for_reprocessing.loc[spot, :].copy()
 
             current_spot = LaserTRAM(name=spot)
-
+            
             batch.process_spot(
                 current_spot,
                 raw_data=spot_data.loc[spot, :],
                 bkgd=(old_df.loc[spot, "bkgd_start"], old_df.loc[spot, "bkgd_stop"]),
                 keep=(old_df.loc[spot, "int_start"], old_df.loc[spot, "int_stop"]),
-                internal_std=int_std,
+                int_std=int_std,
                 despike=False,
                 output_report=True,
             )
@@ -2124,8 +2124,7 @@ def calculate_concentrations(
                 concentrations.samples_nostandards, "{} 1stdev%".format(oxide)
             ]
         ).to_numpy()
-
-        concentrations.set_internal_standard_concentrations(
+        concentrations.set_int_std_concentrations(
             spots=concentrations.data.loc["unknown", "Spot"],
             concentrations=int_std_oxide_array,
             uncertainties=int_std_rel_unc,
