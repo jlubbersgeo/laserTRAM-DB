@@ -27,6 +27,8 @@ import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
 from plotly.subplots import make_subplots
 
+
+# test create develop branch
 from lasertram import LaserCalc, LaserTRAM, batch
 
 # this should hopefully be enough colors. Repeats after 48...
@@ -1812,7 +1814,7 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             spot_data = df_for_reprocessing.loc[spot, :].copy()
 
             current_spot = LaserTRAM(name=spot)
-            
+
             batch.process_spot(
                 current_spot,
                 raw_data=spot_data.loc[spot, :],
