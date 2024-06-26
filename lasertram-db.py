@@ -25,9 +25,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
-from plotly.subplots import make_subplots
-
 from lasertram import LaserCalc, LaserTRAM, batch
+from plotly.subplots import make_subplots
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -453,8 +452,9 @@ app.layout = html.Div(
                                                                             ],
                                                                             style_table={
                                                                                 "overflowX": "auto",
+                                                                                "overflowY": "auto",
                                                                                 "height": 275,
-                                                                                "width": "70vh",
+                                                                                "width": "80vh",
                                                                             },
                                                                             fixed_rows={
                                                                                 "headers": True
@@ -462,8 +462,8 @@ app.layout = html.Div(
                                                                             style_cell={
                                                                                 # all three widths are needed
                                                                                 "minWidth": "100px",
-                                                                                "width": "60px",
-                                                                                "maxWidth": "60px",
+                                                                                "width": "100px",
+                                                                                "maxWidth": "100px",
                                                                                 "overflow": "hidden",
                                                                                 "textOverflow": "ellipsis",
                                                                                 "textAlign": "center",
@@ -474,7 +474,13 @@ app.layout = html.Div(
                                                                                         "row_index": "odd"
                                                                                     },
                                                                                     "backgroundColor": "rgb(248, 248, 248)",
-                                                                                }
+                                                                                },
+                                                                                {
+                                                                                    "if": {
+                                                                                        "column_id": "timestamp"
+                                                                                    },
+                                                                                    "width": "30%",
+                                                                                },
                                                                             ],
                                                                             style_header={
                                                                                 "backgroundColor": "rgb(230, 230, 230)",
@@ -878,6 +884,269 @@ app.layout = html.Div(
                                             ]
                                         ),
                                     ],
+                                ),
+                            ]
+                        ),
+                    ],
+                ),
+                dcc.Tab(
+                    label="LaserTRAM profiler",
+                    style=tab_style,
+                    selected_style=tab_selected_style,
+                    children=[
+                        dcc.Store(id="stored_data_p"),
+                        dbc.Col(
+                            [
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H2("LaserTRAM profiler"),
+                                            ]
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.H4(
+                                                    "Reducing line of spots data for LA-ICP-MS"
+                                                ),
+                                            ]
+                                        ),
+                                    ],
+                                    align="center",
+                                ),
+                                dbc.Card(
+                                    [
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(
+                                                    [
+                                                        dcc.Upload(
+                                                            id="upload-data_p",
+                                                            children=dbc.Button(
+                                                                "Upload Data",
+                                                                id="upload-btn_p",
+                                                                color="dark",
+                                                                size="lg",
+                                                                n_clicks=0,
+                                                            ),
+                                                        ),
+                                                        html.Hr(),
+                                                    ],
+                                                    width=1,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label("Int. Std. "),
+                                                        dcc.Dropdown(
+                                                            id="int_std_dropdown_p",
+                                                            multi=False,
+                                                            style={
+                                                                "color": "#212121",
+                                                                "background-color": "none",
+                                                                "width": "70%",
+                                                            },
+                                                            options=[
+                                                                {
+                                                                    "label": "43Ca",
+                                                                    "value": "43Ca",
+                                                                },
+                                                                {
+                                                                    "label": "47Ti",
+                                                                    "value": "47Ti",
+                                                                },
+                                                                {
+                                                                    "label": "29Si",
+                                                                    "value": "29Si",
+                                                                },
+                                                            ],
+                                                            value="43Ca",
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label("Step Size (sec)"),
+                                                        dcc.Input(
+                                                            id="step_val_p",
+                                                            type="number",
+                                                            value=10,
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label(
+                                                            "Control Step Direction Here"
+                                                        ),
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Col(
+                                                                    dbc.Button(
+                                                                        "Backwards",
+                                                                        id="back_btn_p",
+                                                                        color="warning",
+                                                                        size="lg",
+                                                                        n_clicks=0,
+                                                                    ),
+                                                                ),
+                                                                dbc.Col(
+                                                                    dbc.Button(
+                                                                        "Forwards",
+                                                                        id="forward_btn_p",
+                                                                        color="info",
+                                                                        size="lg",
+                                                                        n_clicks=0,
+                                                                    ),
+                                                                ),
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    width=3,
+                                                ),
+                                                dbc.Col(
+                                                    [
+                                                        html.Label(
+                                                            "Record each individual spot"
+                                                        ),
+                                                        dbc.Row(
+                                                            [
+                                                                dbc.Button(
+                                                                    "Record Spot",
+                                                                    id="record_btn_p",
+                                                                    color="success",
+                                                                    size="lg",
+                                                                    n_clicks=0,
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ],
+                                                    width=2,
+                                                ),
+                                            ]
+                                        )
+                                    ],
+                                    body=True,
+                                    style={"width": "100rem"},
+                                    color="secondary",
+                                    inverse=True,
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                dbc.Row(
+                                                    [
+                                                        dbc.Col(
+                                                            [
+                                                                html.H4(
+                                                                    "Choose background and interval of interest with the sliders"
+                                                                ),
+                                                                html.Hr(),
+                                                                dcc.RangeSlider(
+                                                                    id="interval_slider_p",
+                                                                    min=0,
+                                                                    max=150,
+                                                                    marks=None,
+                                                                    value=[
+                                                                        5,
+                                                                        15,
+                                                                        25,
+                                                                        45,
+                                                                    ],
+                                                                    tooltip={
+                                                                        "always_visible": True,
+                                                                        "placement": "bottom",
+                                                                    },
+                                                                    allowCross=False,
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ]
+                                                ),
+                                                dcc.Graph(
+                                                    id="raw-data_p",
+                                                ),
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                dbc.Row(
+                                    [
+                                        dbc.Col(
+                                            [
+                                                html.H4("Analyte Uncertainties"),
+                                                dcc.Graph(
+                                                    id="error-data_p",
+                                                    style={"width": "100vh"},
+                                                ),
+                                            ]
+                                        ),
+                                        dbc.Col(
+                                            [
+                                                html.H4("Saved Spot Data"),
+                                                dash_table.DataTable(
+                                                    id="adding-rows-table_p",
+                                                    columns=[
+                                                        {
+                                                            "name": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "id": "analyte-{}".format(
+                                                                i
+                                                            ),
+                                                            "deletable": True,
+                                                            "renamable": False,
+                                                        }
+                                                        for i in range(1, 5)
+                                                    ],
+                                                    style_table={
+                                                        "overflowX": "auto",
+                                                        "overflowY": "auto",
+                                                        "height": 275,
+                                                        "width": "90vh",
+                                                    },
+                                                    fixed_rows={"headers": True},
+                                                    style_cell={
+                                                        # all three widths are needed
+                                                        "minWidth": "100px",
+                                                        "width": "100px",
+                                                        "maxWidth": "100px",
+                                                        "overflow": "hidden",
+                                                        "textOverflow": "ellipsis",
+                                                        "textAlign": "center",
+                                                    },
+                                                    style_data_conditional=[
+                                                        {
+                                                            "if": {"row_index": "odd"},
+                                                            "backgroundColor": "rgb(248, 248, 248)",
+                                                        },
+                                                    ],
+                                                    style_header={
+                                                        "backgroundColor": "rgb(230, 230, 230)",
+                                                        "fontWeight": "bold",
+                                                        "textAlign": "center",
+                                                    },
+                                                    data=[
+                                                        {
+                                                            "analyte-{}".format(i): (
+                                                                (i - 1) * 5
+                                                            )
+                                                            for i in range(
+                                                                1,
+                                                                5,
+                                                            )
+                                                        }
+                                                    ],
+                                                    editable=True,
+                                                    row_deletable=False,
+                                                    export_format="xlsx",
+                                                    export_headers="display",
+                                                ),
+                                            ]
+                                        ),
+                                    ]
                                 ),
                             ]
                         ),
@@ -1398,6 +1667,7 @@ def get_data(contents, filename):
         Output("raw-data", "figure"),
         Output("error-data", "figure"),
         Output("interval_slider", "max"),
+        Output("interval_slider", "step"),
     ],
     [
         Input("spot_dropdown", "value"),
@@ -1409,15 +1679,18 @@ def get_data(contents, filename):
     [
         State("upload-data", "filename"),
         State("interval_slider", "max"),
+        State("interval_slider", "step"),
     ],
 )
-def plot(spot, stored_data, interval_slider, int_std, filename, slider_max):
+def plot(
+    spot, stored_data, interval_slider, int_std, filename, slider_max, slider_step
+):
     # empty if nothing is uploaded
     if filename == None:
         fig = {}
         error_fig = {}
 
-        return fig, error_fig, slider_max
+        return fig, error_fig, slider_max, slider_step
 
     else:
         # empty if user has not chosen a spot yet
@@ -1434,6 +1707,8 @@ def plot(spot, stored_data, interval_slider, int_std, filename, slider_max):
             # do the lasertram stuff
             current_spot = LaserTRAM(name=spot)
             current_spot.get_data(data.loc[spot, :])
+            slider_step = np.round(np.mean(np.diff(current_spot.data["Time"])), 2)
+
             # if despike == "all":
 
             #     current_spot.despike_data()
@@ -1584,7 +1859,7 @@ def plot(spot, stored_data, interval_slider, int_std, filename, slider_max):
                 uniformtext_mode="hide",
             )
 
-            return fig, error_fig, current_spot.data["Time"].max()
+            return fig, error_fig, current_spot.data["Time"].max(), slider_step
 
 
 # add "recorded" data to table for eventual export
@@ -1812,7 +2087,7 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             spot_data = df_for_reprocessing.loc[spot, :].copy()
 
             current_spot = LaserTRAM(name=spot)
-            
+
             batch.process_spot(
                 current_spot,
                 raw_data=spot_data.loc[spot, :],
@@ -1832,6 +2107,380 @@ def reprocess_data(stored_old_df, stored_df, analytes, int_std, n_clicks):
             [{"id": str(c), "name": str(c)} for c in reprocessed_data.columns],
             reprocessed_data.to_dict("records"),
         )
+
+
+#############################################################################
+########################### LASERTRAM PROFILER TAB ##########################
+#############################################################################
+
+
+# upload data callback
+@app.callback(
+    [
+        Output("stored_data_p", "data"),
+        Output("adding-rows-table_p", "columns"),
+        Output("int_std_dropdown_p", "options"),
+        Output("int_std_dropdown_p", "value"),
+        # Output("despike_dropdown", "options"),
+        # Output("despike_dropdown", "value"),
+    ],
+    Input("upload-data_p", "contents"),
+    State("upload-data_p", "filename"),
+)
+def get_profile_data(contents, filename):
+    if filename == None:
+        # arbitrary place holders until data are uploaded
+        data = pd.DataFrame()
+        columns = [
+            {"id": "analyte-{}".format(i), "name": "analyte-{}".format(i)}
+            for i in range(1, 5)
+        ]
+        analyte_list = [{"label": "Choose analyte", "value": "None"}]
+        int_std = "None"
+        state = False
+
+    elif "xls" in filename:
+        # state = True
+        content_type, content_string = contents.split(",")
+
+        decoded = base64.b64decode(content_string)
+        # Assume that the user uploaded an excel file
+        data = pd.read_excel(io.BytesIO(decoded))
+        data.dropna(inplace=True)
+
+        data = data.set_index(["SampleLabel"])
+
+        # initial columns
+        columns = (
+            [{"id": "timestamp", "name": "timestamp"}]
+            + [{"id": "Spot", "name": "Spot"}]
+            + [{"id": "despiked", "name": "despiked"}]
+            + [{"id": "omitted_region", "name": "omitted_region"}]
+            + [{"id": "bkgd_start", "name": "bkgd_start"}]
+            + [{"id": "bkgd_stop", "name": "bkgd_stop"}]
+            + [{"id": "int_start", "name": "int_start"}]
+            + [{"id": "int_stop", "name": "int_stop"}]
+            + [{"id": "norm", "name": "norm"}]
+            + [{"id": "norm_cps", "name": "norm_cps"}]
+            + [{"id": c, "name": c} for c in data.iloc[:, 2:].columns]
+            + [{"id": c + "_se", "name": c + "_se"} for c in data.iloc[:, 2:].columns]
+        )
+
+        analyte_list = [
+            {"label": analyte, "value": analyte} for analyte in data.iloc[:, 2:].columns
+        ]
+        despike_list = [
+            {"label": analyte, "value": analyte} for analyte in ["None", "all"]
+        ]
+        data.reset_index(inplace=True)
+        # make 43Ca default internal standard unless it's not there
+        # then 29Si...then first column in data if neither are present
+        if "43Ca" in data.iloc[:, 1:].columns:
+            int_std = "43Ca"
+
+        elif "43Ca" not in data.iloc[:, 1:].columns:
+            if "29Si" in data.iloc[:, 1:].columns:
+                int_std = "29Si"
+        else:
+            int_std = list(data.iloc[:, 1:].columns)[0]
+
+        # state = False
+
+    return (
+        data.to_json(orient="split"),
+        columns,
+        analyte_list,
+        int_std,
+        # despike_list,
+        # "None",
+    )
+
+
+# plotting data callback
+@app.callback(
+    [
+        Output("raw-data_p", "figure"),
+        Output("error-data_p", "figure"),
+        Output("interval_slider_p", "max"),
+        Output("interval_slider_p", "step"),
+    ],
+    [
+        Input("stored_data_p", "data"),
+        Input("interval_slider_p", "value"),
+        Input("int_std_dropdown_p", "value"),
+        # Input("despike_dropdown", "value"),
+    ],
+    [
+        State("upload-data_p", "filename"),
+        State("interval_slider_p", "max"),
+        State("interval_slider_p", "step"),
+    ],
+)
+def plot_profile(
+    stored_data, interval_slider, int_std, filename, slider_max, slider_step
+):
+    # empty if nothing is uploaded
+    if filename == None:
+        fig = {}
+        error_fig = {}
+
+        return fig, error_fig, slider_max, slider_step
+
+    else:
+        # retrieve data stored in background
+        data = pd.read_json(stored_data, orient="split")
+        data.set_index("SampleLabel", inplace=True)
+
+        # do the lasertram stuff
+        spot = data.index.unique()[0]
+        current_spot = LaserTRAM(name=spot)
+        current_spot.get_data(data.loc[spot, :])
+        slider_step = np.round(np.mean(np.diff(current_spot.data["Time"])), 2)
+
+        # if despike == "all":
+
+        #     current_spot.despike_data()
+
+        current_spot.assign_int_std(int_std)
+        current_spot.assign_intervals(
+            (interval_slider[0], interval_slider[1]),
+            (interval_slider[2], interval_slider[3]),
+        )
+        current_spot.get_bkgd_data()
+        current_spot.subtract_bkgd()
+        current_spot.get_detection_limits()
+        current_spot.normalize_interval()
+        current_spot.make_output_report()
+
+        # make the plots
+        fig = make_subplots(
+            rows=1,
+            cols=2,
+            horizontal_spacing=0.2,
+            specs=[[{"secondary_y": False}, {"secondary_y": False}]],
+        )
+
+        fig.add_shape(
+            type="rect",
+            x0=interval_slider[2],
+            y0=100,
+            x1=interval_slider[3],
+            y1=current_spot.data_matrix.max().max(),
+            line_width=0,
+            fillcolor="green",
+            opacity=0.25,
+            row=1,
+            col=1,
+        )
+
+        fig.add_shape(
+            type="rect",
+            x0=interval_slider[0],
+            y0=100,
+            x1=interval_slider[1],
+            y1=current_spot.data_matrix.max().max(),
+            line_width=0,
+            fillcolor="red",
+            opacity=0.25,
+            row=1,
+            col=1,
+        )
+        for i in range(len(current_spot.analytes)):
+            fig.add_trace(
+                go.Scatter(
+                    x=current_spot.data["Time"],
+                    y=current_spot.data.loc[:, current_spot.analytes[i]],
+                    mode="lines",
+                    name=current_spot.analytes[i],
+                    line=dict(
+                        color=colorlist[i],
+                    ),
+                ),
+                row=1,
+                col=1,
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=current_spot.data.loc[
+                        :,
+                        "Time",
+                    ][current_spot.int_start_idx : current_spot.int_stop_idx],
+                    y=current_spot.bkgd_subtract_normal_data[:, i],
+                    mode="lines",
+                    name=current_spot.analytes[i],
+                    showlegend=False,
+                    line=dict(
+                        color=colorlist[i],
+                    ),
+                ),
+                row=1,
+                col=2,
+            )
+
+        fig.update_layout(
+            title=spot,
+            template="simple_white",
+            font=dict(size=18, color=text_color),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+            autosize=True,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+        )
+
+        fig.update_yaxes(
+            title_text="Counts per second",
+            tickcolor=text_color,
+            linewidth=2,
+            type="log",
+            linecolor=text_color,
+            row=1,
+            col=1,
+        )
+        fig.update_yaxes(
+            title_text="Normalized to {}".format(int_std), type="log", row=1, col=2
+        )
+        fig.update_xaxes(title_text="Interval Time (s)", row=1, col=2)
+
+        fig.update_xaxes(
+            title_text="Time (s)",
+            tickcolor=text_color,
+            linewidth=2,
+            linecolor=text_color,
+            row=1,
+            col=1,
+        )
+
+        # err_colors = [
+        #     "gold" if current_spot.bkgd_correct_std_err_rel[x] >= 5 else "green"
+        #     for x in range(len(current_spot.bkgd_correct_std_err_rel))
+        # ]
+        err_colors = []
+        for val in current_spot.bkgd_correct_std_err_rel:
+            if val > 10:
+                err_colors.append("#ad0013")
+            elif (val > 7.5) & (val <= 10):
+                err_colors.append("#fa9d1b")
+            elif (val > 5) & (val <= 7.5):
+                err_colors.append("#fac928")
+            else:
+                err_colors.append("#2b8f45")
+
+        error_fig = go.Figure(
+            go.Bar(
+                x=current_spot.analytes,
+                y=current_spot.bkgd_correct_std_err_rel,
+                marker=dict(color=err_colors),
+                text=current_spot.bkgd_correct_med,
+                textposition="auto",
+            )
+        )
+        error_fig.update_yaxes(title_text="% SE")
+        error_fig.update_traces(texttemplate="%{text:.2s}", textposition="outside")
+        error_fig.update_layout(
+            template="simple_white",
+            font=dict(size=18, color=text_color),
+            height=300,
+            uniformtext_minsize=8,
+            uniformtext_mode="hide",
+        )
+
+        return fig, error_fig, current_spot.data["Time"].max(), slider_step
+
+
+@app.callback(
+    Output("adding-rows-table_p", "data"),
+    [
+        Input("record_btn_p", "n_clicks"),
+        Input("stored_data_p", "data"),
+        Input("interval_slider_p", "value"),
+        Input("int_std_dropdown_p", "value"),
+    ],
+    [
+        State("adding-rows-table_p", "data"),
+        State("adding-rows-table_p", "columns"),
+        State("upload-data_p", "filename"),
+    ],
+)
+def add_row_p(n_clicks, stored_data, interval_slider, int_std, rows, columns, filename):
+    if filename == None:
+        return rows
+
+    else:
+        changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
+
+        if "record_btn" in changed_id:
+            # retrieve data stored in background
+            data = pd.read_json(stored_data, orient="split")
+            data.set_index("SampleLabel", inplace=True)
+            spots = list(data.index.unique())
+            spot = spots[0]
+
+            # do the lasertram stuff
+            current_spot = LaserTRAM(name=f"{spot}-{n_clicks}")
+            current_spot.get_data(data.loc[spot, :])
+            # if despike == "all":
+
+            #     current_spot.despike_data()
+
+            current_spot.assign_int_std(int_std)
+            current_spot.assign_intervals(
+                (interval_slider[0], interval_slider[1]),
+                (interval_slider[2], interval_slider[3]),
+            )
+            current_spot.get_bkgd_data()
+            current_spot.subtract_bkgd()
+            current_spot.get_detection_limits()
+            current_spot.normalize_interval()
+            current_spot.make_output_report()
+
+            # add in the time since the beginning of the transect so
+            # each interval recorded has its own timestamp
+            current_spot.output_report["timestamp"] = pd.to_datetime(
+                current_spot.output_report["timestamp"]
+            ) + pd.Timedelta(seconds=interval_slider[2])
+
+            row_data = current_spot.output_report.values[0]
+            rows.append({c["id"]: r for c, r in zip(columns, row_data)})
+
+        return rows
+
+
+# jump interval based on input value and button clicks callback
+# ----------
+@app.callback(
+    Output("interval_slider_p", "value"),
+    [
+        Input("forward_btn_p", "n_clicks"),
+        Input("back_btn_p", "n_clicks"),
+        Input("step_val_p", "value"),
+    ],
+    [State("upload-data_p", "filename"), State("interval_slider_p", "value")],
+)
+def jump(n_clicks_f, n_clicks_b, step_val, filename, interval_slider):
+    if filename == None:
+        return interval_slider
+
+    else:
+        # this jumps the interval by the amount specified in the step_val input
+        # box. Checks to see which button was clicked and then acts accordingly
+        # e.g. moving the interval forward or backwards
+        if n_clicks_f != 0 or n_clicks_b != 0:
+            changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
+
+            if "forward_btn" in changed_id:
+                interval_slider[0] = interval_slider[0]
+                interval_slider[1] = interval_slider[1]
+                interval_slider[2] = interval_slider[2] + step_val
+                interval_slider[3] = interval_slider[3] + step_val
+
+            elif "back_btn" in changed_id:
+                interval_slider[0] = interval_slider[0]
+                interval_slider[1] = interval_slider[1]
+                interval_slider[2] = interval_slider[2] - step_val
+                interval_slider[3] = interval_slider[3] - step_val
+
+        return interval_slider
 
 
 #############################################################################

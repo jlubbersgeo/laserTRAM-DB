@@ -19,13 +19,17 @@ _Happy processing!_ <br> -`Jordan`
 
 LaserTRAM-DB is a dashboard for the complete processing pipeline of Laser Ablation Inductively Coupled Plasma Mass Spectrometry (LA-ICP-MS) data in complex materials such as geologic samples. As LA-ICP-MS data in geologic samples frequently have multiple phases, inclusions, and other compositional complexities within them that do not represent the material of interest, user interaction is required to filter unwanted signals out of the overall ablation signal. LaserTRAM-DB allows the user to filter which portion of the ablation peak is utilized in calculating concentrations, subsequently allowing for more accurate data to be obtained. It allows easy inspection of any sort of calculation done to the data and just about everything is exportable from tables displayed within the dashboard.
 
-It is comprised of 2 parts:
+It is comprised of 3 parts:
 
 1. **LaserTRAM:** Choosing an interval of interest from raw cps data in individual spot analyses and normalizing it to an internal standard.
 
 ![LaserTRAM GUI](images/LaserTRAM_tab.png)
 
-1. **LaserCalc:** Takes the output from either LaserTRAM or LaserTRAM profiler and converts the normalized data into concentrations using the equations outlined below.
+2. **LaserTRAM profiler** Choosing numerous intervals of interest from raw cps data in a series of rapidly gathered line of spots and normalizing them to an internal standard.
+
+![LaserTRAM-profiler GUI](images/LaserTRAM-profiler_tab.png)
+
+3. **LaserCalc:** Takes the output from either LaserTRAM or LaserTRAM profiler and converts the normalized data into concentrations using the equations outlined below.
 
 ![LaserCalc GUI](images/LaserCalc_concentrations_tab.png)
 
@@ -53,7 +57,7 @@ git clone https://github.com/jlubbersgeo/laserTRAM-DB
 
 ## Data input format
 
-Initially, LaserTRAM requires a single spreadsheet upload that looks like:
+Initially, LaserTRAM and LaserTRAM-profiler require a single spreadsheet upload that looks like:
 | timestamp | SampleLabel | Time | analyte 1 | ... | analyte n |
 |:-------------------:|:-----------:|:-----:|:---------:|:---:|:---------:|
 | 2022-10-10 22:44:00 | GSE-1G_1 | 13.24 | 100000 | ... | 100 |
@@ -82,14 +86,18 @@ Should you wish to build your own scripts or dashboard, a basic walkthrough of t
 
 ## Quickstart
 
-With LaserTRAM-DB up and running, to get started, please watch the videos above in the Demos section. After that, sample data may be found in the "tests" folder:
+With LaserTRAM-DB up and running, to get started, sample data may be found in the "tests" folder:
 
 - LaserTRAM test data: `spot_test_timestamp_raw_data.xlsx`
 - LaserCalc test data: `spot_test_timestamp_lasertram_complete.xlsx`,`profile_test_lasertram_profiler_complete.xlsx`
 - LaserCalc standards data: `laicpms_stds_tidy.xlsx`
 
+## Tutorials
+
+_Coming soon!_
+
 ## Contributing
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-One of the main goals of this project is to bring increased transparency to the fields that utilize LA-ICP-MS data. As such, we welcome feedback and suggestions to help improve the software! If you wish to be a part of further development, or have ideas for new features please open an [issue](https://github.com/jlubbersgeo/laserTRAM-DB/issues) here on GitHub or reach out to Jordan Lubbers (jlubbers@usgs.gov).
+One of the main goals of this project is to bring increased transparency to the fields that utilize LA-ICP-MS data. As such, we welcome feedback and suggestions to help improve the software! If you wish to be a part of further development, or have ideas for new features please open an [issue](https://github.com/jlubbersgeo/laserTRAM-DB/issues) here on GitHub or reach out to Jordan Lubbers (jlubbers _at_ usgs.gov).
