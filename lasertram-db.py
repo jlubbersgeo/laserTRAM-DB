@@ -1167,6 +1167,19 @@ app.layout = html.Div(
                                         # Hidden div inside the app that stores the intermediate value
                                         dcc.Store(id="stored_data_c"),
                                         dcc.Store(id="stored_stds"),
+                                        dbc.Modal(
+                                            [
+                                                dbc.ModalHeader(
+                                                    dbc.ModalTitle("Success!")
+                                                ),
+                                                dbc.ModalBody(
+                                                    "✨ GEOREM Standard Reference Material database uploaded successfully ✨"
+                                                ),
+                                            ],
+                                            id="SRM_success_modal",
+                                            size="lg",
+                                            is_open=False,
+                                        ),
                                         dcc.Store(id="stored_calibstd_data"),
                                         dbc.Col(
                                             [
@@ -2610,6 +2623,8 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 
         # data.insert(loc=1, column="index", value=np.arange(1, len(data) + 1))
 
+        # THIS ONLY ACCEPTS UNIQUE NAMED SPOTS, SO IF THERE ARE DUPLICATE NAMES
+        # THE CODE BREAKS...to fix or to force rename??? ¯\_(ツ)_/¯
         spots = list(data.index.unique())
 
         # Check for potential calibration standards. This will let us know what our options
@@ -2671,14 +2686,17 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 @app.callback(
     [
         Output("stored_stds", "data"),
+        Output("SRM_success_modal", "is_open"),
     ],
     Input("upload-stds", "contents"),
     State("upload-stds", "filename"),
+    # State("SRM_success_modal", "is_open"),
 )
 def get_stds(contents, filename):
     # This is all for retrieving the standard reference material data
     if filename == None:
         data = pd.DataFrame()
+        return (data.to_json(orient="split"), False)
 
     elif "csv" in filename:
         content_type, content_string = contents.split(",")
@@ -2687,6 +2705,7 @@ def get_stds(contents, filename):
         # Assume that the user uploaded a CSV file
         data = pd.read_csv(io.StringIO(decoded.decode("utf-8")))
         data.set_index("Standard", inplace=True)
+        return (data.to_json(orient="split"), True)
 
     elif "xls" in filename:
         content_type, content_string = contents.split(",")
@@ -2696,7 +2715,7 @@ def get_stds(contents, filename):
         data = pd.read_excel(io.BytesIO(decoded))
         # data.set_index("Standard", inplace=True)
 
-    return (data.to_json(orient="split"),)
+        return (data.to_json(orient="split"), True)
 
 
 @app.callback(
