@@ -25,8 +25,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
-from lasertram import LaserCalc, LaserTRAM, batch
 from plotly.subplots import make_subplots
+
+from lasertram import LaserCalc, LaserTRAM, batch
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -1652,15 +1653,15 @@ def get_data(contents, filename):
         data.reset_index(inplace=True)
         # make 43Ca default internal standard unless it's not there
         # then 29Si...then first column in data if neither are present
-        if "43Ca" in data.iloc[:, 1:].columns:
-            int_std = "43Ca"
+        # if "43Ca" in data.iloc[:, 1:].columns:
+        #     int_std = "43Ca"
 
-        elif "43Ca" not in data.iloc[:, 1:].columns:
-            if "29Si" in data.iloc[:, 1:].columns:
-                int_std = "29Si"
-        else:
-            int_std = list(data.iloc[:, 1:].columns)[0]
-
+        # elif "43Ca" not in data.iloc[:, 1:].columns:
+        #     if "29Si" in data.iloc[:, 1:].columns:
+        #         int_std = "29Si"
+        # else:
+        #     int_std = list(data.iloc[:, 1:].columns)[0]
+        int_std = list(data.iloc[:, 1:].columns)[0]
         # state = False
 
     return (
@@ -2188,14 +2189,16 @@ def get_profile_data(contents, filename):
         data.reset_index(inplace=True)
         # make 43Ca default internal standard unless it's not there
         # then 29Si...then first column in data if neither are present
-        if "43Ca" in data.iloc[:, 1:].columns:
-            int_std = "43Ca"
+        # if "43Ca" in data.iloc[:, 1:].columns:
+        #     int_std = "43Ca"
 
-        elif "43Ca" not in data.iloc[:, 1:].columns:
-            if "29Si" in data.iloc[:, 1:].columns:
-                int_std = "29Si"
-        else:
-            int_std = list(data.iloc[:, 1:].columns)[0]
+        # elif "43Ca" not in data.iloc[:, 1:].columns:
+        #     if "29Si" in data.iloc[:, 1:].columns:
+        #         int_std = "29Si"
+        # else:
+        #     int_std = list(data.iloc[:, 1:].columns)[0]
+
+        int_std = list(data.iloc[:, 1:].columns)[0]
 
         # state = False
 
