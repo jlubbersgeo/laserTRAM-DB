@@ -25,8 +25,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
-from lasertram import LaserCalc, LaserTRAM, batch
 from plotly.subplots import make_subplots
+
+from lasertram import LaserCalc, LaserTRAM, batch
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -1167,6 +1168,19 @@ app.layout = html.Div(
                                         # Hidden div inside the app that stores the intermediate value
                                         dcc.Store(id="stored_data_c"),
                                         dcc.Store(id="stored_stds"),
+                                        dbc.Modal(
+                                            [
+                                                dbc.ModalHeader(
+                                                    dbc.ModalTitle("Success!")
+                                                ),
+                                                dbc.ModalBody(
+                                                    "✨ GEOREM Standard Reference Material database uploaded successfully ✨"
+                                                ),
+                                            ],
+                                            id="SRM_success_modal",
+                                            size="lg",
+                                            is_open=False,
+                                        ),
                                         dcc.Store(id="stored_calibstd_data"),
                                         dbc.Col(
                                             [
@@ -1639,15 +1653,15 @@ def get_data(contents, filename):
         data.reset_index(inplace=True)
         # make 43Ca default internal standard unless it's not there
         # then 29Si...then first column in data if neither are present
-        if "43Ca" in data.iloc[:, 1:].columns:
-            int_std = "43Ca"
+        # if "43Ca" in data.iloc[:, 1:].columns:
+        #     int_std = "43Ca"
 
-        elif "43Ca" not in data.iloc[:, 1:].columns:
-            if "29Si" in data.iloc[:, 1:].columns:
-                int_std = "29Si"
-        else:
-            int_std = list(data.iloc[:, 1:].columns)[0]
-
+        # elif "43Ca" not in data.iloc[:, 1:].columns:
+        #     if "29Si" in data.iloc[:, 1:].columns:
+        #         int_std = "29Si"
+        # else:
+        #     int_std = list(data.iloc[:, 1:].columns)[0]
+        int_std = list(data.iloc[:, 1:].columns)[0]
         # state = False
 
     return (
@@ -2175,14 +2189,16 @@ def get_profile_data(contents, filename):
         data.reset_index(inplace=True)
         # make 43Ca default internal standard unless it's not there
         # then 29Si...then first column in data if neither are present
-        if "43Ca" in data.iloc[:, 1:].columns:
-            int_std = "43Ca"
+        # if "43Ca" in data.iloc[:, 1:].columns:
+        #     int_std = "43Ca"
 
-        elif "43Ca" not in data.iloc[:, 1:].columns:
-            if "29Si" in data.iloc[:, 1:].columns:
-                int_std = "29Si"
-        else:
-            int_std = list(data.iloc[:, 1:].columns)[0]
+        # elif "43Ca" not in data.iloc[:, 1:].columns:
+        #     if "29Si" in data.iloc[:, 1:].columns:
+        #         int_std = "29Si"
+        # else:
+        #     int_std = list(data.iloc[:, 1:].columns)[0]
+
+        int_std = list(data.iloc[:, 1:].columns)[0]
 
         # state = False
 
@@ -2610,6 +2626,8 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 
         # data.insert(loc=1, column="index", value=np.arange(1, len(data) + 1))
 
+        # THIS ONLY ACCEPTS UNIQUE NAMED SPOTS, SO IF THERE ARE DUPLICATE NAMES
+        # THE CODE BREAKS...to fix or to force rename??? ¯\_(ツ)_/¯
         spots = list(data.index.unique())
 
         # Check for potential calibration standards. This will let us know what our options
@@ -2671,14 +2689,17 @@ def get_ratio_data(contents, filename, columns, int_std_columns, header):
 @app.callback(
     [
         Output("stored_stds", "data"),
+        Output("SRM_success_modal", "is_open"),
     ],
     Input("upload-stds", "contents"),
     State("upload-stds", "filename"),
+    # State("SRM_success_modal", "is_open"),
 )
 def get_stds(contents, filename):
     # This is all for retrieving the standard reference material data
     if filename == None:
         data = pd.DataFrame()
+        return (data.to_json(orient="split"), False)
 
     elif "csv" in filename:
         content_type, content_string = contents.split(",")
@@ -2687,6 +2708,7 @@ def get_stds(contents, filename):
         # Assume that the user uploaded a CSV file
         data = pd.read_csv(io.StringIO(decoded.decode("utf-8")))
         data.set_index("Standard", inplace=True)
+        return (data.to_json(orient="split"), True)
 
     elif "xls" in filename:
         content_type, content_string = contents.split(",")
@@ -2696,7 +2718,7 @@ def get_stds(contents, filename):
         data = pd.read_excel(io.BytesIO(decoded))
         # data.set_index("Standard", inplace=True)
 
-    return (data.to_json(orient="split"),)
+        return (data.to_json(orient="split"), True)
 
 
 @app.callback(
