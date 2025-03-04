@@ -4,11 +4,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8329594.svg)](https://doi.org/10.5281/zenodo.8329594)
 
 
-Paper on EarthArXiv: [https://doi.org/10.31223/X5QG95](https://eartharxiv.org/repository/view/2839/)
 
-[Documentation](https://github.com/jlubbersgeo/laserTRAM-DB/blob/main/docs/LaserTRAM_DB_documentation.pdf)
-
-**_Note_** `LaserTRAM-DB` is still in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
+**_Note_** `LaserTRAM-DB` is (seemingly) always in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
 
 - signal despiking
 - region omission within selected area
@@ -77,11 +74,22 @@ If you are using either a Thermo iCAP series or Agilent 8900 QQQ quadrupole mass
 
 All calculations are done under the hood using the package [`lasertram`](https://jlubbersgeo.github.io/lasertram/). In many ways you can think about `LaserTRAM-DB` as a wrapper to `lasertram` that is designed to offer better interactivity with no scripting.
 
-- [mathematical background](https://jlubbersgeo.github.io/lasertram/explanation/)
 
-Should you wish to build your own scripts or dashboard, a basic walkthrough of the workflow is here:
+The math, logic, and structure of `lasertram` is now published in _Applied Computing and Geosciences_: [`lasertram`: A Python library for time resolved analysis of laser ablation inductively coupled plasma mass spectrometry data](https://doi.org/10.1016/j.acags.2025.100225)
 
-- [walkthrough](https://jlubbersgeo.github.io/lasertram/lasertram_tutorial/)
+Here's a bib entry for you:
+
+```tex
+@article{lubbers2025lasertram,
+  title={lasertram: A Python library for time resolved analysis of laser ablation inductively coupled plasma mass spectrometry data},
+  author={Lubbers, Jordan and Kent, Adam JR and Russo, Chris},
+  journal={Applied Computing and Geosciences},
+  pages={100225},
+  year={2025},
+  publisher={Elsevier},
+  doi={10.1016/j.acags.2025.100225}
+}
+```
 
 
 ## Quickstart
@@ -94,7 +102,7 @@ With LaserTRAM-DB up and running, to get started, sample data may be found in th
 
 ## Tutorials
 
-_Coming soon!_
+A series of YouTube tutorials on how to use the dashboard can be found here: [https://youtu.be/dOm4dW4qy0s?si=1efj4G1tqqH8SJDG](https://youtu.be/dOm4dW4qy0s?si=1efj4G1tqqH8SJDG)
 
 ## Contributing
 
