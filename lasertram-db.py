@@ -16,6 +16,7 @@ jlubbers@usgs.gov
 
 import base64
 import io
+import warnings
 import webbrowser as web
 
 import dash
@@ -25,9 +26,11 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 from dash import Input, Output, State, dash_table, dcc, exceptions, html
+from lasertram import LaserCalc, LaserTRAM, batch
 from plotly.subplots import make_subplots
 
-from lasertram import LaserCalc, LaserTRAM, batch
+warnings.filterwarnings("ignore")
+
 
 # this should hopefully be enough colors. Repeats after 48...
 colorlist = [
@@ -1844,7 +1847,7 @@ def plot(
             #     for x in range(len(current_spot.bkgd_correct_std_err_rel))
             # ]
             err_colors = []
-            for val in current_spot.bkgd_correct_std_err_rel:
+            for val in current_spot.bkgd_subtract_std_err_rel:
                 if val > 10:
                     err_colors.append("#ad0013")
                 elif (val > 7.5) & (val <= 10):
@@ -1857,9 +1860,9 @@ def plot(
             error_fig = go.Figure(
                 go.Bar(
                     x=current_spot.analytes,
-                    y=current_spot.bkgd_correct_std_err_rel,
+                    y=current_spot.bkgd_subtract_std_err_rel,
                     marker=dict(color=err_colors),
-                    text=current_spot.bkgd_correct_med,
+                    text=current_spot.bkgd_subtract_med,
                     textposition="auto",
                 )
             )
@@ -2372,7 +2375,7 @@ def plot_profile(
         #     for x in range(len(current_spot.bkgd_correct_std_err_rel))
         # ]
         err_colors = []
-        for val in current_spot.bkgd_correct_std_err_rel:
+        for val in current_spot.bkgd_subtract_std_err_rel:
             if val > 10:
                 err_colors.append("#ad0013")
             elif (val > 7.5) & (val <= 10):
@@ -2385,9 +2388,9 @@ def plot_profile(
         error_fig = go.Figure(
             go.Bar(
                 x=current_spot.analytes,
-                y=current_spot.bkgd_correct_std_err_rel,
+                y=current_spot.bkgd_subtract_std_err_rel,
                 marker=dict(color=err_colors),
-                text=current_spot.bkgd_correct_med,
+                text=current_spot.bkgd_subtract_med,
                 textposition="auto",
             )
         )
