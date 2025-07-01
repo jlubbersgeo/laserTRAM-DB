@@ -2919,4 +2919,4 @@ def plot_calib_stds(drift_analyte, calib_std_data, calib_std_stats, alpha, n_cli
 
 
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port=8049)
+    app.run(host="0.0.0.0", port=8049)
