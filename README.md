@@ -1,9 +1,6 @@
 # `LaserTRAM-DB`: A dashboard for the complete laser ablation icp-ms data reduction pipeline.
 
-
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8329594.svg)](https://doi.org/10.5281/zenodo.8329594)
-
-
 
 **_Note_** `LaserTRAM-DB` is (seemingly) always in development and new features are being added (we are happy to take suggestions!). While this is the case, the underlying math and data produced by the software are still accurate. Functionalities being added are those that fall into the following areas:
 
@@ -101,6 +98,13 @@ With LaserTRAM-DB up and running, to get started, sample data may be found in th
 - LaserCalc standards data: `laicpms_stds_tidy.xlsx`
 
 ## Tutorials
+### Video
+
+A three-part video series on the basics of LaserTRAM-DB can be found [here](https://www.youtube.com/playlist?list=PLxZuo_RAAq_c4pd23NQzQ03hZgHjJ6AAN)
+
+### Documentation
+
+_Coming Soon_
 
 A series of YouTube tutorials on how to use the dashboard can be found here: [https://youtu.be/dOm4dW4qy0s?si=1efj4G1tqqH8SJDG](https://youtu.be/dOm4dW4qy0s?si=1efj4G1tqqH8SJDG)
 
