@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.12
-  - dash
+  - dash=3.0.4
   - dash-bootstrap-components
   - ca-certificates
   - openssl
