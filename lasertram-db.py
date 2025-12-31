@@ -13,6 +13,14 @@ jlubbers@usgs.gov
 
 
 """
+# TODO: OVERALL TODO LIST
+# [ ] add despiking options
+# [ ] add changes to internal standard input
+# [ ] add "comment" field in lasertram
+# [ ] fix :break up into multiple files for readability
+# [ ] fix: structure like package
+# [ ] add: move to pyQT?
+# [ ] update versions and dependencies
 
 import base64
 import io
