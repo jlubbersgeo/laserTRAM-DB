@@ -1,3 +1,6 @@
+**THIS REPOSITORY IS NOW ARCHIVED. CURRENT DEVELOPMENT ON LASERTRAM-DB 2.X.X IS NOW BEING DONE AT https://code.usgs.gov/vsc/petro/tools/lasertramdb**
+**PLEASE GO THERE FOR UP TO DATE CODE AND DATA PROCESSING AS THIS IS NO LONGER SUPPORTED**
+
 # `LaserTRAM-DB`: A dashboard for the complete laser ablation icp-ms data reduction pipeline.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8329594.svg)](https://doi.org/10.5281/zenodo.8329594)
